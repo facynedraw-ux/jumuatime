@@ -1,9 +1,27 @@
-import Stripe from 'https://esm.sh/stripe@12';
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
+
+async function stripeRequest(path, secret, body = null, method = 'POST') {
+  const response = await fetch(`https://api.stripe.com/v1${path}`, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${secret}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: body ? JSON.stringify(body) : null,
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error?.message || `Stripe request failed: ${response.status}`);
+  }
+
+  return data;
+}
 
 export async function onRequestOptions() {
   return new Response(null, { headers: corsHeaders });
@@ -58,8 +76,6 @@ export async function onRequestPost(context) {
       });
     }
 
-    const stripe = new Stripe(STRIPE_SECRET, { apiVersion: '2023-10-16' });
-
     const lineItems = [
       { price: stripePriceId, quantity: 1 },
     ];
@@ -76,13 +92,13 @@ export async function onRequestPost(context) {
       });
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await stripeRequest('/checkout/sessions', STRIPE_SECRET, {
       mode: 'payment',
       line_items: lineItems,
       metadata: {
-        type:            'physique',
-        produit_id:      produit_id,
-        variante_id:     variante_id || '',
+        type: 'physique',
+        produit_id: produit_id,
+        variante_id: variante_id || '',
         personnalisation: JSON.stringify(personnalisation || {}),
         montant_livraison: String(livraisonFinal),
         gelato_product_id: gelatoProductId,
@@ -91,7 +107,7 @@ export async function onRequestPost(context) {
         allowed_countries: ['FR', 'BE', 'CH', 'CA', 'MA', 'DZ', 'TN', 'SN', 'CI'],
       },
       success_url: `https://jumuatime.com/confirmation-physique.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `https://jumuatime.com/produit-physique.html?id=${produit_id}`,
+      cancel_url: `https://jumuatime.com/produit-physique.html?id=${produit_id}`,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {

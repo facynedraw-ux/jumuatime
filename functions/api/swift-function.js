@@ -1,10 +1,49 @@
-import Stripe from 'https://esm.sh/stripe@12';
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type, Stripe-Signature',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 };
+
+function equalBytes(a, b) {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a[i] ^ b[i];
+  }
+  return result === 0;
+}
+
+async function verifyStripeSignature(payload, signature, secret) {
+  const parts = signature.split(',').map((item) => item.trim()).filter(Boolean);
+  const timestampPart = parts.find((item) => item.startsWith('t='));
+  const signatures = parts.filter((item) => item.startsWith('v1='));
+
+  if (!timestampPart || signatures.length === 0) {
+    throw new Error('Invalid Stripe signature header');
+  }
+
+  const timestamp = timestampPart.slice(2);
+  const signedPayload = `${timestamp}.${payload}`;
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const digest = new Uint8Array(await crypto.subtle.sign('HMAC', key, encoder.encode(signedPayload)));
+  const digestHex = Array.from(digest, (byte) => byte.toString(16).padStart(2, '0')).join('');
+
+  for (const signaturePart of signatures) {
+    const expectedSignature = signaturePart.slice(3);
+    if (digestHex === expectedSignature) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -30,7 +69,6 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: 'Missing required Cloudflare env vars: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET or GELATO_API_KEY' }, 500);
     }
 
-    const stripe = new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
     const signature = context.request.headers.get('stripe-signature');
     const rawBody = await context.request.text();
 
@@ -38,7 +76,12 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: 'Missing Stripe signature header' }, 400);
     }
 
-    const event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+    const isValidSignature = await verifyStripeSignature(rawBody, signature, webhookSecret);
+    if (!isValidSignature) {
+      return jsonResponse({ error: 'Invalid Stripe signature' }, 400);
+    }
+
+    const event = JSON.parse(rawBody);
 
     if (event.type !== 'checkout.session.completed') {
       return jsonResponse({ received: true }, 200);
