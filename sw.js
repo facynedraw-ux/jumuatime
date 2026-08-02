@@ -1,4 +1,4 @@
-const CACHE = 'maktaba-v1';
+const CACHE = 'maktaba-v2';
 
 const PRECACHE = [
   '/',
@@ -7,6 +7,7 @@ const PRECACHE = [
   '/login.html',
   '/compte.html',
   '/ressources.html',
+  '/admin-ressources.html',
   '/supabase-client.js',
   '/manifest.json',
   '/Images/logo.png',
