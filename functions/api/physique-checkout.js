@@ -49,6 +49,7 @@ export async function onRequestPost(context) {
     // Trouver le Stripe Price ID
     const priceIds    = produit.stripe_price_ids || {};
     const stripePriceId = variante_id ? priceIds[variante_id] : priceIds['default'];
+    const gelatoProductId = produit.gelato_product_id || produit.gelato_product || '';
 
     if (!stripePriceId) {
       return new Response(JSON.stringify({ error: 'Price ID Stripe manquant pour ce produit.' }), {
@@ -84,6 +85,7 @@ export async function onRequestPost(context) {
         variante_id:     variante_id || '',
         personnalisation: JSON.stringify(personnalisation || {}),
         montant_livraison: String(livraisonFinal),
+        gelato_product_id: gelatoProductId,
       },
       shipping_address_collection: {
         allowed_countries: ['FR', 'BE', 'CH', 'CA', 'MA', 'DZ', 'TN', 'SN', 'CI'],

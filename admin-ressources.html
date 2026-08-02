@@ -250,6 +250,12 @@ tailwind.config = {
       <p class="text-xs text-muted mt-1">PDF tronqué (1–2 pages), visible avant achat. Uploadé dans le bucket public.</p>
     </div>
 
+    <div class="mb-3">
+      <label class="f-label" for="f-gelato-product-id">ID produit Gelato (physique)</label>
+      <input type="text" id="f-gelato-product-id" class="f-input" placeholder="9375c91b-67e0-4568-ac45-a2f8f76226a7">
+      <p class="text-xs text-muted mt-1">À renseigner uniquement pour un produit physique envoyé à Gelato.</p>
+    </div>
+
     <div class="mb-5">
       <label class="f-label" for="f-format">Format</label>
       <input type="text" id="f-format" class="f-input" placeholder="PDF" value="PDF">
@@ -370,6 +376,7 @@ function editResource(id) {
   document.getElementById('f-preview-pdf').value = r.preview_pdf_url || '';
   document.getElementById('f-preview-pdf-input').value = '';
   document.getElementById('f-preview-pdf-name').textContent = r.preview_pdf_url ? r.preview_pdf_url.split('/').pop() : 'Sélectionner un PDF d\'aperçu…';
+  document.getElementById('f-gelato-product-id').value = r.gelato_product_id || '';
   document.getElementById('f-format').value = r.format || 'PDF';
   document.getElementById('f-active').checked = r.is_active;
   document.querySelectorAll('input[name="f-theme"]').forEach(cb => {
@@ -394,6 +401,7 @@ function openPanel() {
   document.getElementById('f-preview-pdf-name').textContent = 'Sélectionner un PDF d\'aperçu…';
   document.getElementById('f-preview-input').value = '';
   document.getElementById('f-preview-name').textContent = 'Sélectionner une image…';
+  document.getElementById('f-gelato-product-id').value = '';
   document.getElementById('f-cat').value = '';
   document.getElementById('f-type-produit').value = 'numerique';
   document.getElementById('f-format').value = 'PDF';
@@ -525,6 +533,7 @@ async function saveResource() {
     preview_url: previewUrl,
     preview_pdf_url: previewPdfUrl,
     file_url: fileUrl,
+    gelato_product_id: document.getElementById('f-gelato-product-id').value.trim() || null,
     format: document.getElementById('f-format').value.trim() || 'PDF',
     is_active: document.getElementById('f-active').checked,
   };
