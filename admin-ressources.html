@@ -73,13 +73,8 @@ tailwind.config = {
     </a>
     <nav class="space-y-1 flex-1">
       <a href="admin.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
-      <a href="admin-livres.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">auto_stories</span> Livres</a>
-      <a href="admin-soumissions.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">inbox</span> Soumissions</a>
-      <a href="admin-avis.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">rate_review</span> Avis</a>
-      <a href="admin-annuaire.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">contacts</span> Annuaire</a>
       <a href="admin-ressources.html" class="admin-nav-link active"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
       <a href="admin-utilisateurs.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">group</span> Utilisateurs</a>
-      <a href="admin-themes.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">label</span> Thèmes</a>
     </nav>
     <a href="index.html" class="admin-nav-link mt-4"><span class="ms" style="font-size:18px;">arrow_back</span> Retour au site</a>
   </aside>
@@ -98,13 +93,8 @@ tailwind.config = {
         <span class="font-display font-bold text-base mb-6">Admin</span>
         <nav class="space-y-1 flex-1">
           <a href="admin.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
-          <a href="admin-livres.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">auto_stories</span> Livres</a>
-          <a href="admin-soumissions.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">inbox</span> Soumissions</a>
-          <a href="admin-avis.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">rate_review</span> Avis</a>
-          <a href="admin-annuaire.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">contacts</span> Annuaire</a>
           <a href="admin-ressources.html" class="admin-nav-link active"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
           <a href="admin-utilisateurs.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">group</span> Utilisateurs</a>
-          <a href="admin-themes.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">label</span> Thèmes</a>
         </nav>
         <a href="index.html" class="admin-nav-link mt-4"><span class="ms" style="font-size:18px;">arrow_back</span> Retour au site</a>
       </div>
@@ -172,20 +162,27 @@ tailwind.config = {
 
     <div class="grid grid-cols-2 gap-3 mb-3">
       <div>
-        <label class="f-label" for="f-cat">Catégorie</label>
+        <label class="f-label" for="f-cat">Catégorie boutique</label>
         <select id="f-cat" class="f-select">
           <option value="">— Choisir —</option>
-          <option value="fiche">Fiche</option>
-          <option value="coloriage">Coloriage</option>
-          <option value="kit">Kit</option>
-          <option value="printable">Printable</option>
-          <option value="bundle">Bundle</option>
+          <option value="enfants">Pour les enfants</option>
+          <option value="spiritualite">Spiritualité</option>
+          <option value="decoration">Décoration</option>
+          <option value="cadeaux">Cadeaux</option>
         </select>
       </div>
       <div>
-        <label class="f-label" for="f-price">Prix (€) *</label>
-        <input type="number" id="f-price" class="f-input" step="0.01" min="0" placeholder="3.90">
+        <label class="f-label" for="f-type-produit">Type de produit</label>
+        <select id="f-type-produit" class="f-select">
+          <option value="numerique">Numérique</option>
+          <option value="physique">Physique</option>
+        </select>
       </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="f-label" for="f-price">Prix (€) *</label>
+      <input type="number" id="f-price" class="f-input" step="0.01" min="0" placeholder="3.90">
     </div>
 
     <div class="grid grid-cols-2 gap-3 mb-3">
@@ -285,7 +282,12 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 function slugify(str) {
   return (str||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
-const CAT_LABELS = { fiche:'Fiche', coloriage:'Coloriage', kit:'Kit', printable:'Printable', bundle:'Bundle' };
+const CAT_LABELS = {
+  enfants: 'Pour les enfants',
+  spiritualite: 'Spiritualité',
+  decoration: 'Décoration',
+  cadeaux: 'Cadeaux'
+};
 
 async function init() {
   const admin = await isAdmin();
@@ -354,6 +356,7 @@ function editResource(id) {
   document.getElementById('f-slug').value = r.slug || '';
   document.getElementById('f-desc').value = r.description || '';
   document.getElementById('f-cat').value = r.category || '';
+  document.getElementById('f-type-produit').value = r.type_produit || 'numerique';
   document.getElementById('f-price').value = r.price || '';
   document.getElementById('f-age-min').value = r.age_min ?? '';
   document.getElementById('f-age-max').value = r.age_max ?? '';
@@ -392,8 +395,12 @@ function openPanel() {
   document.getElementById('f-preview-input').value = '';
   document.getElementById('f-preview-name').textContent = 'Sélectionner une image…';
   document.getElementById('f-cat').value = '';
+  document.getElementById('f-type-produit').value = 'numerique';
   document.getElementById('f-format').value = 'PDF';
   document.getElementById('f-active').checked = true;
+  const saveBtn = document.getElementById('panel-save-btn');
+  saveBtn.disabled = false;
+  document.getElementById('panel-save-label').textContent = 'Enregistrer';
   document.querySelectorAll('input[name="f-theme"]').forEach(cb => cb.checked = false);
 
   document.getElementById('panel').classList.remove('hidden');
@@ -404,6 +411,11 @@ function closePanel() {
   document.getElementById('panel').classList.add('hidden');
   document.body.style.overflow = '';
   editingId = null;
+  const saveBtn = document.getElementById('panel-save-btn');
+  if (saveBtn) {
+    saveBtn.disabled = false;
+  }
+  document.getElementById('panel-save-label').textContent = 'Enregistrer';
 }
 function closePanelOverlay(e) { if (e.target === document.getElementById('panel')) closePanel(); }
 
@@ -504,6 +516,7 @@ async function saveResource() {
     slug: document.getElementById('f-slug').value.trim() || slugify(title) + '-' + Date.now().toString(36),
     description: document.getElementById('f-desc').value.trim() || null,
     category: document.getElementById('f-cat').value || null,
+    type_produit: document.getElementById('f-type-produit').value || 'numerique',
     price: parseFloat(document.getElementById('f-price').value) || 0,
     age_min: parseInt(document.getElementById('f-age-min').value) || null,
     age_max: parseInt(document.getElementById('f-age-max').value) || null,
