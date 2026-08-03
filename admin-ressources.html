@@ -446,6 +446,18 @@ function onFileSelect(input) {
   document.getElementById('f-file-clear').classList.remove('hidden');
 }
 
+function clearFile(fieldKey) {
+  document.getElementById('f-' + fieldKey).value = '';
+  document.getElementById('f-' + fieldKey + '-input').value = '';
+  document.getElementById('f-' + fieldKey + '-clear').classList.add('hidden');
+  const labels = {
+    'preview': 'Sélectionner une image…',
+    'file': 'Sélectionner un PDF…',
+    'preview-pdf': "Sélectionner un PDF d'aperçu…"
+  };
+  document.getElementById('f-' + fieldKey + '-name').textContent = labels[fieldKey];
+}
+
 function onPreviewPdfSelect(input) {
   const file = input.files[0];
   if (!file) return;
