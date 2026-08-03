@@ -292,7 +292,7 @@ async function init() {
 
   const { data } = await _supabase
     .from('resources')
-    .select('id, slug, title, subtitle, cover_url, price, category, type_produit')
+    .select('id, slug, title, cover_url, price, category, type_produit')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
