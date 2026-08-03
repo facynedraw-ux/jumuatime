@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Commandes — Admin Jumua Time</title>
+<title>Commandes — Jumua Time Admin</title>
+<link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="favicon.png">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#C96B8A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 <link rel="stylesheet" href="assets/tokens.css">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -15,335 +18,510 @@
 <script src="supabase-client.js"></script>
 <script>
 tailwind.config = {
-  theme: { extend: { colors: { teal:'#5B9EAD','teal-dark':'#3D7A8A',gold:'#C49A5A',bg:'#FAF6F0',border:'#E2D4BC',muted:'#8B7A5A' }, fontFamily: { display:['Playfair Display','serif'], body:['DM Sans','sans-serif'] } } }
+  theme: {
+    extend: {
+      colors: { primary:'#C96B8A', secondary:'#9B7FA6', accent:'#F0A87A', bg:'#FFF5F7', card:'#F5F0FA', text:'#3D1F2D', muted:'#7A5A6A', border:'#E8D5DC', success:'#5B8A5F' },
+      fontFamily: { display:['Playfair Display','serif'], body:['DM Sans','sans-serif'] }
+    }
+  }
 }
 </script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: #F0EBE4; color: #1A1208; margin: 0; min-height: 100vh; }
-  .ms { font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased; }
-  .btn-teal { background:#5B9EAD;color:white;border:none;border-radius:12px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:background 0.2s;display:inline-flex;align-items:center;gap:5px; }
-  .btn-teal:hover { background:#3D7A8A; }
-  .btn-teal:disabled { opacity:0.5;cursor:not-allowed; }
-  .btn-sm { padding:5px 12px;font-size:12px;border-radius:8px; }
-  .status-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
-  .status-pending    { background:#FFF0E0;color:#C07830; }
-  .status-confirmed  { background:#E0F0FF;color:#2A70C0; }
-  .status-fabrication{ background:#F0E8F8;color:#7030A0; }
-  .status-shipped    { background:#E0F8E8;color:#207040; }
-  .status-delivered  { background:#EFEFEF;color:#707070; }
-  .filter-pill { padding:6px 14px;border-radius:20px;border:1.5px solid #E2D4BC;background:white;font-size:12px;font-weight:500;color:#8B7A5A;cursor:pointer;transition:all 0.15s; }
-  .filter-pill.active { background:#5B9EAD;color:white;border-color:#5B9EAD; }
-  .order-card { background:white;border:1px solid #E2D4BC;border-radius:16px;overflow:hidden;transition:box-shadow 0.2s; }
-  .order-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.07); }
-  .order-card-header { padding:14px 16px;border-bottom:1px solid #F0EBE4;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px; }
-  .order-card-body { padding:14px 16px; }
-  .order-card-footer { padding:12px 16px;border-top:1px solid #F0EBE4;background:#FAFAF8;display:flex;align-items:center;gap-8px;flex-wrap:wrap;gap:8px; }
-  .info-row { display:flex;gap:8px;font-size:13px;margin-bottom:6px; }
-  .info-label { color:#8B7A5A;min-width:110px;flex-shrink:0; }
-  .skeleton { background:linear-gradient(90deg,#E2D4BC 25%,#F5EDE0 50%,#E2D4BC 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;height:16px; }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-  #toast { position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1208;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all 0.3s;z-index:200;pointer-events:none;white-space:nowrap; }
-  #toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
-  #toast.error { background:#C0392B; }
-  #toast.success { background:#207040; }
-  .field-input { border:1.5px solid #E2D4BC;border-radius:10px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A1208;background:white;outline:none;width:100%; }
-  .field-input:focus { border-color:#5B9EAD; }
+*, *::before, *::after { box-sizing: border-box; }
+body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; margin:0; }
+.ms { font-family:'Material Symbols Outlined'; font-weight:normal; font-style:normal; font-size:20px; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; direction:ltr; -webkit-font-smoothing:antialiased; }
+.admin-nav-link { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; text-decoration:none; color:#7A5A6A; font-size:14px; font-weight:500; transition:all 0.15s; }
+.admin-nav-link:hover, .admin-nav-link.active { background:#F5E8F0; color:#C96B8A; }
+.btn-primary { background:#C96B8A; color:white; border:none; border-radius:12px; padding:10px 20px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:background 0.15s; }
+.btn-primary:hover { background:#b55a78; }
+.btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-sm { background:#F5E8F0; color:#C96B8A; border:none; border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:background 0.15s; }
+.btn-sm:hover { background:#FACDD8; }
+.btn-green { background:#E8F4E8; color:#5B8A5F; border:none; border-radius:12px; padding:10px 20px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:background 0.15s; }
+.btn-green:hover { background:#D4EBD4; }
+
+/* Filter pills */
+.filter-pill { padding:6px 14px; border-radius:20px; border:1.5px solid #E8D5DC; background:white; font-size:12px; font-weight:500; color:#7A5A6A; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+.filter-pill.active { background:#C96B8A; color:white; border-color:#C96B8A; }
+
+/* Tab buttons */
+.tab-btn { padding:8px 18px; border-radius:10px; border:none; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; background:#F5E8F0; color:#7A5A6A; display:inline-flex; align-items:center; gap:7px; }
+.tab-btn.active { background:#C96B8A; color:white; }
+.count-chip { background:rgba(255,255,255,0.3); border-radius:10px; padding:1px 7px; font-size:11px; }
+.tab-btn:not(.active) .count-chip { background:#E8D5DC; color:#7A5A6A; }
+
+/* Order rows */
+.order-row { display:flex; align-items:center; gap:12px; padding:14px 16px; background:white; border:1px solid #E8D5DC; border-radius:16px; cursor:pointer; transition:box-shadow 0.15s, border-color 0.15s; margin-bottom:8px; }
+.order-row:hover { border-color:#C96B8A; box-shadow:0 2px 12px rgba(201,107,138,0.12); }
+.order-row.no-click { cursor:default; }
+.order-row.no-click:hover { border-color:#E8D5DC; box-shadow:none; }
+
+/* Panel */
+.panel-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.4); display:flex; justify-content:flex-end; }
+.panel-overlay.hidden { display:none; }
+.panel-box { background:white; width:100%; max-width:500px; height:100%; overflow-y:auto; padding:0; display:flex; flex-direction:column; }
+.panel-scroll { flex:1; overflow-y:auto; padding:24px; }
+
+/* Form */
+.f-label { display:block; font-size:11px; font-weight:700; color:#7A5A6A; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.f-input { width:100%; padding:9px 12px; border:1.5px solid #E8D5DC; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; color:#3D1F2D; background:white; outline:none; transition:border-color 0.2s; }
+.f-input:focus { border-color:#C96B8A; }
+.f-select { width:100%; padding:9px 12px; border:1.5px solid #E8D5DC; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; color:#3D1F2D; background:white; outline:none; cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A5A6A' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
+.f-select:focus { border-color:#C96B8A; }
+.f-textarea { width:100%; padding:9px 12px; border:1.5px solid #E8D5DC; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; color:#3D1F2D; background:white; outline:none; resize:vertical; }
+.f-textarea:focus { border-color:#C96B8A; }
+.f-sep { height:1px; background:#E8D5DC; margin:16px 0; }
+
+/* Skeleton */
+.skeleton { background:linear-gradient(90deg,#F5E8F0 25%,#FAF0F5 50%,#F5E8F0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+@media (prefers-reduced-motion:reduce) { .skeleton { animation:none !important; } }
 </style>
 </head>
-<body class="bg-bg font-body">
+<body class="bg-bg font-body text-text">
 
-<!-- ═══ SIDEBAR + LAYOUT ═══ -->
 <div class="flex min-h-screen">
 
-  <!-- Sidebar -->
-  <aside class="hidden md:flex flex-col w-52 flex-shrink-0 py-6 px-4 border-r border-border bg-white">
-    <a href="index.html" class="no-underline mb-8">
-      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-8 w-auto object-contain">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="hidden md:flex flex-col w-56 bg-white border-r border-border px-4 py-6 sticky top-0 h-screen flex-shrink-0">
+    <a href="index.html" class="flex items-center gap-2 mb-8 no-underline">
+      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
+      <span class="font-display font-bold text-text text-base">Admin</span>
     </a>
-    <nav class="flex flex-col gap-1 flex-1">
-      <a href="admin.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium no-underline text-muted hover:bg-gray-50 transition-colors">
-        <span class="ms" style="font-size:18px;">dashboard</span> Dashboard
-      </a>
-      <a href="admin-livres.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium no-underline text-muted hover:bg-gray-50 transition-colors">
-        <span class="ms" style="font-size:18px;">menu_book</span> Livres
-      </a>
-      <a href="admin-soumissions.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium no-underline text-muted hover:bg-gray-50 transition-colors">
-        <span class="ms" style="font-size:18px;">inbox</span> Soumissions
-      </a>
-      <a href="admin-ressources.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium no-underline text-muted hover:bg-gray-50 transition-colors">
-        <span class="ms" style="font-size:18px;">sell</span> Ressources
-      </a>
-      <a href="admin-commandes.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold no-underline rounded-xl" style="background:#EBF5F7;color:#3D7A8A;">
-        <span class="ms" style="font-size:18px;font-variation-settings:'FILL' 1;">local_shipping</span> Commandes
-      </a>
-      <a href="admin-avis.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium no-underline text-muted hover:bg-gray-50 transition-colors">
-        <span class="ms" style="font-size:18px;">rate_review</span> Avis
-      </a>
-      <a href="admin-utilisateurs.html" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium no-underline text-muted hover:bg-gray-50 transition-colors">
-        <span class="ms" style="font-size:18px;">group</span> Utilisateurs
-      </a>
+    <nav class="space-y-1 flex-1">
+      <a href="admin.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html" class="admin-nav-link active"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin-ressources.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
+      <a href="admin-utilisateurs.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">group</span> Utilisateurs</a>
     </nav>
-    <button onclick="signOut()" class="flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-muted hover:text-red-600 transition-colors cursor-pointer border-none bg-transparent">
+    <button onclick="signOut()" class="admin-nav-link mt-4 border-0 bg-transparent cursor-pointer text-left">
       <span class="ms" style="font-size:18px;">logout</span> Déconnexion
     </button>
   </aside>
 
-  <!-- Main -->
-  <div class="flex-1 p-4 md:p-8 max-w-full overflow-x-hidden">
+  <!-- ═══ MAIN ═══ -->
+  <div class="flex-1 flex flex-col min-w-0">
 
-    <!-- Header page -->
-    <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+    <!-- Header mobile -->
+    <header class="md:hidden sticky top-0 z-40 bg-white border-b border-border px-4 h-14 flex items-center justify-between">
+      <span class="font-display font-bold text-base">Commandes</span>
+      <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="w-9 h-9 flex items-center justify-center rounded-xl border border-border">
+        <span class="ms">menu</span>
+      </button>
+    </header>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-border px-4 py-3 flex flex-col gap-1 z-30">
+      <a href="admin.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html" class="admin-nav-link active"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin-ressources.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
+    </div>
+
+    <!-- Page header -->
+    <div class="px-6 pt-6 pb-4 border-b border-border bg-white flex items-center justify-between flex-wrap gap-3">
       <div>
-        <h1 class="font-display text-xl md:text-2xl font-bold" style="color:#1A1208;">Commandes</h1>
-        <p class="text-sm text-muted mt-0.5">Gestion des commandes personnalisées</p>
+        <h1 class="font-display font-bold text-xl text-text">Commandes</h1>
+        <p id="count-label" class="text-xs text-muted mt-0.5">Chargement…</p>
       </div>
-      <div class="flex items-center gap-2">
-        <span id="orders-count" class="text-sm text-muted"></span>
-        <button class="btn-teal btn-sm" onclick="loadOrders()">
-          <span class="ms" style="font-size:16px;">refresh</span> Actualiser
-        </button>
-      </div>
-    </div>
-
-    <!-- Filtres statut -->
-    <div class="flex flex-wrap gap-2 mb-6">
-      <button class="filter-pill active" data-status="all" onclick="setFilter(this)">Toutes</button>
-      <button class="filter-pill" data-status="pending" onclick="setFilter(this)">
-        <span style="color:#C07830;">●</span> En attente
-      </button>
-      <button class="filter-pill" data-status="confirmed" onclick="setFilter(this)">
-        <span style="color:#2A70C0;">●</span> Payée — À fabriquer
-      </button>
-      <button class="filter-pill" data-status="fabrication" onclick="setFilter(this)">
-        <span style="color:#7030A0;">●</span> En fabrication
-      </button>
-      <button class="filter-pill" data-status="shipped" onclick="setFilter(this)">
-        <span style="color:#207040;">●</span> Expédiée
-      </button>
-      <button class="filter-pill" data-status="delivered" onclick="setFilter(this)">
-        <span style="color:#707070;">●</span> Livrée
+      <button onclick="loadAll()" class="btn-sm">
+        <span class="ms" style="font-size:16px;">refresh</span> Actualiser
       </button>
     </div>
 
-    <!-- Liste commandes -->
-    <div id="orders-list" class="flex flex-col gap-4">
-      <!-- Skeletons -->
-      <div class="order-card">
-        <div class="order-card-header"><div class="skeleton w-40"></div><div class="skeleton w-24"></div></div>
-        <div class="order-card-body"><div class="space-y-2"><div class="skeleton w-3/4"></div><div class="skeleton w-1/2"></div><div class="skeleton w-2/3"></div></div></div>
-      </div>
-      <div class="order-card">
-        <div class="order-card-header"><div class="skeleton w-40"></div><div class="skeleton w-24"></div></div>
-        <div class="order-card-body"><div class="space-y-2"><div class="skeleton w-3/4"></div><div class="skeleton w-1/2"></div></div></div>
-      </div>
+    <!-- Tabs physique / numérique -->
+    <div class="px-6 pt-4 pb-0 bg-white border-b border-border flex gap-2">
+      <button id="tab-physiques" onclick="switchTab('physiques')" class="tab-btn active">
+        <span class="ms" style="font-size:16px;">inventory_2</span> Physiques
+        <span id="chip-physiques" class="count-chip">—</span>
+      </button>
+      <button id="tab-numeriques" onclick="switchTab('numeriques')" class="tab-btn">
+        <span class="ms" style="font-size:16px;">download</span> Numériques
+        <span id="chip-numeriques" class="count-chip">—</span>
+      </button>
     </div>
 
-    <div id="orders-empty" class="hidden text-center py-16 text-muted">
-      <span class="ms" style="font-size:40px;display:block;margin-bottom:12px;color:#E2D4BC;">local_shipping</span>
-      Aucune commande pour ce filtre.
+    <!-- Status filters (physiques only) -->
+    <div id="status-bar" class="px-6 py-3 border-b border-border bg-white flex gap-2 flex-wrap">
+      <button onclick="setStatus('')"              class="filter-pill active" data-s="">Toutes</button>
+      <button onclick="setStatus('en_attente')"    class="filter-pill" data-s="en_attente">⏳ En attente</button>
+      <button onclick="setStatus('en_preparation')"class="filter-pill" data-s="en_preparation">📦 En préparation</button>
+      <button onclick="setStatus('expedie')"       class="filter-pill" data-s="expedie">🚚 Expédié</button>
+      <button onclick="setStatus('livre')"         class="filter-pill" data-s="livre">✅ Livré</button>
     </div>
 
+    <!-- List -->
+    <div id="orders-list" class="flex-1 p-6">
+      <div class="order-row"><div class="skeleton h-10 w-10 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-48"></div><div class="skeleton h-3 w-32"></div></div></div>
+      <div class="order-row"><div class="skeleton h-10 w-10 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-56"></div><div class="skeleton h-3 w-28"></div></div></div>
+      <div class="order-row"><div class="skeleton h-10 w-10 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-40"></div><div class="skeleton h-3 w-36"></div></div></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /flex -->
+
+<!-- ═══ PANEL ═══ -->
+<div id="panel-overlay" class="panel-overlay hidden" onclick="maybeClosePanel(event)">
+  <div class="panel-box">
+    <div class="panel-scroll" id="panel-content">
+      <!-- injected by renderPanel() -->
+    </div>
+    <div class="px-6 py-4 border-t border-border bg-white" id="panel-actions">
+      <!-- injected -->
+    </div>
   </div>
 </div>
 
-<div id="toast" role="alert" aria-live="polite"></div>
-
 <script>
-const STATUS_LABELS = {
-  pending:     { label:'En attente de paiement', cls:'status-pending',     next:'confirmed'  },
-  confirmed:   { label:'Payée — À fabriquer',    cls:'status-confirmed',   next:'fabrication'},
-  fabrication: { label:'En cours de fabrication',cls:'status-fabrication', next:'shipped'    },
-  shipped:     { label:'Expédiée',               cls:'status-shipped',     next:'delivered'  },
-  delivered:   { label:'Livrée',                 cls:'status-delivered',   next:null         },
-};
+// ── State ──
+let allPhysiques  = [];
+let allNumeriques = [];
+let currentTab    = 'physiques';
+let currentStatus = '';
+let currentCmd    = null; // open panel
 
-const STATUS_NEXT_LABEL = {
-  confirmed:   'Marquer : En fabrication',
-  fabrication: 'Marquer : Expédiée',
-  shipped:     'Marquer : Livrée',
-  delivered:   null,
-};
-
-let currentFilter = 'all';
-let allOrders = [];
-
-// ── Guard admin ──
+// ── Boot ──
 (async () => {
   const ok = await isAdmin();
-  if (!ok) { window.location.href = 'login.html'; }
-  else { await loadOrders(); }
+  if (!ok) { window.location.href = 'login.html'; return; }
+  await loadAll();
 })();
 
-async function loadOrders() {
-  try {
-    let query = _supabase
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false });
+// ── Data ──
+async function loadAll() {
+  const [physRes, numRes] = await Promise.all([
+    _supabase
+      .from('commandes_physiques')
+      .select('*, resources(title, preview_url, price)')
+      .order('created_at', { ascending: false }),
+    _supabase
+      .from('purchases')
+      .select('id, created_at, user_id, resources(title, preview_url, price)')
+      .order('created_at', { ascending: false }),
+  ]);
 
-    const { data, error } = await query;
-    if (error) throw error;
-    allOrders = data || [];
-    renderOrders();
-    document.getElementById('orders-count').textContent = `${allOrders.length} commande${allOrders.length !== 1 ? 's' : ''}`;
-  } catch (err) {
-    showToast('Erreur chargement : ' + err.message, 'error');
+  if (physRes.error) console.error('commandes_physiques:', physRes.error.message);
+  if (numRes.error)  console.error('purchases:', numRes.error.message);
+
+  allPhysiques  = physRes.data || [];
+  allNumeriques = numRes.data  || [];
+
+  const total = allPhysiques.length + allNumeriques.length;
+  document.getElementById('count-label').textContent = `${total} commande${total !== 1 ? 's' : ''} au total`;
+  document.getElementById('chip-physiques').textContent  = allPhysiques.length;
+  document.getElementById('chip-numeriques').textContent = allNumeriques.length;
+
+  renderList();
+}
+
+// ── Tabs / Filters ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-physiques').classList.toggle('active', tab === 'physiques');
+  document.getElementById('tab-numeriques').classList.toggle('active', tab === 'numeriques');
+  document.getElementById('status-bar').style.display = tab === 'physiques' ? 'flex' : 'none';
+  renderList();
+}
+
+function setStatus(s) {
+  currentStatus = s;
+  document.querySelectorAll('#status-bar .filter-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.s === s);
+  });
+  renderList();
+}
+
+// ── Render ──
+function renderList() {
+  const el = document.getElementById('orders-list');
+  el.innerHTML = '';
+
+  if (currentTab === 'physiques') {
+    const list = currentStatus
+      ? allPhysiques.filter(o => o.statut === currentStatus)
+      : allPhysiques;
+    if (!list.length) { el.innerHTML = emptyState('Aucune commande physique'); return; }
+    el.innerHTML = list.map(rowPhysique).join('');
+  } else {
+    if (!allNumeriques.length) { el.innerHTML = emptyState('Aucun achat numérique'); return; }
+    el.innerHTML = allNumeriques.map(rowNumerique).join('');
   }
 }
 
-function setFilter(btn) {
-  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentFilter = btn.dataset.status;
-  renderOrders();
+function emptyState(msg) {
+  return `<div class="text-center py-16 text-muted">
+    <span class="ms" style="font-size:40px;display:block;margin-bottom:12px;color:#E8D5DC;">inbox</span>
+    <span style="font-size:14px;">${msg}</span>
+  </div>`;
 }
 
-function renderOrders() {
-  const filtered = currentFilter === 'all'
-    ? allOrders
-    : allOrders.filter(o => o.status === currentFilter);
+function rowPhysique(o) {
+  const adr    = o.adresse_livraison || {};
+  const name   = adr.name || adr.full_name || adr.nom || '—';
+  const email  = adr.email || '—';
+  const prod   = o.resources || {};
+  const date   = fmtDate(o.created_at);
+  const prix   = o.montant_total ? `${(o.montant_total/100).toFixed(2)} €` :
+                 (prod.price ? `${(prod.price/100).toFixed(2)} €` : '—');
+  const thumb  = prod.preview_url
+    ? `<img src="${prod.preview_url}" alt="" class="w-11 h-11 rounded-xl object-cover flex-shrink-0">`
+    : `<div class="w-11 h-11 rounded-xl flex-shrink-0" style="background:#F5E8F0;"></div>`;
 
-  const list  = document.getElementById('orders-list');
-  const empty = document.getElementById('orders-empty');
+  return `
+  <div class="order-row" onclick="openPanel('${o.id}')">
+    ${thumb}
+    <div class="flex-1 min-w-0">
+      <div class="font-semibold text-sm truncate">${prod.title || '—'}</div>
+      <div class="text-xs text-muted truncate">${name} · <span style="color:#9B7FA6;">${email}</span></div>
+    </div>
+    <div class="text-right flex-shrink-0 space-y-1">
+      <div class="text-xs text-muted">${date}</div>
+      ${statusBadge(o.statut)}
+    </div>
+    <div class="font-bold text-sm flex-shrink-0 w-16 text-right" style="color:#C96B8A;">${prix}</div>
+    <span class="ms text-muted flex-shrink-0" style="font-size:18px;color:#C96B8A;">chevron_right</span>
+  </div>`;
+}
 
-  if (!filtered.length) {
-    list.innerHTML = '';
-    empty.classList.remove('hidden');
+function rowNumerique(o) {
+  const prod  = o.resources || {};
+  const date  = fmtDate(o.created_at);
+  const prix  = prod.price ? `${(prod.price/100).toFixed(2)} €` : '—';
+  const thumb = prod.preview_url
+    ? `<img src="${prod.preview_url}" alt="" class="w-11 h-11 rounded-xl object-cover flex-shrink-0">`
+    : `<div class="w-11 h-11 rounded-xl flex-shrink-0" style="background:#F5E8F0;"></div>`;
+
+  return `
+  <div class="order-row no-click">
+    ${thumb}
+    <div class="flex-1 min-w-0">
+      <div class="font-semibold text-sm truncate">${prod.title || '—'}</div>
+      <div class="text-xs text-muted font-mono truncate">${o.user_id ? o.user_id.slice(0,12)+'…' : '—'}</div>
+    </div>
+    <div class="text-right flex-shrink-0 space-y-1">
+      <div class="text-xs text-muted">${date}</div>
+      <span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#D4EBD4;color:#207040;">✓ Payé</span>
+    </div>
+    <div class="font-bold text-sm flex-shrink-0 w-16 text-right" style="color:#C96B8A;">${prix}</div>
+    <span class="ms flex-shrink-0" style="font-size:18px;color:#E8D5DC;">chevron_right</span>
+  </div>`;
+}
+
+function statusBadge(statut) {
+  const map = {
+    en_attente:     { label:'En attente',     bg:'#FFF3CD', color:'#856404' },
+    en_preparation: { label:'En préparation', bg:'#D1ECF1', color:'#0C5460' },
+    expedie:        { label:'Expédié',        bg:'#D4EBD4', color:'#207040' },
+    livre:          { label:'Livré',          bg:'#E8F0E8', color:'#5B8A5F' },
+    annule:         { label:'Annulé',         bg:'#F8D7DA', color:'#721C24' },
+  };
+  const s = map[statut] || { label: statut || '—', bg:'#E8D5DC', color:'#7A5A6A' };
+  return `<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.bg};color:${s.color};">${s.label}</span>`;
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+
+// ── Panel ──
+function openPanel(id) {
+  const o = allPhysiques.find(x => x.id === id);
+  if (!o) return;
+  currentCmd = o;
+  renderPanel(o);
+  document.getElementById('panel-overlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function maybeClosePanel(e) {
+  if (e.target === document.getElementById('panel-overlay')) closePanel();
+}
+
+function closePanel() {
+  document.getElementById('panel-overlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function renderPanel(o) {
+  const adr    = o.adresse_livraison || {};
+  const name   = adr.name || adr.full_name || adr.nom || '—';
+  const email  = adr.email || '—';
+  const prod   = o.resources || {};
+  const perso  = o.personnalisation || {};
+  const ref    = (o.stripe_session_id || o.id).slice(-12).toUpperCase();
+  const date   = o.created_at ? new Date(o.created_at).toLocaleString('fr-FR') : '—';
+
+  const livraison  = o.montant_livraison || 0;
+  const total      = o.montant_total;
+  const sousTotal  = (total && livraison) ? total - livraison : (prod.price || 0);
+
+  // Adresse
+  const adrParts = [adr.line1, adr.line2, [adr.postal_code, adr.city].filter(Boolean).join(' '), adr.country].filter(Boolean);
+
+  // Personnalisation
+  const persoEntries = Object.entries(perso).filter(([,v]) => v);
+
+  document.getElementById('panel-content').innerHTML = `
+    <div class="flex items-start justify-between mb-1">
+      <h2 class="font-display font-bold text-lg" style="color:#3D1F2D;">Commande</h2>
+      <button onclick="closePanel()" style="background:none;border:none;cursor:pointer;padding:4px;color:#7A5A6A;">
+        <span class="ms" style="font-size:22px;">close</span>
+      </button>
+    </div>
+    <div class="text-xs text-muted mb-1">Réf. <span class="font-mono font-semibold">${ref}</span></div>
+    <div class="text-xs text-muted mb-5">${date}</div>
+
+    <!-- Statut -->
+    <div class="flex items-center gap-3 p-3 rounded-xl mb-5" style="background:#FFF5F7;">
+      <div>
+        <div class="text-xs text-muted mb-1">Statut actuel</div>
+        ${statusBadge(o.statut)}
+      </div>
+    </div>
+
+    <!-- Produit -->
+    <div class="f-sep" style="margin-top:0;"></div>
+    <div class="f-label">Produit commandé</div>
+    <div class="flex gap-3 items-center mb-3">
+      ${prod.preview_url ? `<img src="${prod.preview_url}" alt="" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">` : ''}
+      <div>
+        <div class="font-semibold text-sm">${prod.title || '—'}</div>
+        ${o.variante_id ? `<div class="text-xs text-muted mt-0.5">Variante : ${o.variante_id}</div>` : ''}
+      </div>
+    </div>
+
+    ${persoEntries.length ? `
+    <div class="p-3 rounded-xl mb-3" style="background:#FAF6F0;border:1px solid #E8D5DC;">
+      <div class="text-xs font-bold text-muted uppercase tracking-wider mb-2">Personnalisation</div>
+      ${persoEntries.map(([k,v]) => `<div class="text-xs mb-1"><span class="font-semibold">${k}</span> : ${v}</div>`).join('')}
+    </div>` : ''}
+
+    <!-- Client -->
+    <div class="f-sep"></div>
+    <div class="f-label">Client</div>
+    <div class="text-sm font-semibold mb-0.5">${name}</div>
+    <div class="text-xs text-muted mb-4" style="color:#9B7FA6;">${email}</div>
+
+    ${adrParts.length ? `
+    <div class="f-label">Adresse de livraison</div>
+    <div class="text-sm leading-relaxed mb-4" style="background:#FAFAF8;border:1px solid #E8D5DC;border-radius:10px;padding:10px 12px;">
+      ${adrParts.join('<br>')}
+    </div>` : ''}
+
+    <!-- Montants -->
+    <div class="f-sep"></div>
+    <div class="f-label">Récapitulatif</div>
+    <div class="space-y-1 text-sm mb-5">
+      ${sousTotal ? `<div class="flex justify-between"><span class="text-muted">Produit</span><span>${(sousTotal/100).toFixed(2)} €</span></div>` : ''}
+      <div class="flex justify-between"><span class="text-muted">Livraison</span><span>${livraison ? (livraison/100).toFixed(2)+' €' : 'Offerte'}</span></div>
+      ${total ? `<div class="flex justify-between font-bold pt-1 border-t border-border mt-1"><span>Total</span><span style="color:#C96B8A;">${(total/100).toFixed(2)} €</span></div>` : ''}
+    </div>
+
+    <!-- Changer statut -->
+    <div class="f-sep"></div>
+    <label class="f-label" for="pnl-statut">Changer le statut</label>
+    <select id="pnl-statut" class="f-select mb-4">
+      <option value="en_attente"     ${o.statut==='en_attente'    ?'selected':''}>⏳ En attente</option>
+      <option value="en_preparation" ${o.statut==='en_preparation'?'selected':''}>📦 En préparation</option>
+      <option value="expedie"        ${o.statut==='expedie'       ?'selected':''}>🚚 Expédié</option>
+      <option value="livre"          ${o.statut==='livre'         ?'selected':''}>✅ Livré</option>
+      <option value="annule"         ${o.statut==='annule'        ?'selected':''}>❌ Annulé</option>
+    </select>
+
+    <label class="f-label" for="pnl-suivi">Numéro de suivi</label>
+    <input id="pnl-suivi" type="text" class="f-input mb-4" placeholder="Ex : 1Z999AA10123456784" value="${escHtml(o.numero_suivi || '')}">
+
+    <label class="f-label" for="pnl-notes">Notes internes</label>
+    <textarea id="pnl-notes" class="f-textarea mb-2" rows="3" placeholder="Mémo visible uniquement par vous…">${escHtml(o.notes_admin || '')}</textarea>
+    <div id="pnl-msg" class="text-xs text-center mb-3 hidden"></div>
+  `;
+
+  document.getElementById('panel-actions').innerHTML = `
+    <button onclick="saveOrder()" class="btn-primary w-full justify-center">
+      <span class="ms" style="font-size:17px;">save</span> Enregistrer
+    </button>
+  `;
+}
+
+async function saveOrder() {
+  if (!currentCmd) return;
+  const btn         = document.querySelector('#panel-actions .btn-primary');
+  const statut      = document.getElementById('pnl-statut').value;
+  const suivi       = document.getElementById('pnl-suivi').value.trim();
+  const notes       = document.getElementById('pnl-notes').value.trim();
+  const msg         = document.getElementById('pnl-msg');
+  const wasExpedie  = currentCmd.statut === 'expedie';
+  const nowExpedie  = statut === 'expedie';
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ms" style="font-size:17px;">hourglass_top</span> Enregistrement…';
+
+  const { error } = await _supabase
+    .from('commandes_physiques')
+    .update({ statut, numero_suivi: suivi || null, notes_admin: notes || null })
+    .eq('id', currentCmd.id);
+
+  btn.disabled = false;
+  btn.innerHTML = '<span class="ms" style="font-size:17px;">save</span> Enregistrer';
+
+  if (error) {
+    msg.textContent = 'Erreur : ' + error.message;
+    msg.style.color = '#C96B8A';
+    msg.classList.remove('hidden');
+    setTimeout(() => msg.classList.add('hidden'), 4000);
     return;
   }
-  empty.classList.add('hidden');
 
-  list.innerHTML = filtered.map(order => {
-    const st = STATUS_LABELS[order.status] || STATUS_LABELS.pending;
-    const date = (() => {
-      const d = new Date(order.created_at);
-      return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
-    })();
+  currentCmd.statut       = statut;
+  currentCmd.numero_suivi = suivi || null;
+  currentCmd.notes_admin  = notes || null;
+  renderList();
+  document.querySelector('#panel-content .flex.items-center.gap-3 div').innerHTML =
+    `<div class="text-xs text-muted mb-1">Statut actuel</div>${statusBadge(statut)}`;
 
-    const nextBtn = st.next
-      ? `<button class="btn-teal btn-sm" onclick="updateStatus('${order.id}','${st.next}')">${STATUS_NEXT_LABEL[order.status] || 'Avancer →'}</button>`
-      : '';
+  // Email expédition — uniquement si on passe à "expedie" (pas si c'était déjà expedie)
+  if (nowExpedie && !wasExpedie) {
+    const adr   = currentCmd.adresse_livraison || {};
+    const email = adr.email || '';
+    const name  = adr.name || adr.full_name || '';
+    const prod  = currentCmd.resources || {};
 
-    const shippedBtn = order.status === 'fabrication'
-      ? `<button class="btn-teal btn-sm" style="background:#207040;" onclick="markShipped('${order.id}')"><span class="ms" style="font-size:14px;">local_shipping</span> Marquer comme expédiée</button>`
-      : '';
+    if (email) {
+      msg.textContent = '✓ Enregistré · envoi email expédition…';
+      msg.style.color = '#207040';
+      msg.classList.remove('hidden');
 
-    const trackingField = (order.status === 'shipped' || order.status === 'delivered')
-      ? `<div class="flex items-center gap-2 mt-2">
-           <span class="text-xs text-muted">Suivi :</span>
-           <input id="tracking-${order.id}" type="text" class="field-input" style="max-width:180px;font-size:12px;" value="${order.tracking_number || ''}" placeholder="Numéro de suivi">
-           <button class="btn-teal btn-sm" onclick="saveTracking('${order.id}')">Enregistrer</button>
-         </div>`
-      : '';
-
-    return `
-      <div class="order-card" id="order-${order.id}">
-        <div class="order-card-header">
-          <div class="flex items-center gap-3 flex-wrap">
-            <span class="text-sm font-semibold">${order.product_name || '—'}</span>
-            <span class="text-xs text-muted">× ${order.quantity || 1}</span>
-            ${order.amount ? `<span class="text-sm font-bold" style="color:#5B9EAD;">${(order.amount/100).toFixed(2)} €</span>` : ''}
-          </div>
-          <span class="status-badge ${st.cls}">${st.label}</span>
-        </div>
-        <div class="order-card-body">
-          <div class="info-row"><span class="info-label">Personnalisation</span><span>${order.customization || '—'}</span></div>
-          <div class="info-row"><span class="info-label">Client</span><span>${order.nom_client || '—'}</span></div>
-          <div class="info-row"><span class="info-label">Email</span><span>${order.email_client || '—'}</span></div>
-          <div class="info-row"><span class="info-label">Adresse</span><span>${order.adresse || '—'}</span></div>
-          ${order.message ? `<div class="info-row"><span class="info-label">Message</span><span style="font-style:italic;">"${order.message}"</span></div>` : ''}
-          <div class="info-row"><span class="info-label">Date</span><span>${date}</span></div>
-          ${trackingField}
-        </div>
-        <div class="order-card-footer">
-          ${shippedBtn || nextBtn}
-          ${order.status !== 'fabrication' && st.next ? '' : ''}
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-async function updateStatus(id, newStatus) {
-  try {
-    const { error } = await _supabase
-      .from('orders')
-      .update({ status: newStatus })
-      .eq('id', id);
-    if (error) throw error;
-    const order = allOrders.find(o => o.id === id);
-    if (order) order.status = newStatus;
-    renderOrders();
-    showToast('Statut mis à jour.', 'success');
-  } catch (err) {
-    showToast('Erreur : ' + err.message, 'error');
-  }
-}
-
-async function markShipped(id) {
-  const trackingInput = document.getElementById('tracking-' + id);
-  const tracking = trackingInput ? trackingInput.value.trim() : '';
-
-  try {
-    const { error } = await _supabase
-      .from('orders')
-      .update({
-        status: 'shipped',
-        tracking_number: tracking || null,
-        shipped_at: new Date().toISOString(),
+      fetch('/api/email-expedition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name, produit: prod.title || '', tracking: suivi }),
       })
-      .eq('id', id);
-    if (error) throw error;
+      .then(r => r.json())
+      .then(r => {
+        msg.textContent = r.sent ? '✓ Enregistré · email expédition envoyé ✉️' : `✓ Enregistré · (email: ${r.error || 'erreur'})`;
+      })
+      .catch(() => { msg.textContent = '✓ Enregistré · email non envoyé (erreur réseau)'; });
 
-    const order = allOrders.find(o => o.id === id);
-    if (order) { order.status = 'shipped'; order.tracking_number = tracking || null; }
-    renderOrders();
-    showToast('Commande marquée comme expédiée.', 'success');
-
-    // Déclenche l'email d'expédition via Edge Function
-    await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ type: 'order_shipped', order_id: id, tracking_number: tracking }),
-    }).catch(() => {}); // email optionnel — ne bloque pas si erreur
-
-  } catch (err) {
-    showToast('Erreur : ' + err.message, 'error');
+      setTimeout(() => msg.classList.add('hidden'), 5000);
+      return;
+    }
   }
+
+  msg.textContent = '✓ Enregistré avec succès';
+  msg.style.color = '#207040';
+  msg.classList.remove('hidden');
+  setTimeout(() => msg.classList.add('hidden'), 4000);
 }
 
-async function saveTracking(id) {
-  const input = document.getElementById('tracking-' + id);
-  if (!input) return;
-  try {
-    const { error } = await _supabase
-      .from('orders')
-      .update({ tracking_number: input.value.trim() || null })
-      .eq('id', id);
-    if (error) throw error;
-    const order = allOrders.find(o => o.id === id);
-    if (order) order.tracking_number = input.value.trim() || null;
-    showToast('Numéro de suivi enregistré.', 'success');
-  } catch (err) {
-    showToast('Erreur : ' + err.message, 'error');
-  }
-}
-
+// ── Auth ──
 async function signOut() {
   await _supabase.auth.signOut();
   window.location.href = 'login.html';
 }
 
-let toastTimer;
-function showToast(msg, type = 'default') {
-  const t = document.getElementById('toast');
-  clearTimeout(toastTimer);
-  t.textContent = msg;
-  t.className = type === 'error' ? 'show error' : type === 'success' ? 'show success' : 'show';
-  toastTimer = setTimeout(() => { t.className = ''; }, 3500);
+// ── Utils ──
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
-
 </body>
 </html>
