@@ -345,13 +345,10 @@ function renderGrid() {
       : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:48px;color:#5B9EAD;opacity:0.2;">${isPhysique ? 'local_shipping' : 'description'}</span></div>`;
     const bg = isPhysique ? '#EBF5F7' : (cs ? cs.bg : '#FAF6F0');
 
-    // Badge affiché en haut de l'image
-    let topBadge = '';
-    if (isPhysique) {
-      topBadge = `<span class="badge" style="background:white;color:#3D7A8A;box-shadow:0 1px 4px rgba(0,0,0,0.08);">📦 Livré chez toi</span>`;
-    } else if (cs) {
-      topBadge = `<span class="badge" style="background:white;color:${cs.color};box-shadow:0 1px 4px rgba(0,0,0,0.08);">${cs.label}</span>`;
-    }
+    // Badge catégorie
+    const topBadge = cs
+      ? `<span class="badge" style="background:white;color:${cs.color};box-shadow:0 1px 4px rgba(0,0,0,0.08);">${cs.label}</span>`
+      : '';
 
     // Sous-info sous le prix
     const subInfo = isPhysique
