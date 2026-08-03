@@ -123,89 +123,100 @@ tailwind.config = {
 </header>
 
 
-<main class="max-w-2xl mx-auto px-4 pt-12 pb-28 md:pb-16">
+<main class="pb-28 md:pb-16">
 
-  <!-- Photo + nom -->
-  <div class="flex items-center gap-6 mb-10 fade-up">
-    <div class="w-24 h-24 rounded-2xl flex-shrink-0 overflow-hidden" style="background:#F2C4B2;">
-      <img src="Images/pres.png" alt="Facyne" class="w-full h-full object-cover"
-           onerror="this.parentElement.innerHTML='<span class=\'ms\' style=\'font-size:40px;color:#C96B8A;\'>person</span>'">
-    </div>
-    <div>
-      <h1 class="font-display text-3xl font-bold mb-1" style="color:#1A1208;">Facyne</h1>
-      <p class="text-sm mb-1" style="color:#5B9EAD;">Illustratrice jeunesse · Graphiste · Créatrice</p>
-      <p class="text-sm italic" style="color:#8B7A5A;">Je donne vie à tes histoires.</p>
-      <div class="flex gap-4 mt-3">
-        <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
-           class="text-sm font-semibold no-underline hover:opacity-70 transition-opacity" style="color:#5B9EAD;">@jumuatime</a>
-        <a href="https://facyne.com" target="_blank" rel="noopener author"
-           class="text-sm font-semibold no-underline hover:opacity-70 transition-opacity" style="color:#C49A5A;">facyne.com</a>
+  <!-- ── Section 1 : Photo + nom (crème) ── -->
+  <section class="py-14 px-4 fade-up" style="background:#FAF6F0;">
+    <div class="max-w-2xl mx-auto flex items-center gap-8">
+      <div class="w-28 h-28 rounded-2xl flex-shrink-0 overflow-hidden" style="background:#E2D4BC;">
+        <img src="Images/pres.png" alt="Facyne" class="w-full h-full object-cover"
+             onerror="this.parentElement.innerHTML='<span class=\'ms\' style=\'font-size:48px;color:#8B7A5A;\'>person</span>'">
+      </div>
+      <div>
+        <h1 class="font-display text-3xl font-bold mb-1" style="color:#1A1208;">Facyne</h1>
+        <p class="text-sm mb-1" style="color:#5B9EAD;">Illustratrice jeunesse · Graphiste · Créatrice</p>
+        <p class="text-sm italic mb-3" style="color:#8B7A5A;">Je donne vie à tes histoires.</p>
+        <div class="flex gap-4">
+          <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
+             class="text-sm font-semibold no-underline hover:opacity-70 transition-opacity" style="color:#5B9EAD;">@jumuatime</a>
+          <a href="https://facyne.com" target="_blank" rel="noopener author"
+             class="text-sm font-semibold no-underline hover:opacity-70 transition-opacity" style="color:#C49A5A;">facyne.com</a>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Citation mise en valeur -->
-  <blockquote class="mb-10 pl-5 fade-up delay-1" style="border-left:3px solid #C49A5A;">
-    <p class="font-display text-lg italic leading-relaxed" style="color:#1A1208;">
-      "Ce qui me motive, c'est de créer des choses qui ont du sens — des projets portés par des valeurs, des histoires à raconter, des familles à toucher."
-    </p>
-  </blockquote>
-
-  <div class="divider"></div>
-
-  <!-- Jumua Time -->
-  <div class="mb-10 fade-up delay-2">
-    <h2 class="font-display text-2xl font-bold mb-5" style="color:#5B9EAD;">D'où vient Jumua Time ?</h2>
-    <div class="prose">
-      <p>
-        En cherchant des ressources illustrées pour transmettre les valeurs islamiques à mes enfants,
-        je n'ai pas trouvé ce que je voulais — alors je l'ai créé. Affiches, fiches, cartes, mugs :
-        tout ce que j'aurais aimé avoir.
+  <!-- ── Section 2 : Citation (teal foncé) ── -->
+  <section class="py-14 px-4 fade-up delay-1" style="background:#1C3540;">
+    <div class="max-w-2xl mx-auto">
+      <p class="font-display text-xl md:text-2xl italic leading-relaxed" style="color:white;">
+        "Ce qui me motive, c'est de créer des choses qui ont du sens — des projets portés par des valeurs, des histoires à raconter, des familles à toucher."
       </p>
-      <p>
-        Chaque création est illustrée par moi. Pas généré en série, pas sous-traité — fait ici,
-        avec ce que j'ai appris en 10 ans de métier.
-      </p>
+      <p class="text-sm mt-4 font-semibold" style="color:rgba(255,255,255,0.5);">— Facyne</p>
     </div>
-  </div>
+  </section>
 
-  <div class="divider"></div>
-
-  <!-- Mes projets — deux blocs simples -->
-  <div class="mb-12 fade-up delay-3">
-    <h2 class="font-display text-2xl font-bold mb-5" style="color:#5B9EAD;">Mes autres projets</h2>
-    <div class="space-y-3">
-
-      <a href="https://tilawatour.com" target="_blank" rel="noopener"
-         class="flex items-center justify-between p-4 rounded-2xl no-underline group transition-colors"
-         style="background:#F5EDE0;">
-        <div>
-          <p class="font-display font-semibold text-base" style="color:#1A1208;">Tilawa Tour</p>
-          <p class="text-sm" style="color:#8B6230;">Application coranique gratuite · tilawatour.com</p>
-        </div>
-        <span class="ms group-hover:translate-x-1 transition-transform" style="color:#C49A5A;font-size:20px;">arrow_forward</span>
-      </a>
-
-      <a href="https://facyne.com" target="_blank" rel="noopener author"
-         class="flex items-center justify-between p-4 rounded-2xl no-underline group transition-colors"
-         style="background:#EBF5F7;">
-        <div>
-          <p class="font-display font-semibold text-base" style="color:#1A1208;">Facyne — Studio & freelance</p>
-          <p class="text-sm" style="color:#8B7A5A;">Illustrations · Graphisme · Applications · facyne.com</p>
-        </div>
-        <span class="ms group-hover:translate-x-1 transition-transform" style="color:#5B9EAD;font-size:20px;">arrow_forward</span>
-      </a>
-
+  <!-- ── Section 3 : Jumua Time (blanc) ── -->
+  <section class="py-14 px-4 fade-up delay-2" style="background:white;">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="font-display text-2xl font-bold mb-6" style="color:#5B9EAD;">D'où vient Jumua Time ?</h2>
+      <div class="prose">
+        <p>
+          En cherchant des ressources illustrées pour transmettre les valeurs islamiques à mes enfants,
+          je n'ai pas trouvé ce que je voulais — alors je l'ai créé. Affiches, fiches, cartes, mugs :
+          tout ce que j'aurais aimé avoir.
+        </p>
+        <p>
+          Chaque création est illustrée par moi. Pas généré en série, pas sous-traité — fait ici,
+          avec ce que j'ai appris en 10 ans de métier.
+        </p>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- CTA -->
-  <div class="flex flex-col sm:flex-row items-center gap-4 fade-up delay-4">
-    <a href="ressources.html" class="btn-gold">Voir la boutique</a>
-    <a href="mailto:contact@jumuatime.com" class="text-sm no-underline hover:opacity-70 transition-opacity" style="color:#8B7A5A;">
-      contact@jumuatime.com
-    </a>
-  </div>
+  <!-- ── Section 4 : Autres projets (crème dorée) ── -->
+  <section class="py-14 px-4 fade-up delay-3" style="background:#F5EDE0;">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="font-display text-2xl font-bold mb-6" style="color:#5B9EAD;">Mes autres projets</h2>
+      <div class="space-y-3">
+
+        <a href="https://tilawatour.com" target="_blank" rel="noopener"
+           class="flex items-center justify-between p-5 rounded-2xl no-underline group transition-opacity hover:opacity-80"
+           style="background:white;">
+          <div>
+            <p class="font-display font-semibold text-base mb-0.5" style="color:#1A1208;">Tilawa Tour</p>
+            <p class="text-sm" style="color:#8B7A5A;">Application coranique gratuite · tilawatour.com</p>
+          </div>
+          <span class="ms group-hover:translate-x-1 transition-transform flex-shrink-0" style="color:#C49A5A;font-size:22px;">arrow_forward</span>
+        </a>
+
+        <a href="https://facyne.com" target="_blank" rel="noopener author"
+           class="flex items-center justify-between p-5 rounded-2xl no-underline group transition-opacity hover:opacity-80"
+           style="background:white;">
+          <div>
+            <p class="font-display font-semibold text-base mb-0.5" style="color:#1A1208;">Facyne — Studio & freelance</p>
+            <p class="text-sm" style="color:#8B7A5A;">Illustrations · Graphisme · Applications · facyne.com</p>
+          </div>
+          <span class="ms group-hover:translate-x-1 transition-transform flex-shrink-0" style="color:#5B9EAD;font-size:22px;">arrow_forward</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 5 : CTA (teal) ── -->
+  <section class="py-14 px-4 text-center fade-up delay-4" style="background:#5B9EAD;">
+    <div class="max-w-sm mx-auto">
+      <h2 class="font-display text-2xl font-bold mb-3" style="color:white;">Voir la boutique</h2>
+      <p class="text-sm mb-6" style="color:rgba(255,255,255,0.75);">Des créations qui ont du sens.</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="ressources.html" class="btn-gold">Découvrir</a>
+        <a href="mailto:contact@jumuatime.com" class="text-sm no-underline hover:opacity-70 transition-opacity" style="color:rgba(255,255,255,0.7);">
+          contact@jumuatime.com
+        </a>
+      </div>
+    </div>
+  </section>
 
 </main>
 
