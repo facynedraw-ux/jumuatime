@@ -126,7 +126,7 @@ tailwind.config = {
 <main class="max-w-2xl mx-auto px-4 pt-12 pb-28 md:pb-16">
 
   <!-- Photo + nom -->
-  <div class="flex items-center gap-6 mb-12 fade-up">
+  <div class="flex items-center gap-6 mb-10 fade-up">
     <div class="w-24 h-24 rounded-2xl flex-shrink-0 overflow-hidden" style="background:#F2C4B2;">
       <img src="Images/pres.png" alt="Facyne" class="w-full h-full object-cover"
            onerror="this.parentElement.innerHTML='<span class=\'ms\' style=\'font-size:40px;color:#C96B8A;\'>person</span>'">
@@ -135,63 +135,71 @@ tailwind.config = {
       <h1 class="font-display text-3xl font-bold mb-1" style="color:#1A1208;">Facyne</h1>
       <p class="text-sm mb-1" style="color:#5B9EAD;">Illustratrice jeunesse · Graphiste · Créatrice</p>
       <p class="text-sm italic" style="color:#8B7A5A;">Je donne vie à tes histoires.</p>
+      <div class="flex gap-4 mt-3">
+        <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
+           class="text-sm font-semibold no-underline hover:opacity-70 transition-opacity" style="color:#5B9EAD;">@jumuatime</a>
+        <a href="https://facyne.com" target="_blank" rel="noopener author"
+           class="text-sm font-semibold no-underline hover:opacity-70 transition-opacity" style="color:#C96B8A;">facyne.com</a>
+      </div>
     </div>
   </div>
 
-  <!-- Bio -->
-  <div class="prose mb-12 fade-up delay-1">
-    <p>
-      Je donne vie aux histoires et aux univers qui ont du sens. Formée 3 ans en illustration
-      spécialisation jeunesse, je crée des albums, des couvertures, des fiches pédagogiques
-      et tout support illustré pour l'enfance et l'édition. Mon style mêle douceur, couleur
-      et émotion — des personnages qui sourient, des mondes où l'on a envie d'entrer.
+  <!-- Citation mise en valeur -->
+  <blockquote class="mb-10 pl-5 fade-up delay-1" style="border-left:3px solid #C49A5A;">
+    <p class="font-display text-lg italic leading-relaxed" style="color:#1A1208;">
+      "Ce qui me motive, c'est de créer des choses qui ont du sens — des projets portés par des valeurs, des histoires à raconter, des familles à toucher."
     </p>
-    <p>
-      Avec plus de 10 ans d'expérience en graphisme et webdesign, je propose aussi une expertise
-      complète en identité visuelle, mise en page et création de sites. J'ai construit des marques
-      de A à Z, conçu des supports print et digitaux, et développé des applications web et mobile.
-    </p>
-    <p>
-      Ce qui me motive, c'est de créer des choses qui ont du sens — des projets portés par des
-      valeurs, des histoires à raconter, des familles à toucher. Enthousiaste et rigoureuse,
-      <strong>je travaille avec toi, pas pour toi.</strong>
-    </p>
-  </div>
+  </blockquote>
 
   <div class="divider"></div>
 
   <!-- Jumua Time -->
-  <div class="prose mb-12 fade-up delay-2">
-    <h2 class="font-display text-xl font-bold mb-4" style="color:#1A1208;">D'où vient Jumua Time ?</h2>
-    <p>
-      En cherchant des ressources illustrées pour transmettre les valeurs islamiques à mes enfants,
-      je n'ai pas trouvé ce que je voulais — alors je l'ai créé. Affiches, fiches, cartes, mugs :
-      tout ce que j'aurais aimé avoir.
-    </p>
-    <p>
-      Chaque création est illustrée par moi. Pas généré en série, pas sous-traité — fait ici,
-      avec ce que j'ai appris en 10 ans de métier.
-    </p>
+  <div class="mb-10 fade-up delay-2">
+    <h2 class="font-display text-2xl font-bold mb-5" style="color:#1A1208;">D'où vient Jumua Time ?</h2>
+    <div class="prose">
+      <p>
+        En cherchant des ressources illustrées pour transmettre les valeurs islamiques à mes enfants,
+        je n'ai pas trouvé ce que je voulais — alors je l'ai créé. Affiches, fiches, cartes, mugs :
+        tout ce que j'aurais aimé avoir.
+      </p>
+      <p>
+        Chaque création est illustrée par moi. Pas généré en série, pas sous-traité — fait ici,
+        avec ce que j'ai appris en 10 ans de métier.
+      </p>
+    </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Autres projets — texte simple, pas de cards -->
-  <div class="prose mb-14 fade-up delay-3">
-    <h2 class="font-display text-xl font-bold mb-4" style="color:#1A1208;">Mes autres projets</h2>
-    <p>
-      <a href="https://tilawatour.com" target="_blank" rel="noopener" style="color:#C49A5A;font-weight:600;">Tilawa Tour</a>
-      — une application de récitation coranique gratuite, pour accompagner le cheminement mois par mois.
-      Née du même besoin : avoir un outil beau et simple pour ma propre pratique.
-    </p>
-    <p>
-      Et si tu as un projet à illustrer, une marque à construire ou une application à créer —
-      <a href="https://facyne.com" target="_blank" rel="noopener author" style="color:#C96B8A;font-weight:600;">facyne.com</a>
-      est mon portfolio freelance. On en parle.
-    </p>
+  <!-- Mes projets — deux blocs simples -->
+  <div class="mb-12 fade-up delay-3">
+    <h2 class="font-display text-2xl font-bold mb-5" style="color:#1A1208;">Mes autres projets</h2>
+    <div class="space-y-3">
+
+      <a href="https://tilawatour.com" target="_blank" rel="noopener"
+         class="flex items-center justify-between p-4 rounded-2xl no-underline group transition-colors"
+         style="background:#F5EDE0;">
+        <div>
+          <p class="font-display font-semibold text-base" style="color:#1A1208;">Tilawa Tour</p>
+          <p class="text-sm" style="color:#8B6230;">Application coranique gratuite · tilawatour.com</p>
+        </div>
+        <span class="ms group-hover:translate-x-1 transition-transform" style="color:#C49A5A;font-size:20px;">arrow_forward</span>
+      </a>
+
+      <a href="https://facyne.com" target="_blank" rel="noopener author"
+         class="flex items-center justify-between p-4 rounded-2xl no-underline group transition-colors"
+         style="background:#F5E8F0;">
+        <div>
+          <p class="font-display font-semibold text-base" style="color:#1A1208;">Facyne — Studio & freelance</p>
+          <p class="text-sm" style="color:#8B4A6A;">Illustrations · Graphisme · Applications · facyne.com</p>
+        </div>
+        <span class="ms group-hover:translate-x-1 transition-transform" style="color:#C96B8A;font-size:20px;">arrow_forward</span>
+      </a>
+
+    </div>
   </div>
 
-  <!-- CTA minimaliste -->
+  <!-- CTA -->
   <div class="flex flex-col sm:flex-row items-center gap-4 fade-up delay-4">
     <a href="ressources.html" class="btn-gold">Voir la boutique</a>
     <a href="mailto:contact@jumuatime.com" class="text-sm no-underline hover:opacity-70 transition-opacity" style="color:#8B7A5A;">
