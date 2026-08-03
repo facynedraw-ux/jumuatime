@@ -336,8 +336,8 @@ function renderGrid() {
   grid.innerHTML = list.map(r => {
     const isPhysique = r.type_produit === 'physique';
     const href = isPhysique
-      ? `produit-physique.html?id=${esc(r.id)}`
-      : `ressource.html?slug=${esc(r.slug)}`;
+    ? `produit-physique.html?slug=${esc(r.slug)}`
+    : `ressource.html?slug=${esc(r.slug)}`;
 
     const cs = CAT_STYLES[r.category] || null;
     const cover = r.preview_url
