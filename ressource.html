@@ -306,8 +306,8 @@ function renderResource(r) {
     : `${r.title} — Ressource pédagogique Jumua Time`;
   document.getElementById('bc-title').textContent = r.title;
 
-  // Image principale (cover_url en priorité, fallback preview_url)
-  const imgUrl = r.cover_url || r.preview_url;
+  // Image principale (preview_url en priorité, fallback preview_url)
+  const imgUrl = r.preview_url || r.preview_url;
   if (imgUrl) {
     document.getElementById('main-preview').innerHTML = `
       <img src="${esc(imgUrl)}" alt="${esc(r.title)}" class="w-full h-full object-cover">
@@ -373,7 +373,7 @@ function infoCell(label, value) {
 async function loadSimilar(r) {
   const { data } = await _supabase
     .from('resources')
-    .select('slug, title, cover_url, preview_url, price, category')
+    .select('slug, title, preview_url, preview_url, price, category')
     .eq('is_active', true)
     .neq('id', r.id)
     .limit(4);
@@ -382,7 +382,7 @@ async function loadSimilar(r) {
   document.getElementById('similar-section').classList.remove('hidden');
   document.getElementById('similar-grid').innerHTML = data.map(s => {
     const cs = CAT_STYLES[s.category];
-    const imgUrl = s.cover_url || s.preview_url;
+    const imgUrl = s.preview_url || s.preview_url;
     const cover = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${esc(s.title)}" class="w-full h-full object-cover" loading="lazy">`
       : `<div class="absolute inset-0 flex items-center justify-center">

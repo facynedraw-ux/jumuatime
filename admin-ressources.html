@@ -415,6 +415,13 @@ function openPanel() {
   document.body.style.overflow = 'hidden';
 }
 
+function clearFile(fieldKey) {
+  document.getElementById('f-' + fieldKey).value = '';
+  document.getElementById('f-' + fieldKey + '-name').textContent = 'Sélectionner un PDF…';
+  document.getElementById('f-' + fieldKey + '-input').value = '';
+  document.getElementById('f-' + fieldKey + '-clear').classList.add('hidden');
+}
+
 function closePanel() {
   document.getElementById('panel').classList.add('hidden');
   document.body.style.overflow = '';
@@ -436,6 +443,7 @@ function onFileSelect(input) {
   const file = input.files[0];
   if (!file) return;
   document.getElementById('f-file-name').textContent = file.name;
+  document.getElementById('f-file-clear').classList.remove('hidden');
 }
 
 function onPreviewPdfSelect(input) {
