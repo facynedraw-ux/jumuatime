@@ -341,7 +341,7 @@ function renderGrid() {
 
     const cs = CAT_STYLES[r.category] || null;
     const cover = r.cover_url
-      ? `<img src="${esc(r.cover_url)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+      ? `<img src="${esc(r.preview_url)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
       : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:48px;color:#5B9EAD;opacity:0.2;">${isPhysique ? 'local_shipping' : 'description'}</span></div>`;
     const bg = isPhysique ? '#EBF5F7' : (cs ? cs.bg : '#FAF6F0');
 
