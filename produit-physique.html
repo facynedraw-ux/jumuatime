@@ -300,15 +300,15 @@ let persoValues   = {};
 
 // ── Chargement produit ──
 (async () => {
-  const params    = new URLSearchParams(window.location.search);
-  const produitId = params.get('id');
+  const params      = new URLSearchParams(window.location.search);
+  const produitSlug = params.get('slug');
 
-  if (!produitId) { showError(); return; }
+  if (!produitSlug) { showError(); return; }
 
   const { data, error } = await _supabase
     .from('resources')
     .select('*')
-    .eq('id', produitId)
+    .eq('slug', produitSlug)
     .eq('type_produit', 'physique')
     .eq('is_active', true)
     .single();
