@@ -123,196 +123,80 @@ tailwind.config = {
 </header>
 
 
-<main class="max-w-3xl mx-auto px-4 pt-8 pb-28 md:pb-16">
+<main class="max-w-2xl mx-auto px-4 pt-12 pb-28 md:pb-16">
 
-
-  <!-- HERO TEAL -->
-  <section class="relative overflow-hidden rounded-3xl mb-14 fade-up" style="background:#5B9EAD;">
-    <div class="relative z-10 px-8 py-12 text-center">
-      <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:rgba(255,255,255,0.65);">✦ NOTRE HISTOIRE</p>
-      <h1 class="font-display font-black text-3xl md:text-4xl leading-tight mb-4" style="color:white;">
-        Des créations pensées<br>pour <em style="font-style:italic;color:#F2C4B2;">votre famille.</em>
-      </h1>
-      <p class="text-base max-w-lg mx-auto leading-relaxed" style="color:rgba(255,255,255,0.8);">
-        Jumua Time est née d'un besoin simple : avoir des ressources islamiques belles, illustrées, et conçues avec amour pour les enfants et les familles musulmanes.
-      </p>
+  <!-- Photo + nom -->
+  <div class="flex items-center gap-6 mb-12 fade-up">
+    <div class="w-24 h-24 rounded-2xl flex-shrink-0 overflow-hidden" style="background:#F2C4B2;">
+      <img src="Images/pres.png" alt="Facyne" class="w-full h-full object-cover"
+           onerror="this.parentElement.innerHTML='<span class=\'ms\' style=\'font-size:40px;color:#C96B8A;\'>person</span>'">
     </div>
-    <div class="absolute top-0 right-0 w-48 h-48 rounded-full opacity-10" style="background:white;transform:translate(40%,-40%);"></div>
-    <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full opacity-10" style="background:#C49A5A;transform:translate(-30%,30%);"></div>
-  </section>
-
-
-  <!-- OUM SAFYA -->
-  <section class="mb-14 fade-up delay-1">
-    <p class="section-eyebrow mb-4">✦ QUI SUIS-JE</p>
-    <div class="flex gap-6 items-start flex-col sm:flex-row">
-      <div class="w-20 h-20 rounded-2xl flex-shrink-0 flex items-center justify-center overflow-hidden" style="background:#F2C4B2;">
-        <img src="Images/pres.png" alt="Facyne" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\'ms\' style=\'font-size:40px;color:#C96B8A;\'>person</span>'">
-      </div>
-      <div class="flex-1">
-        <h2 class="font-display text-2xl font-bold mb-1" style="color:#1A1208;"><a href="https://facyne.com" target="_blank" rel="author noopener" style="color:inherit;text-decoration:none;">Facyne</a></h2>
-        <p class="text-sm font-medium mb-4" style="color:#5B9EAD;">Illustratrice jeunesse & créatrice d'applications</p>
-        <div class="prose">
-          <p>
-            Derrière Jumua Time, il y a moi — maman, illustratrice, et créatrice d'applications.
-            Je crée des ressources que j'aurais aimé avoir pour mes enfants. Chaque illustration est
-            pensée avec soin, chaque ressource testée en famille.
-          </p>
-          <p>
-            <a href="https://facyne.com" target="_blank" rel="author noopener" style="font-weight:700;color:inherit;"><strong>Facyne</strong></a> est mon nom d'artiste. Je travaille dans l'illustration jeunesse depuis
-            plusieurs années, avec une passion particulière pour les univers islamiques colorés, doux et
-            accessibles aux plus petits.
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-3 mt-4">
-          <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 text-sm font-semibold no-underline transition-colors hover:opacity-80" style="color:#5B9EAD;">
-            <span class="ms" style="font-size:18px;">photo_camera</span>
-            @jumuatime
-          </a>
-          <a href="https://facyne.com" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 text-sm font-semibold no-underline transition-colors hover:opacity-80" style="color:#C49A5A;">
-            <span class="ms" style="font-size:18px;">open_in_new</span>
-            facyne.com
-          </a>
-        </div>
-      </div>
+    <div>
+      <h1 class="font-display text-3xl font-bold mb-1" style="color:#1A1208;">Facyne</h1>
+      <p class="text-sm" style="color:#5B9EAD;">Illustratrice jeunesse · Graphiste · Créatrice numérique</p>
     </div>
-  </section>
-
-
-  <div class="divider"></div>
-
-
-  <!-- LA VISION -->
-  <section class="mb-14 fade-up delay-2">
-    <p class="section-eyebrow mb-4">✦ LA VISION</p>
-    <h2 class="font-display text-2xl font-bold mb-6" style="color:#1A1208;">Pourquoi Jumua Time ?</h2>
-    <div class="grid sm:grid-cols-2 gap-4">
-
-      <div class="value-card">
-        <div class="value-icon" style="background:#EBF5F7;">
-          <span class="ms" style="color:#5B9EAD;font-size:24px;">child_care</span>
-        </div>
-        <h3 class="font-display font-semibold text-base mb-2">Pour les enfants</h3>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Des ressources pédagogiques illustrées, adaptées à chaque âge, pour apprendre en s'amusant.</p>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon" style="background:#F5EDE0;">
-          <span class="ms" style="color:#C49A5A;font-size:24px;">auto_stories</span>
-        </div>
-        <h3 class="font-display font-semibold text-base mb-2">Pour les parents</h3>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Des outils prêts à l'emploi pour transmettre les valeurs islamiques au quotidien, sans se prendre la tête.</p>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon" style="background:#F0EBF5;">
-          <span class="ms" style="color:#9B7FA6;font-size:24px;">palette</span>
-        </div>
-        <h3 class="font-display font-semibold text-base mb-2">Créé avec amour</h3>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Chaque ressource est illustrée à la main, testée en famille. Rien n'est généré en série.</p>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon" style="background:#F7EDE8;">
-          <span class="ms" style="color:#C96B8A;font-size:24px;">favorite</span>
-        </div>
-        <h3 class="font-display font-semibold text-base mb-2">Accessible à tous</h3>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Format PDF imprimable — pas besoin de livraison. Vous recevez votre ressource par email immédiatement.</p>
-      </div>
-
-    </div>
-  </section>
-
-
-  <div class="divider"></div>
-
-
-  <!-- L'ÉCOSYSTÈME -->
-  <section class="mb-14 fade-up delay-3">
-    <p class="section-eyebrow mb-4">✦ L'ÉCOSYSTÈME</p>
-    <h2 class="font-display text-2xl font-bold mb-6" style="color:#1A1208;">Un projet, plusieurs outils</h2>
-    <div class="space-y-4">
-
-      <div class="eco-card">
-        <div class="flex items-center gap-4">
-          <div class="eco-icon" style="background:#EBF5F7;">
-            <span class="ms" style="color:#5B9EAD;font-size:24px;">store</span>
-          </div>
-          <div>
-            <h3 class="font-display font-semibold text-base" style="color:#1A1208;">Jumua Time — La boutique</h3>
-            <p class="text-xs" style="color:#5B9EAD;">jumuatime.com — en ligne</p>
-          </div>
-        </div>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Ressources pédagogiques, décoration et outils pour la famille musulmane — pensés par Facyne.</p>
-      </div>
-
-      <div class="eco-card">
-        <div class="flex items-center gap-4">
-          <div class="eco-icon" style="background:#F5EDE0;">
-            <span class="ms" style="color:#C49A5A;font-size:24px;">menu_book</span>
-          </div>
-          <div>
-            <h3 class="font-display font-semibold text-base" style="color:#1A1208;">Tilawa Tour — L'application</h3>
-            <p class="text-xs" style="color:#C49A5A;">tilawatour.com — gratuite</p>
-          </div>
-        </div>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Cheminement coranique mois par mois. Une application de récitation qui vous accompagne tout au long de l'année.</p>
-        <a href="https://tilawatour.com" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-1 text-sm font-semibold no-underline" style="color:#C49A5A;">
-          Découvrir <span class="ms" style="font-size:16px;">arrow_forward</span>
-        </a>
-      </div>
-
-      <div class="eco-card" style="opacity:0.6;">
-        <div class="flex items-center gap-4">
-          <div class="eco-icon" style="background:#F0EBF5;">
-            <span class="ms" style="color:#9B7FA6;font-size:24px;">translate</span>
-          </div>
-          <div>
-            <h3 class="font-display font-semibold text-base" style="color:#1A1208;">Lugha Tour — Bientôt</h3>
-            <p class="text-xs" style="color:#9B7FA6;">Apprentissage de l'arabe — en développement</p>
-          </div>
-        </div>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Un outil pour apprendre l'arabe progressivement, en famille. Arrive bientôt dans l'écosystème.</p>
-      </div>
-
-      <div class="eco-card">
-        <div class="flex items-center gap-4">
-          <div class="eco-icon" style="background:#F5E8F0;">
-            <span class="ms" style="color:#C96B8A;font-size:24px;">brush</span>
-          </div>
-          <div>
-            <h3 class="font-display font-semibold text-base" style="color:#1A1208;">Facyne — Le studio</h3>
-            <p class="text-xs" style="color:#C96B8A;">facyne.com</p>
-          </div>
-        </div>
-        <p class="text-xs font-medium mb-2" style="color:#8B7A5A;">Illustrations · Graphisme · Applications</p>
-        <p class="text-sm leading-relaxed" style="color:#8B7A5A;">Le portfolio et le freelance derrière tout l'écosystème. Illustrations sur mesure, identités visuelles, applications.</p>
-        <a href="https://facyne.com" target="_blank" rel="noopener author"
-           class="inline-flex items-center gap-1 text-sm font-semibold no-underline" style="color:#C96B8A;">
-          Découvrir <span class="ms" style="font-size:16px;">arrow_forward</span>
-        </a>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- CTA -->
-  <div class="rounded-3xl p-8 text-center fade-up delay-4" style="background:#5B9EAD;">
-    <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.65);">✦ PRÊT·E À COMMENCER</p>
-    <h2 class="font-display text-2xl font-bold mb-3" style="color:white;">Découvrir la boutique</h2>
-    <p class="text-sm mb-6 max-w-sm mx-auto" style="color:rgba(255,255,255,0.75);">
-      Des ressources créées avec amour, pour des familles qui veulent transmettre.
-    </p>
-    <a href="ressources.html" class="btn-gold">
-      <span class="ms" style="font-size:18px;">store</span>
-      Voir les ressources
-    </a>
   </div>
 
+  <!-- Bio -->
+  <div class="prose mb-12 fade-up delay-1">
+    <p>
+      Je donne vie aux histoires et aux univers qui ont du sens. Formée 3 ans en illustration
+      spécialisation jeunesse, je crée des albums, des couvertures, des fiches pédagogiques
+      et tout support illustré pour l'enfance et l'édition. Mon style mêle douceur, couleur
+      et émotion — des personnages qui sourient, des mondes où l'on a envie d'entrer.
+    </p>
+    <p>
+      Avec plus de 10 ans d'expérience en graphisme et webdesign, je propose aussi une expertise
+      complète en identité visuelle, mise en page et création de sites. J'ai construit des marques
+      de A à Z, conçu des supports print et digitaux, et développé des applications web et mobile.
+    </p>
+    <p>
+      Ce qui me motive, c'est de créer des choses qui ont du sens — des projets portés par des
+      valeurs, des histoires à raconter, des familles à toucher. Enthousiaste et rigoureuse,
+      <strong>je travaille avec toi, pas pour toi.</strong>
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Jumua Time -->
+  <div class="prose mb-12 fade-up delay-2">
+    <h2 class="font-display text-xl font-bold mb-4" style="color:#1A1208;">D'où vient Jumua Time ?</h2>
+    <p>
+      En cherchant des ressources illustrées pour transmettre les valeurs islamiques à mes enfants,
+      je n'ai pas trouvé ce que je voulais — alors je l'ai créé. Affiches, fiches, cartes, mugs :
+      tout ce que j'aurais aimé avoir.
+    </p>
+    <p>
+      Chaque création est illustrée par moi. Pas généré en série, pas sous-traité — fait ici,
+      avec ce que j'ai appris en 10 ans de métier.
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Autres projets — texte simple, pas de cards -->
+  <div class="prose mb-14 fade-up delay-3">
+    <h2 class="font-display text-xl font-bold mb-4" style="color:#1A1208;">Mes autres projets</h2>
+    <p>
+      <a href="https://tilawatour.com" target="_blank" rel="noopener" style="color:#C49A5A;font-weight:600;">Tilawa Tour</a>
+      — une application de récitation coranique gratuite, pour accompagner le cheminement mois par mois.
+      Née du même besoin : avoir un outil beau et simple pour ma propre pratique.
+    </p>
+    <p>
+      Et si tu as un projet à illustrer, une marque à construire ou une application à créer —
+      <a href="https://facyne.com" target="_blank" rel="noopener author" style="color:#C96B8A;font-weight:600;">facyne.com</a>
+      est mon portfolio freelance. On en parle.
+    </p>
+  </div>
+
+  <!-- CTA minimaliste -->
+  <div class="flex flex-col sm:flex-row items-center gap-4 fade-up delay-4">
+    <a href="ressources.html" class="btn-gold">Voir la boutique</a>
+    <a href="mailto:contact@jumuatime.com" class="text-sm no-underline hover:opacity-70 transition-opacity" style="color:#8B7A5A;">
+      contact@jumuatime.com
+    </a>
+  </div>
 
 </main>
 
