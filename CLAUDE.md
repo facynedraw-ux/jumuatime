@@ -5,14 +5,15 @@ HTML statique + Tailwind CDN + Vanilla JS
 Supabase (PostgreSQL + Auth + Storage) — project: qsvozaxqeamrdkmujoze.supabase.co
 Stripe mode LIVE (paiements réels)
 Resend via Edge Function "swift-function" (emails)
-Cloudflare Pages — repo: facynedraw-ux/jumuatime (ou maktaba-tour, à vérifier)
+Cloudflare Pages — repo: C:\Users\conta\OneDrive\Documents\GitHub\maktaba-tour
+Répertoire de travail local : D:\DEV\jumuatime\
 
 ## Palette
 - Teal principal : #5B9EAD
-- Rose pêche : #F2C4B2
-- Crème : #FDF6F0
+- Gold : #C49A5A
+- Crème : #FAF6F0
 - Texte foncé : #1A1A1A
-- Blanc : #FFFFFF
+- Footer : #2D3154 (bleu nuit)
 
 ## Typographie
 - Titres : Playfair Display
@@ -20,47 +21,97 @@ Cloudflare Pages — repo: facynedraw-ux/jumuatime (ou maktaba-tour, à vérifie
 
 ## Identité
 - Nom : Jumua Time
+- Marque boutique : Jumuatime (pas Facyne)
 - Sous-titre : "L'univers illustré de la famille musulmane"
 - Slogan : "Des créations qui ont du sens."
-- Proposé par : Jumua & Me (Facyne)
+- Créatrice : Facyne (Oum Safya)
 
 ## Structure fichiers
-- Pages principales : index.html, boutique.html, a-propos.html
-- Pages légales : cgv.html, mentions.html, confidentialite.html
-- Pages auth : login.html, compte.html
-- Pages admin : admin.html, admin-commandes.html
-- Edge Functions : functions/api/
-- Assets : Images/, assets/
 
-## Base de données Supabase
-Tables existantes :
-- ressources (produits — numériques et physiques)
-- profiles (utilisateurs)
-- commandes_physiques (commandes produits physiques)
+Pages principales :
+- index.html
+- ressources.html — boutique (filtres JS, pas de rechargement)
+- a-propos.html
 
-Colonnes importantes dans ressources :
-- type_produit : 'numerique' | 'physique'
-- categorie_boutique : 'ressources-digitales' | 'affiches' | 'objets' | 'cadeaux'
-- personnalisable : boolean
-- options_personnalisation : JSONB
-- variantes : JSONB
-- stripe_price_id_defaut : text
-- prix_livraison : integer (centimes)
-- delai_livraison : text
+Fiches produit :
+- ressource.html?slug=... — produit numérique
+- produit-physique.html?slug=... — produit physique (Gelato)
 
-## Architecture boutique (brief juin 2026)
-- UNE seule page boutique : boutique.html
-- Filtres catégories côté JS (pas de rechargement)
-- Fiche produit universelle : fiche-produit.html?id=UUID
-- Personnalisation inline dans la fiche produit (pas de page séparée)
-- PAS de page personnalisation.html — supprimée
+Pages auth/compte :
+- login.html (noindex)
+- compte.html (noindex)
+- telechargement.html — téléchargement après achat numérique
+- commande-confirmee.html — confirmation commande physique
+- confirmation-physique.html
+
+Pages admin (noindex) :
+- admin.html — tableau de bord principal (3 items : stats, achats, abonnés)
+- admin-commandes.html — gestion commandes
+- admin-ressources.html — ajout/édition des produits en boutique
+
+Pages légales :
+- cgv.html, mentions.html, confidentialite.html, personnalisation.html
+
+Autres :
+- supabase-client.js — client Supabase partagé (NE JAMAIS re-déclarer _supabase)
+- sw.js — service worker
+- media-picker.js
+- functions/ — Edge Functions Cloudflare
+- assets/, Images/, Products/ — médias
+
+## Base de données Supabase — NOMS RÉELS
+
+### Table `resources` (anglais, sans accent)
+Colonnes :
+- `id` (uuid)
+- `slug` (text) — utilisé dans les URLs (?slug=...)
+- `title` (text)
+- `preview_url` (text) — image principale (PAS cover_url)
+- `price` (integer, centimes)
+- `category` (text) — valeurs : `enfants` | `spiritualite` | `decoration` | `cadeaux`
+- `type_produit` (text) — `numerique` | `physique`
+- `gelato_product_id` (text, nullable) — ID produit Gelato pour les physiques
+- `format` (text, nullable)
+
+Filtre technique côté front uniquement (pas en base) : `__physique__`
+
+### Autres tables actives
+- `profiles` — utilisateurs
+- `purchases` — achats numériques
+- `email_subscribers`
+
+### ⚠️ Tables reliquats à supprimer (vérifier avant)
+`books`, `authors`, `publishers`, `submissions`, `themes`, `reviews`, `reading_list`
+
+## Gelato (fulfillment physique)
+- Compte créé, clé API générée
+- Produit connecté : Carte At-Tin (La Figue), ID `9375c91b-67e0-4568-ac45-a2f8f76226a7`
+- Formats : affiches A4 uniquement ; cartes = deux fiches séparées (carré / rectangulaire)
+- Pas de PDF téléchargeable pour les affiches/cartes
+
+## Grille tarifaire
+| Produit | Prix |
+|---|---|
+| Affiche digitale (1 design) | 11,90 € |
+| Poster alphabet arabe | 12,90 € |
+| Carte simple (unité) | 4,50 € |
+| Set de cartes | 12,90 € |
+| Bundle 4 saisons | 34,90 € |
+| Carte/affiche physique (Gelato) | 12,00 € |
 
 ## Stripe
-- Mode LIVE (vraie carte)
+- Mode LIVE (vraie carte) — NE JAMAIS passer en mode TEST
 - Prix en centimes dans Supabase
-- Checkout numérique : Edge Function existante
-- Checkout physique : functions/api/physique-checkout.js
-- Webhook : functions/api/swift-function.js
+- Checkout numérique : Edge Function stripe-checkout (JWT OFF)
+- Checkout physique : à connecter avec Gelato
+- Webhook : stripe-webhook (JWT OFF)
+
+## Edge Functions Supabase
+| Fonction | URL | JWT |
+|---|---|---|
+| `send-email` | `/functions/v1/swift-function` | OFF |
+| `stripe-checkout` | `/functions/v1/stripe-checkout` | OFF |
+| `stripe-webhook` | `/functions/v1/stripe-webhook` | OFF |
 
 ## Emails (Resend)
 - From : contact@jumuatime.com
@@ -69,29 +120,13 @@ Colonnes importantes dans ressources :
 ## Règles importantes
 - NE JAMAIS utiliser balise <form> → event handlers JS uniquement
 - Les prix sont en CENTIMES dans Supabase, affichés en euros dans le HTML
-- NE JAMAIS modifier le système Stripe en mode TEST (on est en LIVE)
+- NE JAMAIS modifier Stripe en mode TEST (on est en LIVE)
 - NE JAMAIS supprimer de données Supabase sans confirmation explicite
 - Toujours RLS activé sur les nouvelles tables
 - Commit par correction : git commit -m "fix: [description]"
-- Push final : git add . && git commit -m "..." && git push
-
-## Pages à exclure de l'indexation Google
-- compte.html → meta robots: noindex
-- login.html → meta robots: noindex
-- admin.html → meta robots: noindex
-- admin-commandes.html → meta robots: noindex
-
-## Ce qui a déjà été fait (ne pas refaire)
-- Logo SVG nettoyé (teal + pêche, fond transparent)
-- Positionnement "L'univers illustré de la famille musulmane" partout
-- Bloc Facyne sur index.html avec 2 CTAs vers facyne.com
-- Footer fond #2D3154 (bleu nuit)
-- Section "univers numériques" supprimée de facyne.com (pas jumuatime)
-- Schema.org Store sur index.html
-- robots.txt + sitemap.xml à créer (pas encore fait)
+- `supabase-client.js` est le seul endroit où `_supabase` est déclaré
 
 ## Ecosystème Jumua & Me
 - jumuatime.com — boutique illustrée famille musulmane
-- tilawatour.pages.dev — app récitation Coran
-- maktaba-tour — plateforme livres jeunesse musulmans (en construction)
+- tilawatour.com — app récitation Coran
 - facyne.com — portfolio et freelance de Facyne

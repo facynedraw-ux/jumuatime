@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mon panier — Jumua Time</title>
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="theme-color" content="#5B9EAD">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="cart.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        teal:'#5B9EAD','teal-light':'#EBF5F7','teal-dark':'#3D7A8A',
+        gold:'#C49A5A','gold-light':'#F5EDE0',
+        bg:'#FAF6F0', border:'#E2D4BC', muted:'#8B7A5A', dark:'#1A1208',
+      },
+      fontFamily: { display:['Playfair Display','serif'], body:['DM Sans','sans-serif'] },
+    }
+  }
+}
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { font-family:'DM Sans',sans-serif; background:#FAF6F0; color:#1A1208; margin:0; }
+  .ms { font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased; }
+  .btn-teal { background:#5B9EAD;color:white;border:none;border-radius:20px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:background 0.2s;display:inline-flex;align-items:center;gap:8px;text-decoration:none; }
+  .btn-teal:hover { background:#3D7A8A; }
+  .btn-teal:disabled { opacity:0.5;cursor:not-allowed; }
+  .qty-btn { width:30px;height:30px;border:1.5px solid #E2D4BC;border-radius:8px;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1208;transition:border-color 0.15s; }
+  .qty-btn:hover { border-color:#5B9EAD; }
+  .footer-link { color:rgba(255,255,255,0.55);font-size:14px;text-decoration:none;transition:color 0.2s; }
+  .footer-link:hover { color:white; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .fade-up { animation:fadeUp 0.35s ease both; }
+</style>
+</head>
+<body class="bg-bg font-body text-dark">
+
+<!-- HEADER -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-border">
+  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center no-underline">
+      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
+    </a>
+    <nav class="hidden md:flex items-center gap-5">
+      <a href="ressources.html" class="text-sm font-medium text-muted hover:text-teal transition-colors no-underline">Boutique</a>
+      <a href="a-propos.html" class="text-sm font-medium text-muted hover:text-teal transition-colors no-underline">À propos</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <!-- Icône panier (active) -->
+      <a href="panier.html" class="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors" style="background:#EBF5F7;">
+        <span class="ms" style="font-size:22px;color:#5B9EAD;">shopping_bag</span>
+        <span class="jt-cart-count" style="display:none;position:absolute;top:0;right:0;background:#C49A5A;color:white;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;"></span>
+      </a>
+      <a href="compte.html" class="btn-teal hidden md:inline-flex" style="font-size:13px;padding:8px 18px;">
+        <span class="ms" style="font-size:16px;">person</span> Mon compte
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-4 py-8 pb-32 md:pb-16">
+  <h1 class="font-display text-2xl font-bold mb-6" style="color:#1A1208;">Mon panier</h1>
+
+  <!-- État vide -->
+  <div id="empty-state" class="hidden text-center py-20 fade-up">
+    <span class="ms" style="font-size:56px;color:#E2D4BC;display:block;margin-bottom:16px;">shopping_bag</span>
+    <h2 class="font-display text-xl font-bold mb-2">Ton panier est vide</h2>
+    <p class="text-sm text-muted mb-6">Explore la boutique pour trouver des créations qui te plaisent.</p>
+    <a href="ressources.html" class="btn-teal">Voir la boutique</a>
+  </div>
+
+  <!-- Contenu panier -->
+  <div id="cart-content" class="hidden fade-up">
+    <div class="md:flex md:gap-8 md:items-start">
+
+      <!-- Articles -->
+      <div class="flex-1 space-y-3 mb-6 md:mb-0" id="items-list"></div>
+
+      <!-- Récapitulatif -->
+      <div class="md:w-72 flex-shrink-0">
+        <div class="bg-white border border-border rounded-2xl p-5 sticky top-24">
+          <h2 class="font-semibold text-sm mb-4" style="color:#1A1208;">Récapitulatif</h2>
+
+          <div class="space-y-2 text-sm mb-4">
+            <div class="flex justify-between">
+              <span class="text-muted">Sous-total</span>
+              <span id="recap-subtotal" class="font-medium">—</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted">Livraison</span>
+              <span id="recap-shipping" class="font-medium">—</span>
+            </div>
+            <p id="recap-shipping-hint" class="text-xs text-muted"></p>
+          </div>
+
+          <div class="flex justify-between font-bold text-base border-t border-border pt-3 mb-5">
+            <span>Total</span>
+            <span id="recap-total" style="color:#5B9EAD;">—</span>
+          </div>
+
+          <button id="checkout-btn" class="btn-teal w-full justify-center" onclick="startCheckout()">
+            <span class="ms" style="font-size:18px;">lock</span>
+            Commander →
+          </button>
+          <p class="text-xs text-center text-muted mt-2">Paiement sécurisé par Stripe</p>
+
+          <a href="ressources.html" class="block text-center text-sm text-muted hover:text-teal transition-colors mt-4 no-underline">
+            ← Continuer mes achats
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- BOTTOM NAV MOBILE -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-border md:hidden z-50"
+     style="padding-bottom:max(0.5rem,env(safe-area-inset-bottom));">
+  <div class="grid grid-cols-4">
+    <a href="index.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
+      <span class="ms" style="font-size:20px;">home</span>
+      <span style="font-size:10px;">Accueil</span>
+    </a>
+    <a href="ressources.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
+      <span class="ms" style="font-size:20px;">store</span>
+      <span style="font-size:10px;">Boutique</span>
+    </a>
+    <a href="panier.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline relative" style="color:#5B9EAD;">
+      <span class="ms" style="font-size:20px;">shopping_bag</span>
+      <span style="font-size:10px;font-weight:600;">Panier</span>
+      <span class="jt-cart-count" style="display:none;position:absolute;top:4px;right:20px;background:#C49A5A;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;"></span>
+    </a>
+    <a href="compte.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
+      <span class="ms" style="font-size:20px;">person</span>
+      <span style="font-size:10px;">Compte</span>
+    </a>
+  </div>
+</nav>
+
+<script>
+function fmt(cents) {
+  return (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function renderCart() {
+  const items = Cart.get();
+  if (!items.length) {
+    document.getElementById('empty-state').classList.remove('hidden');
+    document.getElementById('cart-content').classList.add('hidden');
+    return;
+  }
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('cart-content').classList.remove('hidden');
+
+  // Articles
+  document.getElementById('items-list').innerHTML = items.map(item => {
+    const key  = item.produit_id + '|' + (item.variante_id || '');
+    const line = (item.price_cents || 0) * (item.quantity || 1);
+    const badge = item.type_produit === 'physique'
+      ? `<span style="font-size:10px;background:#EBF5F7;color:#3D7A8A;padding:2px 8px;border-radius:20px;font-weight:600;">📦 Physique</span>`
+      : `<span style="font-size:10px;background:#F5EDE0;color:#8B6230;padding:2px 8px;border-radius:20px;font-weight:600;">📄 Numérique</span>`;
+
+    const thumb = item.preview_url
+      ? `<img src="${item.preview_url}" alt="${item.title}" class="w-full h-full object-cover">`
+      : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:28px;color:#C49A5A;opacity:0.4;">image</span></div>`;
+
+    return `
+      <div class="bg-white border border-border rounded-2xl p-4 flex gap-4 items-start" data-key="${key}">
+        <div class="flex-shrink-0 rounded-xl overflow-hidden" style="width:72px;height:72px;background:#F5EDE0;">
+          ${thumb}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm leading-snug mb-1 truncate">${item.title}</p>
+          ${badge}
+          <div class="flex items-center gap-2 mt-2">
+            <button class="qty-btn" onclick="changeQty('${key}', ${(item.quantity||1) - 1})">−</button>
+            <span class="text-sm font-medium w-5 text-center">${item.quantity || 1}</span>
+            <button class="qty-btn" onclick="changeQty('${key}', ${(item.quantity||1) + 1})">+</button>
+            <button onclick="removeItem('${key}')" class="ml-2 text-xs text-muted hover:text-red-500 transition-colors" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+              <span class="ms" style="font-size:16px;">delete</span>
+            </button>
+          </div>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <p class="font-bold text-sm" style="color:#5B9EAD;">${fmt(line)}</p>
+          ${item.quantity > 1 ? `<p class="text-xs text-muted">${fmt(item.price_cents)} / unité</p>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  // Récap
+  const subtotal = Cart.subtotal();
+  const shipping = Cart.shipping();
+  const total    = Cart.total();
+  const hasPhysical = Cart.get().some(i => i.type_produit === 'physique');
+
+  document.getElementById('recap-subtotal').textContent = fmt(subtotal);
+
+  if (!hasPhysical) {
+    document.getElementById('recap-shipping').textContent = '—';
+    document.getElementById('recap-shipping-hint').textContent = 'Produits numériques : livraison immédiate par email';
+  } else if (shipping === 0) {
+    document.getElementById('recap-shipping').innerHTML = '🎁 <strong>Offerte</strong>';
+    document.getElementById('recap-shipping-hint').textContent = '✓ Livraison offerte';
+  } else {
+    document.getElementById('recap-shipping').textContent = fmt(shipping);
+    const manquant = (4500 - Cart._physicalSubtotal()) / 100;
+    document.getElementById('recap-shipping-hint').textContent =
+      `Livraison offerte dès 45 € de produits physiques (il manque ${manquant.toFixed(2)} €)`;
+  }
+
+  document.getElementById('recap-total').textContent = fmt(total);
+}
+
+function changeQty(key, qty) {
+  Cart.setQty(key, qty);
+  renderCart();
+}
+
+function removeItem(key) {
+  Cart.remove(key);
+  renderCart();
+}
+
+window.addEventListener('jt-cart-updated', renderCart);
+
+// ── Checkout ──
+async function startCheckout() {
+  const items = Cart.get();
+  if (!items.length) return;
+
+  const btn = document.getElementById('checkout-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ms" style="font-size:18px;">progress_activity</span> Chargement…';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/stripe-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        type: 'panier',
+        items: items.map(i => ({
+          produit_id:        i.produit_id,
+          slug:              i.slug,
+          title:             i.title,
+          preview_url:       i.preview_url || '',
+          price_cents:       i.price_cents,
+          type_produit:      i.type_produit,
+          gelato_product_id: i.gelato_product_id || '',
+          variante_id:       i.variante_id || '',
+          personnalisation:  i.personnalisation || {},
+          quantity:          i.quantity || 1,
+        })),
+        origin: window.location.origin,
+      }),
+    });
+
+    const { url, error } = await res.json();
+    if (error) throw new Error(error);
+    if (!url) throw new Error('Impossible de créer la session de paiement.');
+    window.location.href = url;
+  } catch (err) {
+    showToast('Erreur : ' + (err.message || 'Réessayez.'), 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<span class="ms" style="font-size:18px;">lock</span> Commander →';
+  }
+}
+
+renderCart();
+</script>
+
+</body>
+</html>

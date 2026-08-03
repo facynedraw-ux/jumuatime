@@ -17,6 +17,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
+<script src="cart.js"></script>
 <script>
 tailwind.config = {
   theme: {
@@ -85,9 +86,15 @@ tailwind.config = {
       <a href="personnalisation.html" class="text-sm font-medium text-muted hover:text-teal transition-colors no-underline">Personnalisation</a>
       <a href="a-propos.html" class="text-sm font-medium text-muted hover:text-teal transition-colors no-underline">À propos</a>
     </nav>
-    <a href="compte.html" class="btn-teal hidden md:inline-flex" style="font-size:13px;padding:8px 18px;">
-      <span class="ms" style="font-size:16px;">person</span> Mon compte
-    </a>
+    <div class="flex items-center gap-3">
+      <a href="panier.html" class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-teal-light transition-colors">
+        <span class="ms" style="font-size:22px;color:#5B9EAD;">shopping_bag</span>
+        <span class="jt-cart-count" style="display:none;position:absolute;top:0;right:0;background:#C49A5A;color:white;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;"></span>
+      </a>
+      <a href="compte.html" class="btn-teal hidden md:inline-flex" style="font-size:13px;padding:8px 18px;">
+        <span class="ms" style="font-size:16px;">person</span> Mon compte
+      </a>
+    </div>
   </div>
 </header>
 
@@ -178,9 +185,12 @@ tailwind.config = {
       </div>
 
       <!-- Bouton commander -->
-      <button id="order-btn" class="btn-teal w-full justify-center py-3 text-base" disabled onclick="startCheckout()">
-        <span class="ms" style="font-size:18px;">lock</span>
-        Commander mon affiche →
+      <button id="add-cart-btn" class="btn-teal w-full justify-center py-3 text-base" disabled onclick="addToCartFromPage()">
+        <span class="ms" style="font-size:18px;">shopping_bag</span>
+        Ajouter au panier
+      </button>
+      <button id="order-btn" class="w-full text-center text-sm text-muted hover:text-teal transition-colors mt-1 py-2" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()">
+        Commander maintenant →
       </button>
       <p class="text-xs text-center text-muted">Paiement sécurisé par Stripe · Adresse de livraison collectée au paiement</p>
 
@@ -279,9 +289,10 @@ tailwind.config = {
       <span class="ms" style="font-size:20px;">store</span>
       <span style="font-size:10px;">Boutique</span>
     </a>
-    <a href="personnalisation.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
-      <span class="ms" style="font-size:20px;">brush</span>
-      <span style="font-size:10px;">Perso</span>
+    <a href="panier.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline relative" style="color:#8B7A5A;">
+      <span class="ms" style="font-size:20px;">shopping_bag</span>
+      <span style="font-size:10px;">Panier</span>
+      <span class="jt-cart-count" style="display:none;position:absolute;top:4px;right:16px;background:#C49A5A;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;"></span>
     </a>
     <a href="compte.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
       <span class="ms" style="font-size:20px;">person</span>
@@ -490,11 +501,12 @@ function updatePreview(val) {
 function checkFormValid() {
   const options = produit?.options_personnalisation;
   const champs  = options?.champs || [];
-  const btn     = document.getElementById('order-btn');
 
   // Vérifier variante si nécessaire
   if ((produit?.variantes || []).length > 0 && !varianteChoisie) {
-    btn.disabled = true; return;
+    document.getElementById('add-cart-btn').disabled = true;
+    document.getElementById('order-btn').disabled = true;
+    return;
   }
 
   // Vérifier champs obligatoires
@@ -502,21 +514,53 @@ function checkFormValid() {
     if (champ.required) {
       const val = persoValues[champ.id] || '';
       if (!val || (champ.min_length && val.length < champ.min_length)) {
-        btn.disabled = true; return;
+        document.getElementById('add-cart-btn').disabled = true;
+        document.getElementById('order-btn').disabled = true;
+        return;
       }
     }
   }
 
-  btn.disabled = false;
+  document.getElementById('add-cart-btn').disabled = false;
+  document.getElementById('order-btn').disabled = false;
 }
 
-// ── Checkout ──
+// ── Ajouter au panier ──
+function addToCartFromPage() {
+  if (!produit) return;
+  const variante    = (produit.variantes || []).find(v => v.id === varianteChoisie);
+  const priceCents  = variante ? variante.prix : (produit.price || 0) * 100;
+
+  Cart.add({
+    produit_id:        produit.id,
+    slug:              produit.slug,
+    title:             variante ? `${produit.title} — ${variante.label}` : produit.title,
+    preview_url:       produit.preview_url || '',
+    price_cents:       priceCents,
+    type_produit:      'physique',
+    gelato_product_id: produit.gelato_product_id || '',
+    variante_id:       varianteChoisie || '',
+    personnalisation:  persoValues,
+  });
+
+  const btn = document.getElementById('add-cart-btn');
+  btn.innerHTML = '<span class="ms" style="font-size:18px;">check</span> Ajouté au panier !';
+  setTimeout(() => {
+    btn.innerHTML = '<span class="ms" style="font-size:18px;">shopping_bag</span> Ajouter au panier';
+  }, 2000);
+}
+
+// ── Commander maintenant (checkout direct, sans passer par le panier) ──
 async function startCheckout() {
+  if (!produit) return;
   const btn = document.getElementById('order-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="ms" style="font-size:18px;">progress_activity</span> Chargement…';
+  btn.textContent = 'Chargement…';
 
   try {
+    const variante   = (produit.variantes || []).find(v => v.id === varianteChoisie);
+    const priceCents = variante ? variante.prix : (produit.price || 0) * 100;
+
     const res = await fetch(`${SUPABASE_URL}/functions/v1/stripe-checkout`, {
       method:  'POST',
       headers: {
@@ -525,11 +569,20 @@ async function startCheckout() {
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({
-        type:            'physique',
-        produit_id:      produit.id,
-        variante_id:     varianteChoisie || null,
-        personnalisation: persoValues,
-        origin:          window.location.origin,
+        type: 'panier',
+        items: [{
+          produit_id:        produit.id,
+          slug:              produit.slug,
+          title:             variante ? `${produit.title} — ${variante.label}` : produit.title,
+          preview_url:       produit.preview_url || '',
+          price_cents:       priceCents,
+          type_produit:      'physique',
+          gelato_product_id: produit.gelato_product_id || '',
+          variante_id:       varianteChoisie || '',
+          personnalisation:  persoValues,
+          quantity:          1,
+        }],
+        origin: window.location.origin,
       }),
     });
     const { url, error } = await res.json();
@@ -539,7 +592,7 @@ async function startCheckout() {
   } catch (err) {
     showToast('Erreur : ' + (err.message || 'Réessayez.'), 'error');
     btn.disabled = false;
-    btn.innerHTML = '<span class="ms" style="font-size:18px;">lock</span> Commander mon affiche →';
+    btn.textContent = 'Commander maintenant →';
   }
 }
 

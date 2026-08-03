@@ -20,6 +20,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
+<script src="cart.js"></script>
 <script>
 tailwind.config = {
   theme: {
@@ -109,6 +110,10 @@ tailwind.config = {
       <a href="a-propos.html" class="text-sm font-medium text-muted hover:text-teal transition-colors no-underline">À propos</a>
     </nav>
     <div class="flex items-center gap-2">
+      <a href="panier.html" class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-teal-light transition-colors">
+        <span class="ms" style="font-size:22px;color:#5B9EAD;">shopping_bag</span>
+        <span class="jt-cart-count" style="display:none;position:absolute;top:0;right:0;background:#C49A5A;color:white;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;"></span>
+      </a>
       <a id="header-account-link" href="login.html" class="btn-teal hidden md:inline-flex" style="font-size:13px;padding:8px 18px;">
         <span class="ms" style="font-size:16px;">person</span> Mon compte
       </a>
@@ -178,11 +183,14 @@ tailwind.config = {
           <ul id="includes-list" class="space-y-1.5"></ul>
         </div>
 
-        <!-- Bouton achat desktop -->
-        <div class="hidden md:block">
-          <button id="buy-btn-desktop" class="btn-buy mb-3" onclick="handleBuy()">
+        <!-- Boutons achat desktop -->
+        <div class="hidden md:block space-y-2">
+          <button id="add-cart-btn-desktop" class="btn-buy mb-1 w-full justify-center" onclick="addToCartFromPage()">
             <span class="ms" style="font-size:18px;">shopping_bag</span>
-            <span id="buy-label-desktop">Acheter — …</span>
+            Ajouter au panier
+          </button>
+          <button id="buy-btn-desktop" class="w-full text-center text-sm text-muted hover:text-teal transition-colors py-1" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="handleBuy()">
+            <span id="buy-label-desktop">Acheter maintenant — …</span>
           </button>
           <p class="text-xs text-center" style="color:#8B7A5A;">
             <span class="ms" style="font-size:12px;vertical-align:-1px;">mail</span>
@@ -240,11 +248,13 @@ tailwind.config = {
 
 <!-- STICKY BUY BAR MOBILE -->
 <div class="sticky-buy md:hidden" id="sticky-buy">
-  <button id="buy-btn-mobile" class="btn-buy" onclick="handleBuy()">
+  <button id="add-cart-btn-mobile" class="btn-buy mb-2" onclick="addToCartFromPage()">
     <span class="ms" style="font-size:18px;">shopping_bag</span>
-    <span id="buy-label-mobile">Acheter</span>
+    Ajouter au panier
   </button>
-  <p class="text-xs text-center mt-1.5" style="color:#8B7A5A;">Livraison immédiate par email · PDF imprimable</p>
+  <button id="buy-btn-mobile" class="w-full text-center text-sm text-muted py-1" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" onclick="handleBuy()">
+    <span id="buy-label-mobile">Acheter maintenant</span>
+  </button>
 </div>
 
 
@@ -401,7 +411,32 @@ async function loadSimilar(r) {
   }).join('');
 }
 
-// ── Achat Stripe ──
+// ── Ajouter au panier ──
+function addToCartFromPage() {
+  if (!currentResource) return;
+
+  Cart.add({
+    produit_id:        currentResource.id,
+    slug:              currentResource.slug,
+    title:             currentResource.title,
+    preview_url:       currentResource.preview_url || '',
+    price_cents:       Math.round(Number(currentResource.price) * 100),
+    type_produit:      'numerique',
+    gelato_product_id: '',
+    variante_id:       '',
+    personnalisation:  {},
+  });
+
+  ['add-cart-btn-desktop','add-cart-btn-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const orig = el.innerHTML;
+    el.innerHTML = '<span class="ms" style="font-size:18px;">check</span> Ajouté au panier !';
+    setTimeout(() => { el.innerHTML = orig; }, 2000);
+  });
+}
+
+// ── Achat direct Stripe ──
 const STRIPE_PK = 'pk_live_51Oj4bQLj722859plM930hrjtUu3xCmwS4G1Fck0qtiiN6fqhsR7SucDDTc2KOSdaMAoGUsxFmKv2tbKGfUTO9Hjr00WpYoHACD';
 
 async function handleBuy() {
