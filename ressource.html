@@ -280,6 +280,8 @@ const CAT_STYLES = {
 const THEME_LABELS = { ramadan:'Ramadan', aid:'Aïd', prophetes:'Prophètes', valeurs:'Valeurs', famille:'Famille', arabe:'Arabe', coran:'Coran', nature:'Nature', aventure:'Aventure', priere:'Prière' };
 
 let currentResource = null;
+let galleryImages   = [];
+let currentGalleryIdx = 0;
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
@@ -316,14 +318,19 @@ function renderResource(r) {
     : `${r.title} — Ressource pédagogique Jumua Time`;
   document.getElementById('bc-title').textContent = r.title;
 
-  // Image principale (preview_url en priorité, fallback preview_url)
-  const imgUrl = r.preview_url || r.preview_url;
-  if (imgUrl) {
-    document.getElementById('main-preview').innerHTML = `
-      <img src="${esc(imgUrl)}" alt="${esc(r.title)}" class="w-full h-full object-cover">
-      <div class="absolute inset-0 flex items-center justify-center pointer-events-none" style="background:rgba(255,255,255,0.04);">
-        <span class="text-white font-bold text-2xl opacity-25 select-none" style="transform:rotate(-30deg);">APERÇU</span>
-      </div>`;
+  // Image principale + galerie
+  galleryImages = [r.preview_url, ...(r.gallery_urls || [])].filter(Boolean);
+  currentGalleryIdx = 0;
+  if (galleryImages.length > 0) {
+    setMainImage(0);
+    if (galleryImages.length > 1) {
+      const thumbsEl = document.getElementById('preview-thumbs');
+      thumbsEl.innerHTML = galleryImages.map((url, i) => `
+        <div onclick="switchGalleryImage(${i},this)"
+             style="width:60px;height:60px;border-radius:8px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid ${i===0?'#5B9EAD':'#E2D4BC'};transition:border-color 0.15s;">
+          <img src="${esc(url)}" alt="" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+        </div>`).join('');
+    }
   }
 
   // Badges catégorie + âge + thèmes
@@ -466,8 +473,28 @@ async function handleBuy() {
   }
 }
 
+function setMainImage(idx) {
+  const url = galleryImages[idx];
+  if (!url) return;
+  currentGalleryIdx = idx;
+  const title = currentResource ? esc(currentResource.title) : '';
+  document.getElementById('main-preview').innerHTML = `
+    <img src="${esc(url)}" alt="${title}" class="w-full h-full object-cover cursor-pointer" onclick="openLightbox(currentGalleryIdx)">
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none" style="background:rgba(255,255,255,0.04);">
+      <span class="text-white font-bold text-2xl opacity-25 select-none" style="transform:rotate(-30deg);">APERÇU</span>
+    </div>`;
+}
+
+function switchGalleryImage(idx, thumb) {
+  setMainImage(idx);
+  document.querySelectorAll('#preview-thumbs > div').forEach(t => t.style.borderColor = '#E2D4BC');
+  thumb.style.borderColor = '#5B9EAD';
+}
+
 // ── Lightbox ──
-function openLightbox(url) {
+function openLightbox(idxOrUrl) {
+  const url = typeof idxOrUrl === 'number' ? galleryImages[idxOrUrl] : idxOrUrl;
+  if (!url) return;
   document.getElementById('lightbox-img').src = url;
   document.getElementById('lightbox').classList.remove('hidden');
   document.body.style.overflow = 'hidden';

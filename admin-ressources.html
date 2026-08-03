@@ -68,7 +68,7 @@ tailwind.config = {
   <!-- SIDEBAR -->
   <aside class="hidden md:flex flex-col w-56 bg-white border-r border-border px-4 py-6 sticky top-0 h-screen flex-shrink-0">
     <a href="index.html" class="flex items-center gap-2 mb-8 no-underline">
-      <img src="Images/logo.png" alt="Jumua Time" class="w-8 h-8 object-contain">
+      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
       <span class="font-display font-bold text-text text-base">Admin</span>
     </a>
     <nav class="space-y-1 flex-1">
@@ -185,36 +185,6 @@ tailwind.config = {
       <input type="number" id="f-price" class="f-input" step="0.01" min="0" placeholder="3.90">
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-3">
-      <div>
-        <label class="f-label" for="f-age-min">Âge min</label>
-        <input type="number" id="f-age-min" class="f-input" min="0" max="12" placeholder="3">
-      </div>
-      <div>
-        <label class="f-label" for="f-age-max">Âge max</label>
-        <input type="number" id="f-age-max" class="f-input" min="0" max="12" placeholder="6">
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label class="f-label" for="f-pages">Nombre de pages</label>
-      <input type="number" id="f-pages" class="f-input" min="1" placeholder="12">
-    </div>
-
-    <div class="mb-3">
-      <label class="f-label">Thèmes</label>
-      <div class="grid grid-cols-2 gap-1.5">
-        <label class="f-check"><input type="checkbox" value="ramadan" name="f-theme"> 🌙 Ramadan</label>
-        <label class="f-check"><input type="checkbox" value="aid" name="f-theme"> 🎁 Aïd</label>
-        <label class="f-check"><input type="checkbox" value="prophetes" name="f-theme"> ⭐ Prophètes</label>
-        <label class="f-check"><input type="checkbox" value="valeurs" name="f-theme"> 💛 Valeurs</label>
-        <label class="f-check"><input type="checkbox" value="famille" name="f-theme"> 🏡 Famille</label>
-        <label class="f-check"><input type="checkbox" value="arabe" name="f-theme"> ع Arabe</label>
-        <label class="f-check"><input type="checkbox" value="coran" name="f-theme"> 📖 Coran</label>
-        <label class="f-check"><input type="checkbox" value="priere" name="f-theme"> 🤲 Prière</label>
-      </div>
-    </div>
-
     <div class="f-sep"></div>
 
     <div class="mb-3">
@@ -254,6 +224,15 @@ tailwind.config = {
       <label class="f-label" for="f-gelato-product-id">ID produit Gelato (physique)</label>
       <input type="text" id="f-gelato-product-id" class="f-input" placeholder="9375c91b-67e0-4568-ac45-a2f8f76226a7">
       <p class="text-xs text-muted mt-1">À renseigner uniquement pour un produit physique envoyé à Gelato.</p>
+    </div>
+
+    <div class="mb-3">
+      <label class="f-label">Galerie d'images (mockups, visuels supplémentaires)</label>
+      <div id="f-gallery-list" class="space-y-2 mb-2"></div>
+      <button type="button" onclick="addGalleryUrl()" class="btn-sm">
+        <span class="ms" style="font-size:14px;">add</span> Ajouter une URL
+      </button>
+      <p class="text-xs text-muted mt-1">Colle les URLs des mockups (dashboard Gelato, Supabase Storage, etc.)</p>
     </div>
 
     <div class="mb-5">
@@ -364,9 +343,6 @@ function editResource(id) {
   document.getElementById('f-cat').value = r.category || '';
   document.getElementById('f-type-produit').value = r.type_produit || 'numerique';
   document.getElementById('f-price').value = r.price || '';
-  document.getElementById('f-age-min').value = r.age_min ?? '';
-  document.getElementById('f-age-max').value = r.age_max ?? '';
-  document.getElementById('f-pages').value = r.page_count ?? '';
   document.getElementById('f-preview').value = r.preview_url || '';
   document.getElementById('f-preview-input').value = '';
   document.getElementById('f-preview-name').textContent = r.preview_url ? r.preview_url.split('/').pop() : 'Sélectionner une image…';
@@ -379,9 +355,8 @@ function editResource(id) {
   document.getElementById('f-gelato-product-id').value = r.gelato_product_id || '';
   document.getElementById('f-format').value = r.format || 'PDF';
   document.getElementById('f-active').checked = r.is_active;
-  document.querySelectorAll('input[name="f-theme"]').forEach(cb => {
-    cb.checked = (r.themes || []).includes(cb.value);
-  });
+  document.getElementById('f-gallery-list').innerHTML = '';
+  (r.gallery_urls || []).forEach(url => addGalleryUrl(url));
 
   document.getElementById('panel').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -391,7 +366,7 @@ function openPanel() {
   editingId = null;
   document.getElementById('panel-title').textContent = 'Ajouter une ressource';
   document.getElementById('panel-save-label').textContent = 'Enregistrer';
-  ['f-id','f-title','f-slug','f-desc','f-price','f-age-min','f-age-max','f-pages','f-preview','f-file'].forEach(id => {
+  ['f-id','f-title','f-slug','f-desc','f-price','f-preview','f-file'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   document.getElementById('f-file-input').value = '';
@@ -406,10 +381,10 @@ function openPanel() {
   document.getElementById('f-type-produit').value = 'numerique';
   document.getElementById('f-format').value = 'PDF';
   document.getElementById('f-active').checked = true;
+  document.getElementById('f-gallery-list').innerHTML = '';
   const saveBtn = document.getElementById('panel-save-btn');
   saveBtn.disabled = false;
   document.getElementById('panel-save-label').textContent = 'Enregistrer';
-  document.querySelectorAll('input[name="f-theme"]').forEach(cb => cb.checked = false);
 
   document.getElementById('panel').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -468,6 +443,24 @@ function onPreviewSelect(input) {
   const file = input.files[0];
   if (!file) return;
   document.getElementById('f-preview-name').textContent = file.name;
+}
+
+function addGalleryUrl(url = '') {
+  const list = document.getElementById('f-gallery-list');
+  const row = document.createElement('div');
+  row.className = 'flex gap-2 items-center';
+  const safe = String(url).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  row.innerHTML = `
+    <input type="text" class="f-input flex-1" placeholder="https://…" value="${safe}">
+    <button type="button" onclick="this.parentElement.remove()" class="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-muted hover:bg-card flex-shrink-0" title="Supprimer">
+      <span class="ms" style="font-size:16px;">close</span>
+    </button>`;
+  list.appendChild(row);
+}
+
+function getGalleryUrls() {
+  return [...document.querySelectorAll('#f-gallery-list input')]
+    .map(i => i.value.trim()).filter(Boolean);
 }
 
 async function saveResource() {
@@ -546,10 +539,7 @@ async function saveResource() {
     category: document.getElementById('f-cat').value || null,
     type_produit: document.getElementById('f-type-produit').value || 'numerique',
     price: parseFloat(document.getElementById('f-price').value) || 0,
-    age_min: parseInt(document.getElementById('f-age-min').value) || null,
-    age_max: parseInt(document.getElementById('f-age-max').value) || null,
-    page_count: parseInt(document.getElementById('f-pages').value) || null,
-    themes: [...document.querySelectorAll('input[name="f-theme"]:checked')].map(c => c.value),
+    gallery_urls: getGalleryUrls(),
     preview_url: previewUrl,
     preview_pdf_url: previewPdfUrl,
     file_url: fileUrl,
