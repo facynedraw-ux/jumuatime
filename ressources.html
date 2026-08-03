@@ -144,6 +144,8 @@ tailwind.config = {
       <button class="filter-pill cat-btn" onclick="setFilter('spiritualite', this)">Spiritualité</button>
       <button class="filter-pill cat-btn" onclick="setFilter('decoration', this)">Décoration</button>
       <button class="filter-pill cat-btn" onclick="setFilter('cadeaux', this)">Cadeaux</button>
+      <button class="filter-pill cat-btn" onclick="setFilter('__numerique__', this)" style="border-color:#5B9EAD;color:#3D7A8A;">📄 Numérique</button>
+      <button class="filter-pill cat-btn" onclick="setFilter('__physique__', this)" style="border-color:#C49A5A;color:#8B6230;">📦 Physique</button>
     </div>
   </div>
 
@@ -313,8 +315,10 @@ function renderGrid() {
   let list;
   if (activeCategory === '__physique__') {
     list = allResources.filter(r => r.type_produit === 'physique');
+  } else if (activeCategory === '__numerique__') {
+    list = allResources.filter(r => r.type_produit === 'numerique');
   } else if (activeCategory) {
-    list = allResources.filter(r => r.category === activeCategory && r.type_produit !== 'physique');
+    list = allResources.filter(r => r.category === activeCategory);
   } else {
     list = allResources;
   }
