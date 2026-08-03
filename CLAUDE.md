@@ -24,7 +24,7 @@ Répertoire de travail local : D:\DEV\jumuatime\
 - Marque boutique : Jumuatime (pas Facyne)
 - Sous-titre : "L'univers illustré de la famille musulmane"
 - Slogan : "Des créations qui ont du sens."
-- Créatrice : Facyne (Oum Safya)
+- Créatrice : Facyne
 
 ## Structure fichiers
 
