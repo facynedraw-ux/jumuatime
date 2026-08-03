@@ -220,7 +220,7 @@ tailwind.config = {
     .from('commandes_physiques')
     .select(`
       id, created_at, statut, personnalisation, montant_livraison,
-      resources ( title, cover_url ),
+      resources ( title, preview_url ),
       variante_id, adresse_livraison
     `)
     .eq('stripe_session_id', sessionId)

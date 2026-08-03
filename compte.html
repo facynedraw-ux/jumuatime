@@ -245,7 +245,7 @@ async function saveProfile() {
 async function loadAchats() {
   const { data, error } = await _supabase
     .from('purchases')
-    .select('id, created_at, resource_id, resources(id, slug, title, cover_url, file_url, price)')
+    .select('id, created_at, resource_id, resources(id, slug, title, preview_url, file_url, price)')
     .eq('user_id', session.user.id)
     .order('created_at', { ascending: false });
 
@@ -275,8 +275,8 @@ async function loadAchats() {
 function renderAchat(purchase) {
   const r = purchase.resources;
   if (!r) return '';
-  const cover = r.cover_url
-    ? `<img src="${esc(r.cover_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
+  const cover = r.preview_url
+    ? `<img src="${esc(r.preview_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
     : `<div class="w-full h-full flex items-center justify-center">
          <span class="ms" style="font-size:22px;color:#5B9EAD;opacity:0.4;">description</span>
        </div>`;
