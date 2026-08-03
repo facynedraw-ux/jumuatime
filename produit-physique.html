@@ -333,9 +333,9 @@ function renderProduit() {
   document.getElementById('product-title').textContent = produit.title;
 
   // Image
-  if (produit.cover_url) {
+  if (produit.preview_url) {
     const img = document.getElementById('product-image');
-    img.src = produit.cover_url;
+    img.src = produit.preview_url;
     img.alt = produit.title;
     img.classList.remove('hidden');
     document.getElementById('product-image-placeholder').classList.add('hidden');
