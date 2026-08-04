@@ -103,7 +103,7 @@ tailwind.config = {
         <span class="ms" style="font-size:44px;color:#5B9EAD;font-variation-settings:'FILL' 1;">check_circle</span>
       </div>
       <h1 class="font-display text-2xl md:text-3xl font-bold mb-1" style="color:#1A1208;">Commande confirmée !</h1>
-      <p class="text-muted text-sm">Barak Allahou fikoum — votre affiche est en préparation.</p>
+      <p class="text-muted text-sm" id="subtitle">Barak Allahou fikoum — votre commande est en préparation.</p>
       <div class="inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-semibold" style="background:#EBF5F7;color:#3D7A8A;">
         Confirmation envoyée par email
       </div>
@@ -125,28 +125,28 @@ tailwind.config = {
           <div class="step-dot done"><span class="ms" style="font-size:16px;font-variation-settings:'FILL' 1;">check</span></div>
           <div>
             <p class="font-medium text-sm">Commande reçue</p>
-            <p class="text-xs text-muted">Facyne a reçu votre commande et va créer votre affiche personnalisée.</p>
+            <p class="text-xs text-muted" id="step1-desc">Jumua Time a bien reçu votre commande.</p>
           </div>
         </div>
         <div class="timeline-step">
           <div class="step-dot pending">2</div>
           <div>
-            <p class="font-medium text-sm text-muted">Création & impression</p>
-            <p class="text-xs text-muted">Facyne finalise votre affiche, puis Gelato l'imprime (1 à 3 j. ouvrés).</p>
+            <p class="font-medium text-sm text-muted" id="step2-title">Préparation & impression</p>
+            <p class="text-xs text-muted" id="step2-desc">Votre commande est préparée et expédiée sous 5–7 jours ouvrés.</p>
           </div>
         </div>
         <div class="timeline-step">
           <div class="step-dot pending">3</div>
           <div>
             <p class="font-medium text-sm text-muted">Expédition</p>
-            <p class="text-xs text-muted">Votre affiche est envoyée chez vous. Vous recevrez un email avec le suivi.</p>
+            <p class="text-xs text-muted" id="step3-desc">Vous recevrez un email avec votre numéro de suivi dès l'envoi.</p>
           </div>
         </div>
         <div class="timeline-step">
           <div class="step-dot pending"><span class="ms" style="font-size:16px;">home</span></div>
           <div>
             <p class="font-medium text-sm text-muted">Livraison</p>
-            <p class="text-xs text-muted">Votre affiche arrive à votre porte, prête à être encadrée.</p>
+            <p class="text-xs text-muted" id="step4-desc">Votre commande arrive à votre porte.</p>
           </div>
         </div>
       </div>
@@ -220,7 +220,7 @@ tailwind.config = {
     .from('commandes_physiques')
     .select(`
       id, created_at, statut, personnalisation, montant_livraison,
-      resources ( title, preview_url ),
+      resources ( title, preview_url, category ),
       variante_id, adresse_livraison
     `)
     .eq('stripe_session_id', sessionId)
@@ -253,6 +253,32 @@ tailwind.config = {
   const cmd    = data;
   const prod   = cmd.resources;
   const perso  = cmd.personnalisation || {};
+
+  // Adapter le texte à la catégorie du produit
+  const cat = prod?.category || '';
+  const nomProduit = cat === 'Affiche' ? 'votre affiche'
+    : cat === 'Mug' ? 'votre mug'
+    : cat === 'Marque-page' ? 'votre marque-page'
+    : cat === 'Carte' ? 'votre carte'
+    : 'votre commande';
+  const isGelato = cat === 'Affiche' || cat === 'Mug';
+
+  document.getElementById('subtitle').textContent = `Barak Allahou fikoum — ${nomProduit} est en préparation.`;
+  document.getElementById('step1-desc').textContent = `Jumua Time a bien reçu votre commande et prépare ${nomProduit}.`;
+  if (cat === 'Affiche') {
+    document.getElementById('step2-title').textContent = 'Impression & expédition';
+    document.getElementById('step2-desc').textContent = 'Gelato imprime votre affiche et l\'expédie directement chez vous (1–3 j. ouvrés).';
+    document.getElementById('step4-desc').textContent = 'Votre affiche arrive à votre porte, prête à être encadrée.';
+  } else if (cat === 'Mug') {
+    document.getElementById('step2-title').textContent = 'Fabrication & expédition';
+    document.getElementById('step2-desc').textContent = 'Gelato fabrique votre mug et l\'expédie directement chez vous (1–3 j. ouvrés).';
+    document.getElementById('step4-desc').textContent = 'Votre mug arrive à votre porte, prêt à être utilisé.';
+  } else {
+    document.getElementById('step2-title').textContent = 'Préparation';
+    document.getElementById('step2-desc').textContent = `${nomProduit.charAt(0).toUpperCase() + nomProduit.slice(1)} est préparé(e) avec soin et expédié(e) sous 5–7 jours.`;
+    document.getElementById('step4-desc').textContent = `${nomProduit.charAt(0).toUpperCase() + nomProduit.slice(1)} arrive à votre porte.`;
+  }
+  document.getElementById('step3-desc').textContent = `Vous recevrez un email avec votre numéro de suivi dès que ${nomProduit} est expédié(e).`;
   const date   = new Date(cmd.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
 
   let rows = '';
