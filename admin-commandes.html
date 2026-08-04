@@ -92,7 +92,7 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
       <a href="admin.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
       <a href="admin-commandes.html" class="admin-nav-link active"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
       <a href="admin-ressources.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
-      <a href="admin-utilisateurs.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">group</span> Utilisateurs</a>
+      <a href="admin-stock.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
     </nav>
     <button onclick="signOut()" class="admin-nav-link mt-4 border-0 bg-transparent cursor-pointer text-left">
       <span class="ms" style="font-size:18px;">logout</span> Déconnexion
@@ -147,6 +147,15 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
       <button onclick="setStatus('livre')"         class="filter-pill" data-s="livre">✅ Livré</button>
     </div>
 
+    <!-- Selection toolbar -->
+    <div id="selection-bar" class="hidden px-6 py-2 border-b border-border flex items-center gap-3" style="background:#FFF0F5;">
+      <span id="selection-count" class="text-sm font-semibold" style="color:#C96B8A;"></span>
+      <button onclick="deleteSelected()" class="btn-sm" style="background:#FEE2E2;color:#B91C1C;">
+        <span class="ms" style="font-size:14px;">delete</span> Supprimer
+      </button>
+      <button onclick="clearSelection()" class="btn-sm">Annuler</button>
+    </div>
+
     <!-- List -->
     <div id="orders-list" class="flex-1 p-6">
       <div class="order-row"><div class="skeleton h-10 w-10 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-48"></div><div class="skeleton h-3 w-32"></div></div></div>
@@ -175,7 +184,8 @@ let allPhysiques  = [];
 let allNumeriques = [];
 let currentTab    = 'physiques';
 let currentStatus = '';
-let currentCmd    = null; // open panel
+let currentCmd    = null;
+let selectedIds   = new Set();
 
 // ── Boot ──
 (async () => {
@@ -214,6 +224,8 @@ async function loadAll() {
 // ── Tabs / Filters ──
 function switchTab(tab) {
   currentTab = tab;
+  selectedIds.clear();
+  updateSelectionBar();
   document.getElementById('tab-physiques').classList.toggle('active', tab === 'physiques');
   document.getElementById('tab-numeriques').classList.toggle('active', tab === 'numeriques');
   document.getElementById('status-bar').style.display = tab === 'physiques' ? 'flex' : 'none';
@@ -263,9 +275,14 @@ function rowPhysique(o) {
   const thumb  = prod.preview_url
     ? `<img src="${prod.preview_url}" alt="" class="w-11 h-11 rounded-xl object-cover flex-shrink-0">`
     : `<div class="w-11 h-11 rounded-xl flex-shrink-0" style="background:#F5E8F0;"></div>`;
+  const checked = selectedIds.has(o.id) ? 'checked' : '';
 
   return `
   <div class="order-row" onclick="openPanel('${o.id}')">
+    <div onclick="event.stopPropagation()" style="flex-shrink:0;padding:2px;">
+      <input type="checkbox" id="cb-${o.id}" ${checked} onchange="toggleSelect('${o.id}')"
+        style="width:16px;height:16px;accent-color:#C96B8A;cursor:pointer;">
+    </div>
     ${thumb}
     <div class="flex-1 min-w-0">
       <div class="font-semibold text-sm truncate">${prod.title || '—'}</div>
@@ -276,7 +293,7 @@ function rowPhysique(o) {
       ${statusBadge(o.statut)}
     </div>
     <div class="font-bold text-sm flex-shrink-0 w-16 text-right" style="color:#C96B8A;">${prix}</div>
-    <span class="ms text-muted flex-shrink-0" style="font-size:18px;color:#C96B8A;">chevron_right</span>
+    <span class="ms flex-shrink-0" style="font-size:18px;color:#C96B8A;">chevron_right</span>
   </div>`;
 }
 
@@ -287,9 +304,14 @@ function rowNumerique(o) {
   const thumb = prod.preview_url
     ? `<img src="${prod.preview_url}" alt="" class="w-11 h-11 rounded-xl object-cover flex-shrink-0">`
     : `<div class="w-11 h-11 rounded-xl flex-shrink-0" style="background:#F5E8F0;"></div>`;
+  const checked = selectedIds.has(o.id) ? 'checked' : '';
 
   return `
   <div class="order-row no-click">
+    <div style="flex-shrink:0;padding:2px;">
+      <input type="checkbox" id="cb-${o.id}" ${checked} onchange="toggleSelect('${o.id}')"
+        style="width:16px;height:16px;accent-color:#C96B8A;cursor:pointer;">
+    </div>
     ${thumb}
     <div class="flex-1 min-w-0">
       <div class="font-semibold text-sm truncate">${prod.title || '—'}</div>
@@ -436,9 +458,14 @@ function renderPanel(o) {
   `;
 
   document.getElementById('panel-actions').innerHTML = `
-    <button onclick="saveOrder()" class="btn-primary w-full justify-center">
-      <span class="ms" style="font-size:17px;">save</span> Enregistrer
-    </button>
+    <div class="flex gap-2">
+      <button onclick="saveOrder()" class="btn-primary flex-1 justify-center">
+        <span class="ms" style="font-size:17px;">save</span> Enregistrer
+      </button>
+      <button onclick="deleteOrder('${o.id}')" style="background:#FEE2E2;color:#B91C1C;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px;" title="Supprimer cette commande">
+        <span class="ms" style="font-size:17px;">delete</span>
+      </button>
+    </div>
   `;
 }
 
@@ -510,6 +537,49 @@ async function saveOrder() {
   msg.style.color = '#207040';
   msg.classList.remove('hidden');
   setTimeout(() => msg.classList.add('hidden'), 4000);
+}
+
+// ── Sélection / Suppression ──
+function toggleSelect(id) {
+  if (selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  updateSelectionBar();
+}
+
+function updateSelectionBar() {
+  const bar = document.getElementById('selection-bar');
+  const n = selectedIds.size;
+  if (n > 0) {
+    bar.classList.remove('hidden');
+    document.getElementById('selection-count').textContent = `${n} sélectionnée${n > 1 ? 's' : ''}`;
+  } else {
+    bar.classList.add('hidden');
+  }
+}
+
+function clearSelection() {
+  selectedIds.clear();
+  updateSelectionBar();
+  renderList();
+}
+
+async function deleteSelected() {
+  const n = selectedIds.size;
+  if (!n) return;
+  if (!confirm(`Supprimer ${n} commande${n > 1 ? 's' : ''} ? Cette action est irréversible.`)) return;
+  const table = currentTab === 'physiques' ? 'commandes_physiques' : 'purchases';
+  const { error } = await _supabase.from(table).delete().in('id', [...selectedIds]);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  selectedIds.clear();
+  await loadAll();
+}
+
+async function deleteOrder(id) {
+  if (!confirm('Supprimer cette commande ? Cette action est irréversible.')) return;
+  const { error } = await _supabase.from('commandes_physiques').delete().eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  closePanel();
+  await loadAll();
 }
 
 // ── Auth ──

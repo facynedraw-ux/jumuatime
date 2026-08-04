@@ -283,6 +283,22 @@ function formatPrice(price) {
   return parseFloat(price).toFixed(2).replace('.', ',') + ' €';
 }
 
+function formatPriceRange(r) {
+  const variantes = r.variantes || [];
+  const prix = variantes.map(v => v.prix).filter(p => p > 0);
+  if (prix.length >= 2) {
+    const min = Math.min(...prix);
+    const max = Math.max(...prix);
+    if (min !== max) {
+      const fmt = c => (c / 100).toFixed(2).replace('.', ',') + ' €';
+      return `${fmt(min)} – ${fmt(max)}`;
+    }
+    return (prix[0] / 100).toFixed(2).replace('.', ',') + ' €';
+  }
+  if (prix.length === 1) return (prix[0] / 100).toFixed(2).replace('.', ',') + ' €';
+  return formatPrice(r.price);
+}
+
 async function init() {
   // Lire paramètre ?cat= depuis l'URL (liens depuis la home)
   const params = new URLSearchParams(window.location.search);
@@ -297,7 +313,7 @@ async function init() {
 
   const { data } = await _supabase
     .from('resources')
-    .select('id, slug, title, preview_url, price, category, type_produit, stock')
+    .select('id, slug, title, preview_url, price, category, type_produit, stock, variantes')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
@@ -378,7 +394,7 @@ function renderGrid() {
         <div class="p-3">
           <h3 class="font-semibold text-xs leading-snug mb-1.5" style="color:#1A1208;">${esc(r.title)}</h3>
           ${r.subtitle ? `<p class="text-xs leading-snug mb-1" style="color:#8B7A5A;">${esc(r.subtitle)}</p>` : ''}
-          <p class="font-display font-bold text-base mt-1" style="color:#C49A5A;">${formatPrice(r.price)}</p>
+          <p class="font-display font-bold text-base mt-1" style="color:#C49A5A;">${formatPriceRange(r)}</p>
           ${subInfo}
           ${isEpuise ? `<p class="text-xs mt-0.5 font-medium" style="color:#B91C1C;">Épuisé</p>` : ''}
         </div>

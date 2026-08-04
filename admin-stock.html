@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stock — Jumua Time Admin</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#C96B8A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: { primary:'#C96B8A', secondary:'#9B7FA6', accent:'#F0A87A', bg:'#FFF5F7', card:'#F5F0FA', text:'#3D1F2D', muted:'#7A5A6A', border:'#E8D5DC', success:'#5B8A5F' },
+      fontFamily: { display:['Playfair Display','serif'], body:['DM Sans','sans-serif'] }
+    }
+  }
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; margin:0; }
+.ms { font-family:'Material Symbols Outlined'; font-weight:normal; font-style:normal; font-size:20px; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; direction:ltr; -webkit-font-smoothing:antialiased; }
+.admin-nav-link { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; text-decoration:none; color:#7A5A6A; font-size:14px; font-weight:500; transition:all 0.15s; }
+.admin-nav-link:hover, .admin-nav-link.active { background:#F5E8F0; color:#C96B8A; }
+.btn-sm { background:#F5E8F0; color:#C96B8A; border:none; border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; transition:background 0.15s; }
+.btn-sm:hover { background:#FACDD8; }
+.stock-row { display:flex; align-items:center; gap:14px; padding:14px 16px; background:white; border:1px solid #E8D5DC; border-radius:16px; margin-bottom:8px; }
+.stock-input { width:80px; padding:7px 10px; border:1.5px solid #E8D5DC; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:#3D1F2D; text-align:center; outline:none; transition:border-color 0.2s; }
+.stock-input:focus { border-color:#C96B8A; }
+.stock-badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.skeleton { background:linear-gradient(90deg,#F5E8F0 25%,#FAF0F5 50%,#F5E8F0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+</style>
+</head>
+<body class="bg-bg font-body text-text">
+
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside class="hidden md:flex flex-col w-56 bg-white border-r border-border px-4 py-6 sticky top-0 h-screen flex-shrink-0">
+    <a href="index.html" class="flex items-center gap-2 mb-8 no-underline">
+      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
+      <span class="font-display font-bold text-text text-base">Admin</span>
+    </a>
+    <nav class="space-y-1 flex-1">
+      <a href="admin.html"           class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html"  class="admin-nav-link"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin-ressources.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
+      <a href="admin-stock.html"      class="admin-nav-link active"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
+    </nav>
+    <button onclick="signOut()" class="admin-nav-link mt-4 border-0 bg-transparent cursor-pointer text-left">
+      <span class="ms" style="font-size:18px;">logout</span> Déconnexion
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Header mobile -->
+    <header class="md:hidden sticky top-0 z-40 bg-white border-b border-border px-4 h-14 flex items-center justify-between">
+      <span class="font-display font-bold text-base">Stock</span>
+      <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="w-9 h-9 flex items-center justify-center rounded-xl border border-border">
+        <span class="ms">menu</span>
+      </button>
+    </header>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-border px-4 py-3 flex flex-col gap-1 z-30">
+      <a href="admin.html"           class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html"  class="admin-nav-link"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin-ressources.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
+      <a href="admin-stock.html"      class="admin-nav-link active"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
+    </div>
+
+    <!-- Page header -->
+    <div class="px-6 pt-6 pb-4 border-b border-border bg-white flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h1 class="font-display font-bold text-xl text-text">Gestion du stock</h1>
+        <p id="count-label" class="text-xs text-muted mt-0.5">Chargement…</p>
+      </div>
+      <button onclick="load()" class="btn-sm">
+        <span class="ms" style="font-size:16px;">refresh</span> Actualiser
+      </button>
+    </div>
+
+    <!-- Legend -->
+    <div class="px-6 py-3 border-b border-border bg-white flex gap-4 flex-wrap text-xs text-muted">
+      <span><span class="stock-badge" style="background:#D1FAE5;color:#065F46;">En stock</span> valeur quelconque</span>
+      <span><span class="stock-badge" style="background:#FEF3C7;color:#92400E;">Faible</span> ≤ 5</span>
+      <span><span class="stock-badge" style="background:#FEE2E2;color:#B91C1C;">Épuisé</span> = 0</span>
+      <span><span class="stock-badge" style="background:#F3F4F6;color:#6B7280;">Illimité</span> champ vide</span>
+    </div>
+
+    <!-- List -->
+    <div id="stock-list" class="flex-1 p-6">
+      <div class="stock-row"><div class="skeleton h-11 w-11 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-48"></div><div class="skeleton h-3 w-24"></div></div></div>
+      <div class="stock-row"><div class="skeleton h-11 w-11 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-56"></div><div class="skeleton h-3 w-20"></div></div></div>
+      <div class="stock-row"><div class="skeleton h-11 w-11 rounded-xl flex-shrink-0"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-40"></div><div class="skeleton h-3 w-28"></div></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden px-5 py-3 rounded-2xl text-sm font-semibold shadow-lg" style="font-family:'DM Sans',sans-serif;"></div>
+
+<script>
+let products = [];
+
+(async () => {
+  const ok = await isAdmin();
+  if (!ok) { window.location.href = 'login.html'; return; }
+  await load();
+})();
+
+async function load() {
+  const { data, error } = await _supabase
+    .from('resources')
+    .select('id, title, preview_url, category, stock, is_active')
+    .eq('type_produit', 'physique')
+    .order('title');
+
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  products = data || [];
+  document.getElementById('count-label').textContent = `${products.length} produit${products.length !== 1 ? 's' : ''} physique${products.length !== 1 ? 's' : ''}`;
+  render();
+}
+
+function render() {
+  const list = document.getElementById('stock-list');
+  if (!products.length) {
+    list.innerHTML = `<div class="text-center py-16 text-muted"><span class="ms" style="font-size:40px;display:block;margin-bottom:12px;color:#E8D5DC;">inventory_2</span><span style="font-size:14px;">Aucun produit physique</span></div>`;
+    return;
+  }
+  list.innerHTML = products.map(p => {
+    const thumb = p.preview_url
+      ? `<img src="${esc(p.preview_url)}" alt="" class="w-11 h-11 rounded-xl object-cover flex-shrink-0">`
+      : `<div class="w-11 h-11 rounded-xl flex-shrink-0" style="background:#F5E8F0;"></div>`;
+
+    const badge = stockBadge(p.stock);
+    const val   = p.stock !== null && p.stock !== undefined ? p.stock : '';
+
+    return `
+    <div class="stock-row" id="row-${p.id}">
+      ${thumb}
+      <div class="flex-1 min-w-0">
+        <div class="font-semibold text-sm truncate">${esc(p.title)}</div>
+        <div class="text-xs text-muted mt-0.5">${p.is_active ? '' : '<span style="color:#B91C1C;">Inactif · </span>'}${esc(p.category || '—')}</div>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        ${badge}
+        <input type="number" class="stock-input" min="0" step="1"
+          placeholder="∞" value="${val}"
+          onchange="saveStock('${p.id}', this.value)"
+          title="Laisser vide = illimité">
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function stockBadge(stock) {
+  if (stock === null || stock === undefined || stock === '') {
+    return `<span class="stock-badge" style="background:#F3F4F6;color:#6B7280;">Illimité</span>`;
+  }
+  if (stock === 0) return `<span class="stock-badge" style="background:#FEE2E2;color:#B91C1C;">Épuisé</span>`;
+  if (stock <= 5)  return `<span class="stock-badge" style="background:#FEF3C7;color:#92400E;">Faible · ${stock}</span>`;
+  return `<span class="stock-badge" style="background:#D1FAE5;color:#065F46;">En stock · ${stock}</span>`;
+}
+
+async function saveStock(id, raw) {
+  const newStock = raw === '' ? null : parseInt(raw, 10);
+  const { error } = await _supabase
+    .from('resources')
+    .update({ stock: newStock })
+    .eq('id', id);
+
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+
+  // Mettre à jour localement
+  const p = products.find(x => x.id === id);
+  if (p) p.stock = newStock;
+
+  // Rafraîchir uniquement le badge de la ligne
+  const badge = document.querySelector(`#row-${id} .stock-badge`);
+  if (badge) badge.outerHTML = stockBadge(newStock);
+
+  showToast('Stock mis à jour ✓', 'success');
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = type === 'error' ? '#C96B8A' : '#3D7A4A';
+  t.style.color = 'white';
+  t.classList.remove('hidden');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.add('hidden'), 3000);
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function signOut() {
+  await _supabase.auth.signOut();
+  window.location.href = 'login.html';
+}
+</script>
+</body>
+</html>
