@@ -207,6 +207,15 @@ tailwind.config = {
       <!-- Caractéristiques -->
       <div id="product-details" class="space-y-2 text-sm text-muted pt-2 border-t border-border"></div>
 
+      <!-- Description accordéon (mobile uniquement) -->
+      <details id="product-desc-accordion" class="group md:hidden border-t border-border pt-2" style="display:none;">
+        <summary class="cursor-pointer flex items-center justify-between py-1 font-semibold text-sm select-none" style="color:#1A1208;list-style:none;">
+          À propos de ce produit
+          <span class="ms group-open:rotate-180 transition-transform" style="font-size:20px;color:#5B9EAD;">expand_more</span>
+        </summary>
+        <div id="product-description-mobile" class="text-sm leading-relaxed text-muted mt-3"></div>
+      </details>
+
     </div>
   </div>
 
@@ -285,6 +294,28 @@ tailwind.config = {
 <div id="toast" role="alert" aria-live="polite"></div>
 
 <script>
+// ── Markdown léger ──
+function inlineMd(t) {
+  return t
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>');
+}
+function mdToHtml(text) {
+  return text.split(/\n\n+/).map(block => {
+    const lines = block.split('\n');
+    if (lines.every(l => /^[-*] /.test(l.trim()))) {
+      return '<ul style="list-style:disc;padding-left:1.3em;margin-bottom:.75em;">'
+        + lines.map(l => `<li>${inlineMd(l.replace(/^[-*]\s/,''))}</li>`).join('')
+        + '</ul>';
+    }
+    if (/^## /.test(block)) {
+      return `<p style="font-weight:600;color:#1A1208;margin-bottom:.5em;">${inlineMd(block.replace(/^## /,''))}</p>`;
+    }
+    return `<p style="margin-bottom:.75em;">${lines.map(inlineMd).join('<br>')}</p>`;
+  }).join('');
+}
+
 // ── État ──
 let produit         = null;
 let varianteChoisie = null;
@@ -353,7 +384,10 @@ function renderProduit() {
 
   // Description
   if (produit.description) {
-    document.getElementById('product-description').textContent = produit.description;
+    const descHtml = mdToHtml(produit.description);
+    document.getElementById('product-description').innerHTML = descHtml;
+    document.getElementById('product-description-mobile').innerHTML = descHtml;
+    document.getElementById('product-desc-accordion').style.display = '';
   }
 
   // Caractéristiques

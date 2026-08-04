@@ -347,9 +347,14 @@ function renderGelatoVariantes() {
         <input type="text" placeholder="ID Gelato (ex: 9375c91b-…)" value="${esc(v.gelato_product_id||'')}"
           class="f-input text-sm" style="padding:6px 10px;font-size:11px;font-family:monospace;"
           oninput="updateGelatoVariante('${v.id}','gelato_product_id',this.value.trim())">
-        <input type="url" placeholder="URL photo mockup (optionnel)" value="${esc(v.preview_url||'')}"
-          class="f-input text-sm" style="padding:6px 10px;"
-          oninput="updateGelatoVariante('${v.id}','preview_url',this.value.trim())">
+        <div class="flex gap-2 items-center">
+          ${v.preview_url ? `<img src="${esc(v.preview_url)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid #E8D5DC;flex-shrink:0;">` : ''}
+          <label class="flex-1 flex items-center gap-2 cursor-pointer rounded-xl border-2 border-dashed p-2 text-xs text-muted hover:border-primary transition-colors" style="border-color:#E8D5DC;">
+            <span class="ms" style="font-size:18px;color:#C96B8A;">add_photo_alternate</span>
+            <span>${v.preview_url ? 'Changer la photo' : 'Ajouter une photo mockup'}</span>
+            <input type="file" accept="image/*" class="hidden" onchange="uploadVarianteImage(this,'${v.id}')">
+          </label>
+        </div>
       </div>
       <button type="button" onclick="removeGelatoVariante('${v.id}')"
         style="background:none;border:none;cursor:pointer;padding:4px;color:#999;">
@@ -372,6 +377,22 @@ function removeGelatoVariante(id) {
 function updateGelatoVariante(id, field, value) {
   const v = gelatoVariantes.find(v => v.id === id);
   if (v) v[field] = value;
+}
+
+async function uploadVarianteImage(input, varianteId) {
+  const file = input.files[0];
+  if (!file) return;
+  showToast('Upload en cours…', 'info');
+  const ext = file.name.split('.').pop();
+  const path = 'variante-previews/' + varianteId + '-' + Date.now().toString(36) + '.' + ext;
+  const { data, error } = await _supabase.storage
+    .from('submissions')
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (error) { showToast('Erreur upload : ' + error.message, 'error'); return; }
+  const { data: { publicUrl } } = _supabase.storage.from('submissions').getPublicUrl(data.path);
+  updateGelatoVariante(varianteId, 'preview_url', publicUrl);
+  renderGelatoVariantes();
+  showToast('Photo ajoutée ✓', 'success');
 }
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
