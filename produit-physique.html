@@ -385,8 +385,13 @@ function renderProduit() {
   const details = document.getElementById('product-details');
   details.innerHTML = `
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">local_shipping</span> Livraison sous ${delai}</div>
+    ${produit.gelato_product_id ? `
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">print</span> Impression professionnelle papier mat premium</div>
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">verified</span> Fabriqué via Gelato, partenaire certifié</div>
+    ` : `
+    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">handmade</span> Préparé et expédié à la main</div>
+    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">favorite</span> Création originale Facyne</div>
+    `}
   `;
 
   // Variantes
@@ -436,8 +441,10 @@ function selectVariante(id) {
 }
 
 function updatePrix(prixProduit) {
-  const prixLivraison = produit.prix_livraison || 300;
-  const seuilGratuit  = produit.livraison_offerte_a_partir || 4580;
+  const seuilGratuit  = produit.livraison_offerte_a_partir || 4500;
+  const prixLivraison = produit.gelato_product_id
+    ? (produit.prix_livraison || 490)
+    : (produit.mode_livraison === 'lettre' ? 200 : 490);
   const livraison     = prixProduit >= seuilGratuit ? 0 : prixLivraison;
 
   document.getElementById('product-price-display').textContent =
