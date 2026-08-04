@@ -202,8 +202,10 @@ tailwind.config = {
         <span class="ms" style="font-size:18px;">shopping_bag</span>
         Ajouter au panier
       </button>
-      <button id="order-btn" class="w-full text-center text-sm text-muted hover:text-teal transition-colors mt-1 py-2" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()">
-        Commander maintenant →
+      <button id="order-btn" class="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-2xl border-2 transition-all mt-1" style="background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
+        onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
+        <span class="ms" style="font-size:18px;">bolt</span>
+        Commander maintenant
       </button>
       <p class="text-xs text-center text-muted">Paiement sécurisé par Stripe · Adresse de livraison collectée au paiement</p>
 
@@ -676,10 +678,11 @@ function addToCartFromPage() {
   });
 
   const btn = document.getElementById('add-cart-btn');
-  btn.innerHTML = '<span class="ms" style="font-size:18px;">check</span> Ajouté au panier !';
+  btn.innerHTML = '<span class="ms" style="font-size:18px;">check</span> Ajouté !';
   setTimeout(() => {
-    btn.innerHTML = '<span class="ms" style="font-size:18px;">shopping_bag</span> Ajouter au panier';
-  }, 2000);
+    btn.innerHTML = '<span class="ms" style="font-size:18px;">shopping_cart</span> Voir le panier';
+    btn.onclick = () => { window.location.href = 'panier.html'; };
+  }, 1000);
 }
 
 // ── Commander maintenant (checkout direct, sans passer par le panier) ──
