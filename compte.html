@@ -61,6 +61,11 @@ tailwind.config = {
   .achat-card:hover { box-shadow:0 4px 16px rgba(91,158,173,0.1); }
   .achat-cover { width:54px;height:70px;border-radius:10px;flex-shrink:0;overflow:hidden;background:#F5EDE0; }
 
+  /* Commande card */
+  .cmd-card { background:white;border:1px solid #E2D4BC;border-radius:16px;padding:16px;transition:box-shadow 0.2s; }
+  .cmd-card:hover { box-shadow:0 4px 16px rgba(91,158,173,0.1); }
+  .cmd-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
+
   /* Skeleton */
   .skeleton { background:linear-gradient(90deg,#E2D4BC 25%,#F5EDE0 50%,#E2D4BC 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
@@ -152,6 +157,25 @@ tailwind.config = {
     <div id="achats-list" class="space-y-3 hidden"></div>
   </div>
 
+  <!-- ── MES COMMANDES (physiques) ── -->
+  <div class="fade-up delay-2 mt-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-display font-bold text-lg" style="color:#1A1208;">
+        Mes commandes
+        <span id="commandes-count" class="font-body font-normal text-sm ml-1" style="color:#8B7A5A;"></span>
+      </h2>
+    </div>
+
+    <!-- Squelettes -->
+    <div id="commandes-skeleton" class="space-y-3">
+      <div class="skeleton rounded-2xl" style="height:90px;"></div>
+      <div class="skeleton rounded-2xl" style="height:90px;"></div>
+    </div>
+
+    <!-- Liste -->
+    <div id="commandes-list" class="space-y-3 hidden"></div>
+  </div>
+
 </main>
 
 
@@ -196,6 +220,7 @@ async function init() {
   session = s;
   loadProfile();
   loadAchats();
+  loadCommandes();
 }
 
 // ── Profil ──
@@ -322,6 +347,77 @@ async function downloadResource(fileUrl, title, btn) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+// ── Commandes physiques ──
+const CMD_STATUS = {
+  confirmed:      { label: 'En attente',     bg: '#FEF5E7', color: '#B07D00' },
+  en_attente:     { label: 'En attente',     bg: '#FEF5E7', color: '#B07D00' },
+  en_preparation: { label: 'En préparation', bg: '#EBF5F7', color: '#3D7A8A' },
+  expedie:        { label: 'Expédié',        bg: '#EDFAF1', color: '#1E7E3C' },
+  livre:          { label: 'Livré',          bg: '#F0F0F0', color: '#666'    },
+};
+
+async function loadCommandes() {
+  const email = session.user.email;
+  const { data, error } = await _supabase
+    .from('commandes_physiques')
+    .select('id, created_at, statut, montant_total, montant_livraison, numero_suivi, produit_id, resources!produit_id(title, preview_url)')
+    .eq('email_client', email)
+    .order('created_at', { ascending: false });
+
+  document.getElementById('commandes-skeleton').classList.add('hidden');
+  const list = document.getElementById('commandes-list');
+  list.classList.remove('hidden');
+
+  const items = (!error && data) ? data : [];
+  document.getElementById('commandes-count').textContent = items.length > 0 ? `(${items.length})` : '';
+
+  if (items.length === 0) {
+    list.innerHTML = `
+      <div class="text-center py-10">
+        <span class="ms block mb-3" style="font-size:40px;color:#E2D4BC;">local_shipping</span>
+        <p class="font-semibold text-sm mb-1" style="color:#1A1208;">Aucune commande pour l'instant</p>
+        <p class="text-xs" style="color:#8B7A5A;">Vos commandes de produits physiques apparaîtront ici.</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(c => renderCommande(c)).join('');
+}
+
+function renderCommande(c) {
+  const st     = CMD_STATUS[c.statut] || CMD_STATUS['en_attente'];
+  const total  = c.montant_total ? (c.montant_total / 100).toFixed(2) + ' €' : '—';
+  const title  = c.resources?.title || 'Produit physique';
+  const cover  = c.resources?.preview_url
+    ? `<img src="${esc(c.resources.preview_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
+    : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:22px;color:#5B9EAD;opacity:0.4;">inventory_2</span></div>`;
+
+  const tracking = c.numero_suivi
+    ? `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${encodeURIComponent(c.numero_suivi)}"
+          target="_blank" rel="noopener"
+          class="inline-flex items-center gap-1 text-xs font-medium no-underline mt-2"
+          style="color:#5B9EAD;">
+         <span class="ms" style="font-size:14px;">local_shipping</span>
+         Suivre — ${esc(c.numero_suivi)}
+       </a>`
+    : '';
+
+  return `
+    <div class="cmd-card">
+      <div class="flex gap-3 items-center">
+        <div class="achat-cover flex-shrink-0">${cover}</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm leading-snug mb-1" style="color:#1A1208;">${esc(title)}</p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="cmd-badge" style="background:${st.bg};color:${st.color};">${st.label}</span>
+            <span class="text-xs" style="color:#8B7A5A;">${fmtDate(c.created_at)} · ${total}</span>
+          </div>
+          ${tracking}
+        </div>
+      </div>
+    </div>`;
 }
 
 async function logout() {
