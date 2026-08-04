@@ -396,7 +396,49 @@ async function startCheckout() {
   }
 }
 
-renderCart();
+// Sync prix depuis Supabase (si prix changé depuis l'ajout au panier)
+async function syncCartPrices() {
+  const items = Cart.get();
+  if (!items.length) { renderCart(); return; }
+
+  const ids = [...new Set(items.map(i => i.produit_id))];
+  const { data } = await _supabase
+    .from('resources')
+    .select('id, price, variantes, stock')
+    .in('id', ids);
+
+  if (!data) { renderCart(); return; }
+
+  const map = {};
+  data.forEach(r => { map[r.id] = r; });
+
+  let changed = false;
+  const updated = items.map(item => {
+    const r = map[item.produit_id];
+    if (!r) return item;
+
+    // Prix : chercher dans variantes d'abord, sinon prix produit
+    let freshCents = (r.price || 0) * 100;
+    if (item.variante_id && r.variantes?.length) {
+      const v = r.variantes.find(v => v.id === item.variante_id);
+      if (v?.prix) freshCents = v.prix;
+    }
+
+    if (freshCents !== item.price_cents) {
+      changed = true;
+      return { ...item, price_cents: freshCents };
+    }
+    return item;
+  });
+
+  if (changed) {
+    localStorage.setItem('jt_panier', JSON.stringify(updated));
+  }
+
+  renderCart();
+}
+
+syncCartPrices();
 loadRelated();
 </script>
 
