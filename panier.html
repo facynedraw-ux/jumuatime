@@ -384,7 +384,7 @@ async function startCheckout() {
     const { url, error } = await res.json();
     if (error) throw new Error(error);
     if (!url) throw new Error('Impossible de créer la session de paiement.');
-    window.location.href = url;
+    window.open(url, '_blank');
   } catch (err) {
     showToast('Erreur : ' + (err.message || 'Réessayez.'), 'error');
     btn.disabled = false;

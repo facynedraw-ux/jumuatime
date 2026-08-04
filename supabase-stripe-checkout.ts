@@ -133,7 +133,20 @@ Deno.serve(async (req: Request) => {
       // Livraison : uniquement les produits manuels (non-Gelato)
       const manualPhysical = items.filter((i: any) => i.type_produit === 'physique' && !i.gelato_product_id);
       const manualSubtotal = manualPhysical.reduce((sum: number, i: any) => sum + (i.price_cents || 0) * (i.quantity || 1), 0);
-      const hasColis = manualPhysical.some((i: any) => !i.mode_livraison || i.mode_livraison === 'colis');
+
+      // Récupérer mode_livraison depuis la DB (source de vérité, pas le client)
+      let hasColis = false;
+      if (manualPhysical.length > 0) {
+        const produitIds = [...new Set(manualPhysical.map((i: any) => i.produit_id))];
+        const { data: produits } = await supabase
+          .from('resources')
+          .select('id, mode_livraison')
+          .in('id', produitIds);
+        const modeMap: Record<string, string> = Object.fromEntries(
+          (produits || []).map((p: any) => [p.id, p.mode_livraison || 'colis'])
+        );
+        hasColis = manualPhysical.some((i: any) => (modeMap[i.produit_id] || 'colis') !== 'lettre');
+      }
 
       const shippingAmount = manualPhysical.length === 0 ? 0
         : manualSubtotal >= 4500 ? 0
