@@ -149,20 +149,20 @@ export async function onRequestPost(context) {
     const gelatoApiKey    = context.env.GELATO_API_KEY;
     const resendApiKey    = context.env.RESEND_API_KEY;
 
-    if (!stripeSecretKey || !webhookSecret || !gelatoApiKey) {
-      return jsonResponse({ error: 'Missing env vars' }, 500);
-    }
-
     const signature = context.request.headers.get('stripe-signature');
     const testToken = context.request.headers.get('x-test-token');
     const rawBody   = await context.request.text();
 
     let event;
     if (testToken) {
-      // Mode test : bypass signature, token secret requis
+      // Mode test : bypass signature, seul GELATO_API_KEY requis
       if (testToken !== context.env.TEST_SECRET) return jsonResponse({ error: 'Invalid test token' }, 403);
+      if (!gelatoApiKey) return jsonResponse({ error: 'Missing GELATO_API_KEY' }, 500);
       event = JSON.parse(rawBody);
     } else {
+      if (!stripeSecretKey || !webhookSecret || !gelatoApiKey) {
+        return jsonResponse({ error: 'Missing env vars' }, 500);
+      }
       if (!signature) return jsonResponse({ error: 'Missing Stripe signature' }, 400);
       const isValid = await verifyStripeSignature(rawBody, signature, webhookSecret);
       if (!isValid) return jsonResponse({ error: 'Invalid Stripe signature' }, 400);
