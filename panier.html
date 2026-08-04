@@ -372,6 +372,7 @@ async function startCheckout() {
           price_cents:       i.price_cents,
           type_produit:      i.type_produit,
           gelato_product_id: i.gelato_product_id || '',
+          mode_livraison:    i.mode_livraison || 'colis',
           variante_id:       i.variante_id || '',
           personnalisation:  i.personnalisation || {},
           quantity:          i.quantity || 1,
