@@ -194,25 +194,38 @@ export async function onRequestPost(context) {
 
       // Gelato orders
       for (const item of gelatoItems) {
-        const gelatoRes = await fetch('https://www.gelato.com/api/orders', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${gelatoApiKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            productId: item.g,
-            quantity:  item.q || 1,
-            recipient: {
-              name: customerName, email: customerEmail,
-              address: {
-                line1: shipping.line1 || '', line2: shipping.line2 || '',
-                city: shipping.city || '', postalCode: shipping.postal_code || '',
-                country: shipping.country || '', state: shipping.state || '',
-              },
-            },
-            metadata: { source:'jumuatime', stripe_session_id:session.id, produit_id:item.i||'', variante_id:item.v||'' },
-          }),
+        const nameParts  = (customerName || '').trim().split(/\s+/);
+        const firstName  = nameParts[0] || 'Client';
+        const lastName   = nameParts.slice(1).join(' ') || '-';
+        const gelatoBody = {
+          orderType:           'order',
+          orderReferenceId:    `jt-${session.id.slice(-8)}-${(item.i||'').slice(-4)}`,
+          customerReferenceId: customerEmail || session.id,
+          currency:            'EUR',
+          items: [{
+            itemReferenceId: `jt-${(item.i||'').slice(-6)}-${(item.v||'0').slice(-4)}`,
+            productUid:      item.g,
+            quantity:        item.q || 1,
+          }],
+          shipmentMethodUid: 'standard',
+          shippingAddress: {
+            firstName,
+            lastName,
+            addressLine1: shipping.line1 || '',
+            ...(shipping.line2 ? { addressLine2: shipping.line2 } : {}),
+            city:         shipping.city || '',
+            postCode:     shipping.postal_code || '',
+            country:      shipping.country || '',
+            email:        customerEmail,
+          },
+        };
+        const gelatoRes = await fetch('https://order.gelatoapis.com/v4/orders', {
+          method:  'POST',
+          headers: { 'X-API-KEY': gelatoApiKey, 'Content-Type': 'application/json' },
+          body:    JSON.stringify(gelatoBody),
         });
         const data = await gelatoRes.json().catch(() => null);
-        results.push({ produit: item.t || item.i, ok: gelatoRes.ok, data });
+        results.push({ produit: item.t || item.i, ok: gelatoRes.ok, status: gelatoRes.status, data });
       }
 
       // Emails — envoi en parallèle, non bloquant
@@ -244,20 +257,31 @@ export async function onRequestPost(context) {
       return jsonResponse({ received:true, skipped:'No physical Gelato mapping' }, 200);
     }
 
-    const gelatoRes = await fetch('https://www.gelato.com/api/orders', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${gelatoApiKey}`, 'Content-Type': 'application/json' },
+    const nameParts2 = (customerName || '').trim().split(/\s+/);
+    const gelatoRes  = await fetch('https://order.gelatoapis.com/v4/orders', {
+      method:  'POST',
+      headers: { 'X-API-KEY': gelatoApiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        productId: gelatoProductId, quantity: 1,
-        recipient: {
-          name: customerName, email: customerEmail,
-          address: {
-            line1: shipping.line1||'', line2: shipping.line2||'',
-            city: shipping.city||'', postalCode: shipping.postal_code||'',
-            country: shipping.country||'', state: shipping.state||'',
-          },
+        orderType:           'order',
+        orderReferenceId:    `jt-${session.id.slice(-8)}`,
+        customerReferenceId: customerEmail || session.id,
+        currency:            'EUR',
+        items: [{
+          itemReferenceId: `jt-${session.id.slice(-8)}-0`,
+          productUid:      gelatoProductId,
+          quantity:        1,
+        }],
+        shipmentMethodUid: 'normal',
+        shippingAddress: {
+          firstName:    nameParts2[0] || 'Client',
+          lastName:     nameParts2.slice(1).join(' ') || '-',
+          addressLine1: shipping.line1 || '',
+          ...(shipping.line2 ? { addressLine2: shipping.line2 } : {}),
+          city:         shipping.city || '',
+          postCode:     shipping.postal_code || '',
+          country:      shipping.country || '',
+          email:        customerEmail,
         },
-        metadata: { source:'jumuatime', stripe_session_id:session.id, produit_id:metadata.produit_id||'', variante_id:metadata.variante_id||'', personnalisation:metadata.personnalisation||'{}' },
       }),
     });
 
