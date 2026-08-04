@@ -123,8 +123,9 @@ tailwind.config = {
           </button>
           <p class="text-xs text-center text-muted mt-2">Paiement sécurisé par Stripe</p>
 
-          <a href="ressources.html" class="block text-center text-sm text-muted hover:text-teal transition-colors mt-4 no-underline">
-            ← Continuer mes achats
+          <a href="ressources.html" class="flex items-center justify-center gap-2 w-full mt-3 py-2.5 px-4 rounded-xl border-2 text-sm font-semibold transition-colors no-underline" style="border-color:#5B9EAD;color:#5B9EAD;background:white;" onmouseover="this.style.background='#EBF5F7'" onmouseout="this.style.background='white'">
+            <span class="ms" style="font-size:16px;">arrow_back</span>
+            Continuer mes achats
           </a>
         </div>
       </div>
@@ -223,9 +224,12 @@ function renderCart() {
   document.getElementById('items-list').innerHTML = items.map(item => {
     const key  = item.produit_id + '|' + (item.variante_id || '');
     const line = (item.price_cents || 0) * (item.quantity || 1);
-    const badge = item.type_produit === 'physique'
-      ? `<span style="font-size:10px;background:#EBF5F7;color:#3D7A8A;padding:2px 8px;border-radius:20px;font-weight:600;">📦 Physique</span>`
-      : `<span style="font-size:10px;background:#F5EDE0;color:#8B6230;padding:2px 8px;border-radius:20px;font-weight:600;">📄 Numérique</span>`;
+    const cs = CAT_STYLES[item.category];
+    const badge = cs
+      ? `<span style="font-size:10px;background:${cs.bg};color:${cs.color};padding:2px 8px;border-radius:20px;font-weight:600;">${cs.label}</span>`
+      : item.type_produit === 'physique'
+        ? `<span style="font-size:10px;background:#EBF5F7;color:#3D7A8A;padding:2px 8px;border-radius:20px;font-weight:600;">📦 Physique</span>`
+        : `<span style="font-size:10px;background:#F5EDE0;color:#8B6230;padding:2px 8px;border-radius:20px;font-weight:600;">📄 Numérique</span>`;
 
     const thumb = item.preview_url
       ? `<img src="${item.preview_url}" alt="${item.title}" class="w-full h-full object-cover">`

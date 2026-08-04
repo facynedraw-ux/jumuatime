@@ -639,6 +639,7 @@ function addToCartFromPage() {
     preview_url:       produit.preview_url || '',
     price_cents:       priceCents,
     type_produit:      'physique',
+    category:          produit.category || '',
     gelato_product_id: variante?.gelato_product_id || produit.gelato_product_id || '',
     mode_livraison:    produit.mode_livraison || 'colis',
     variante_id:       varianteChoisie || '',
