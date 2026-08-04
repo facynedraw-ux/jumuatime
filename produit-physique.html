@@ -176,6 +176,9 @@ tailwind.config = {
         </div>
       </div>
 
+      <!-- Stock -->
+      <div id="stock-badge" class="hidden"></div>
+
       <!-- Récapitulatif prix -->
       <div class="bg-white border border-border rounded-2xl p-5">
         <h3 class="font-semibold text-sm mb-3">Récapitulatif</h3>
@@ -425,6 +428,9 @@ function renderProduit() {
     updatePrix(produit.price ? produit.price * 100 : 0);
   }
 
+  // Stock
+  renderStockBadge();
+
   // Champs personnalisation
   const options = produit.options_personnalisation;
   if (produit.personnalisable && options?.champs?.length) {
@@ -433,6 +439,21 @@ function renderProduit() {
   } else {
     // Pas de personnalisation requise — activer le bouton directement
     checkFormValid();
+  }
+}
+
+function renderStockBadge() {
+  const el = document.getElementById('stock-badge');
+  if (!el || !produit) return;
+  const stock = produit.stock;
+  if (stock === null || stock === undefined) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  if (stock === 0) {
+    el.innerHTML = `<span class="inline-flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-full" style="background:#FEE2E2;color:#B91C1C;"><span class="ms" style="font-size:14px;">inventory_2</span> Épuisé</span>`;
+  } else if (stock <= 5) {
+    el.innerHTML = `<span class="inline-flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-full" style="background:#FEF3C7;color:#92400E;"><span class="ms" style="font-size:14px;">inventory_2</span> Plus que ${stock} en stock</span>`;
+  } else {
+    el.innerHTML = `<span class="inline-flex items-center gap-1 text-sm font-medium px-3 py-1 rounded-full" style="background:#D1FAE5;color:#065F46;"><span class="ms" style="font-size:14px;">inventory_2</span> En stock</span>`;
   }
 }
 
@@ -602,6 +623,14 @@ function updatePreview(val) {
 function checkFormValid() {
   const options = produit?.options_personnalisation;
   const champs  = options?.champs || [];
+
+  // Épuisé
+  if (produit?.stock !== null && produit?.stock !== undefined && produit?.stock === 0) {
+    document.getElementById('add-cart-btn').disabled = true;
+    document.getElementById('order-btn').disabled = true;
+    document.getElementById('add-cart-btn').textContent = 'Épuisé';
+    return;
+  }
 
   // Vérifier variante si nécessaire
   if ((produit?.variantes || []).length > 0 && !varianteChoisie) {

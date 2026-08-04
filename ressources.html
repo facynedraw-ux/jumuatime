@@ -297,7 +297,7 @@ async function init() {
 
   const { data } = await _supabase
     .from('resources')
-    .select('id, slug, title, preview_url, price, category, type_produit')
+    .select('id, slug, title, preview_url, price, category, type_produit, stock')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
@@ -357,22 +357,30 @@ function renderGrid() {
       ? `<span class="badge" style="background:white;color:${cs.color};box-shadow:0 1px 4px rgba(0,0,0,0.08);">${cs.label}</span>`
       : '';
 
+    // Badge épuisé
+    const isEpuise = r.stock !== null && r.stock !== undefined && r.stock === 0;
+    const epuiseBadge = isEpuise
+      ? `<div class="absolute top-2 right-2"><span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:#FEE2E2;color:#B91C1C;">Épuisé</span></div>`
+      : '';
+
     // Sous-info sous le prix
-    const subInfo = isPhysique
+    const subInfo = isPhysique && !isEpuise
       ? `<p class="text-xs mt-0.5" style="color:#8B7A5A;">Expédié en 5–7 jours</p>`
       : '';
 
     return `
-      <a href="${href}" class="resource-card">
+      <a href="${href}" class="resource-card" style="${isEpuise ? 'opacity:0.65;pointer-events:auto;' : ''}">
         <div class="relative overflow-hidden" style="aspect-ratio:1/1;background:${bg};">
           ${cover}
           ${topBadge ? `<div class="absolute top-2 left-2">${topBadge}</div>` : ''}
+          ${epuiseBadge}
         </div>
         <div class="p-3">
           <h3 class="font-semibold text-xs leading-snug mb-1.5" style="color:#1A1208;">${esc(r.title)}</h3>
           ${r.subtitle ? `<p class="text-xs leading-snug mb-1" style="color:#8B7A5A;">${esc(r.subtitle)}</p>` : ''}
           <p class="font-display font-bold text-base mt-1" style="color:#C49A5A;">${formatPrice(r.price)}</p>
           ${subInfo}
+          ${isEpuise ? `<p class="text-xs mt-0.5 font-medium" style="color:#B91C1C;">Épuisé</p>` : ''}
         </div>
       </a>`;
   }).join('');

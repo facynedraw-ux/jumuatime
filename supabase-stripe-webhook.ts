@@ -161,6 +161,9 @@ Deno.serve(async (req: Request) => {
 
       if (cmdErr) console.warn("[webhook] commandes_physiques insert:", cmdErr.message);
 
+      // Décrémenter le stock
+      await supabase.rpc("decrement_stock", { product_id: meta.produit_id });
+
       const { data: produitData } = await supabase
         .from("resources")
         .select("title")
@@ -280,6 +283,9 @@ Deno.serve(async (req: Request) => {
           })
           .select().single();
         if (cmdErr) console.warn("[webhook] panier commandes_physiques insert:", cmdErr.message);
+
+        // Décrémenter le stock
+        await supabase.rpc("decrement_stock", { product_id: item.i });
 
         if (emailClient) {
           await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/swift-function`, {

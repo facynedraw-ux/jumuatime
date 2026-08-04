@@ -263,6 +263,13 @@ tailwind.config = {
       </div>
     </div>
 
+    <!-- Stock : visible uniquement si type = physique -->
+    <div id="section-stock" class="mb-4" style="display:none;">
+      <label class="f-label" for="f-stock">Stock disponible</label>
+      <input type="number" id="f-stock" class="f-input" min="0" step="1" placeholder="Laisser vide = illimité">
+      <p class="text-xs text-muted mt-1">Décrémenté automatiquement après chaque commande. Laisser vide = stock illimité.</p>
+    </div>
+
     <div class="mb-3">
       <label class="f-label">Galerie d'images (mockups, visuels supplémentaires)</label>
       <div id="f-gallery-list" class="space-y-2 mb-2"></div>
@@ -310,6 +317,7 @@ let editingId = null;
 function onTypeProduitChange() {
   const isPhysique = document.getElementById('f-type-produit').value === 'physique';
   document.getElementById('section-physique').style.display = isPhysique ? '' : 'none';
+  document.getElementById('section-stock').style.display = isPhysique ? '' : 'none';
 }
 
 function onExpeditionChange() {
@@ -487,6 +495,7 @@ function editResource(id) {
   document.getElementById('f-mode-livraison').value = r.mode_livraison || 'lettre';
   document.getElementById('f-format').value = r.format || 'PDF';
   document.getElementById('f-active').checked = r.is_active;
+  document.getElementById('f-stock').value = r.stock ?? '';
   document.getElementById('f-gallery-list').innerHTML = '';
   (r.gallery_urls || []).forEach(url => addGalleryUrl(url));
 
@@ -536,6 +545,7 @@ function openPanel() {
   document.getElementById('f-gallery-list').innerHTML = '';
   document.getElementById('r-manuel').checked = true;
   document.getElementById('r-gelato').checked = false;
+  document.getElementById('f-stock').value = '';
   onTypeProduitChange();
   onExpeditionChange();
   gelatoVariantes = [];
@@ -740,6 +750,9 @@ async function saveResource() {
       : null,
     format: document.getElementById('f-format').value.trim() || 'PDF',
     is_active: document.getElementById('f-active').checked,
+    stock: document.getElementById('f-type-produit').value === 'physique'
+      ? (document.getElementById('f-stock').value !== '' ? parseInt(document.getElementById('f-stock').value, 10) : null)
+      : null,
   };
 
   let error;
