@@ -13,7 +13,7 @@ Répertoire de travail local : D:\DEV\jumuatime\
 - Gold : #C49A5A
 - Crème : #FAF6F0
 - Texte foncé : #1A1A1A
-- Footer : #2D3154 (bleu nuit)
+- Footer : #2D5A66 (teal foncé)
 - Admin : #C96B8A (rose)
 
 ## Typographie
@@ -24,7 +24,8 @@ Répertoire de travail local : D:\DEV\jumuatime\
 - Nom : Jumua Time
 - Marque boutique : Jumuatime (pas Facyne)
 - Sous-titre : "L'univers illustré de la famille musulmane"
-- Slogan : "Des créations qui ont du sens."
+- Slogan : "Des créations qui ont du sens." (baseline officielle de la marque)
+- Accroche hero (index.html) : "Pensées avec du sens." (variante utilisée dans le hero uniquement)
 - Créatrice : Facyne (facyne.draw@gmail.com)
 
 ## Structure fichiers
