@@ -407,11 +407,17 @@ function selectVariante(id) {
   const variantes = produit.variantes || [];
   const v = variantes.find(v => v.id === id);
 
-  // UI
+  // UI sélection
   variantes.forEach(vv => {
     document.getElementById('variante-' + vv.id)?.classList.remove('selected');
   });
   document.getElementById('variante-' + id)?.classList.add('selected');
+
+  // Basculer l'image principale si la variante a son propre mockup
+  const img = document.getElementById('product-image');
+  if (img) {
+    img.src = v?.preview_url || galleryImages[0] || produit.preview_url || '';
+  }
 
   if (v) updatePrix(v.prix);
   checkFormValid();

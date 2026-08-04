@@ -347,6 +347,9 @@ function renderGelatoVariantes() {
         <input type="text" placeholder="ID Gelato (ex: 9375c91b-…)" value="${esc(v.gelato_product_id||'')}"
           class="f-input text-sm" style="padding:6px 10px;font-size:11px;font-family:monospace;"
           oninput="updateGelatoVariante('${v.id}','gelato_product_id',this.value.trim())">
+        <input type="url" placeholder="URL photo mockup (optionnel)" value="${esc(v.preview_url||'')}"
+          class="f-input text-sm" style="padding:6px 10px;"
+          oninput="updateGelatoVariante('${v.id}','preview_url',this.value.trim())">
       </div>
       <button type="button" onclick="removeGelatoVariante('${v.id}')"
         style="background:none;border:none;cursor:pointer;padding:4px;color:#999;">
@@ -472,10 +475,11 @@ function editResource(id) {
     label: v.label || '',
     prix: v.prix || 0,
     gelato_product_id: v.gelato_product_id || '',
+    preview_url: v.preview_url || '',
   }));
   // Migration : ancien produit Gelato sans variantes → pré-remplir une ligne
   if (gelatoVariantes.length === 0 && r.gelato_product_id) {
-    gelatoVariantes = [{ id: crypto.randomUUID(), label: '', prix: r.price || 0, gelato_product_id: r.gelato_product_id }];
+    gelatoVariantes = [{ id: crypto.randomUUID(), label: '', prix: r.price || 0, gelato_product_id: r.gelato_product_id, preview_url: '' }];
   }
 
   // Piloter les sections physique / expédition
