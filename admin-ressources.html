@@ -320,6 +320,7 @@ function onExpeditionChange() {
   document.getElementById('lbl-manuel').style.background  = isGelato ? 'white' : '#FDF0F4';
   document.getElementById('lbl-gelato').style.borderColor = isGelato ? '#C96B8A' : '#E2D4BC';
   document.getElementById('lbl-gelato').style.background  = isGelato ? '#FDF0F4' : 'white';
+  if (isGelato && gelatoVariantes.length === 0) addGelatoVariante();
 }
 
 // ── Gestion variantes Gelato ──
@@ -465,18 +466,24 @@ function editResource(id) {
   document.getElementById('f-gallery-list').innerHTML = '';
   (r.gallery_urls || []).forEach(url => addGalleryUrl(url));
 
-  // Piloter les sections physique / expédition
-  onTypeProduitChange();
-  const isGelato = !!r.gelato_product_id || (r.variantes || []).some(v => v.gelato_product_id);
-  document.getElementById('r-gelato').checked = isGelato;
-  document.getElementById('r-manuel').checked = !isGelato;
-  onExpeditionChange();
+  // Charger les variantes EN PREMIER (avant onExpeditionChange)
   gelatoVariantes = (r.variantes || []).map(v => ({
     id: v.id || crypto.randomUUID(),
     label: v.label || '',
     prix: v.prix || 0,
     gelato_product_id: v.gelato_product_id || '',
   }));
+  // Migration : ancien produit Gelato sans variantes → pré-remplir une ligne
+  if (gelatoVariantes.length === 0 && r.gelato_product_id) {
+    gelatoVariantes = [{ id: crypto.randomUUID(), label: '', prix: r.price || 0, gelato_product_id: r.gelato_product_id }];
+  }
+
+  // Piloter les sections physique / expédition
+  onTypeProduitChange();
+  const isGelato = !!r.gelato_product_id || gelatoVariantes.some(v => v.gelato_product_id);
+  document.getElementById('r-gelato').checked = isGelato;
+  document.getElementById('r-manuel').checked = !isGelato;
+  onExpeditionChange();
   renderGelatoVariantes();
 
   document.getElementById('panel').classList.remove('hidden');
