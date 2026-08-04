@@ -449,7 +449,7 @@ async function loadResources() {
           ${r.is_active ? 'Actif' : 'Inactif'}
         </button>
         <div class="flex gap-2 flex-shrink-0">
-          <a href="ressource.html?slug=${esc(r.slug)}" target="_blank" class="btn-sm" title="Voir la fiche">
+          <a href="${r.type_produit === 'physique' ? 'produit-physique' : 'ressource'}.html?slug=${esc(r.slug)}" target="_blank" class="btn-sm" title="Voir la fiche">
             <span class="ms" style="font-size:14px;">open_in_new</span>
           </a>
           <button class="btn-sm-green" onclick="editResource('${r.id}')" title="Modifier">
