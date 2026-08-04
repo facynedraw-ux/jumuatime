@@ -50,7 +50,7 @@ function emailBase(content) {
 <table width="100%" style="max-width:560px;background:white;border-radius:20px;overflow:hidden;border:1px solid #E2D4BC;">
   <!-- Header -->
   <tr><td style="background:#5B9EAD;padding:24px 32px;text-align:center;">
-    <span style="font-size:22px;font-weight:700;color:white;letter-spacing:-0.5px;">🌙 Jumua Time</span>
+    <img src="https://jumuatime.com/Images/logo_version_white.png" alt="Jumua Time" style="height:48px;width:auto;display:inline-block;">
   </td></tr>
   <!-- Content -->
   <tr><td style="padding:32px;">
