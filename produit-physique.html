@@ -471,7 +471,7 @@ function renderFaq() {
 function updatePrix(prixProduit) {
   const seuilGratuit  = produit.livraison_offerte_a_partir || 4500;
   const prixLivraison = produit.gelato_product_id
-    ? (produit.prix_livraison || 490)
+    ? 0
     : (produit.mode_livraison === 'lettre' ? 200 : 490);
   const livraison     = prixProduit >= seuilGratuit ? 0 : prixLivraison;
 
