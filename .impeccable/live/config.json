@@ -1,6 +1,1 @@
-{
-  "files": ["*.html"],
-  "insertBefore": "</body>",
-  "commentSyntax": "html",
-  "cspChecked": true
-}
+{"files":["*.html"],"exclude":["admin.html","admin-commandes.html","admin-ressources.html","admin-stock.html","login.html"],"insertBefore":"</body>","commentSyntax":"html","cspChecked":true}

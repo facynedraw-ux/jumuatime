@@ -173,6 +173,22 @@ export async function onRequestPost(context) {
     const session       = event.data.object;
     const metadata      = session.metadata || {};
     const type          = metadata.type;
+
+    // ── IDEMPOTENCY : éviter de rejouer une commande déjà traitée ──
+    const supabaseUrl = context.env.SUPABASE_URL;
+    const supabaseKey = context.env.SUPABASE_SERVICE_KEY;
+    if (supabaseUrl && supabaseKey && (type === 'panier' || type === 'physique')) {
+      const checkRes = await fetch(
+        `${supabaseUrl}/rest/v1/commandes_physiques?stripe_session_id=eq.${encodeURIComponent(session.id)}&select=id&limit=1`,
+        { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
+      );
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        if (Array.isArray(existing) && existing.length > 0) {
+          return jsonResponse({ received: true, skipped: 'already_processed', session_id: session.id }, 200);
+        }
+      }
+    }
     const shipping      = session.shipping_details?.address || session.customer_details?.address || {};
     const customerName  = session.customer_details?.name || '';
     const customerEmail = session.customer_details?.email || '';
