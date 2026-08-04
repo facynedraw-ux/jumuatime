@@ -250,11 +250,16 @@ tailwind.config = {
         </select>
       </div>
 
-      <!-- Gelato : ID produit -->
+      <!-- Gelato : formats / variantes -->
       <div id="section-gelato" style="display:none;">
-        <label class="f-label" for="f-gelato-product-id">ID produit Gelato</label>
-        <input type="text" id="f-gelato-product-id" class="f-input" placeholder="9375c91b-67e0-4568-ac45-a2f8f76226a7">
-        <p class="text-xs text-muted mt-1">Visible dans ton catalogue Gelato → Product details.</p>
+        <div class="flex items-center justify-between mb-2">
+          <label class="f-label mb-0">Formats / Variantes</label>
+          <button type="button" onclick="addGelatoVariante()" class="btn-sm" style="font-size:12px;">
+            <span class="ms" style="font-size:14px;">add</span> Ajouter un format
+          </button>
+        </div>
+        <div id="gelato-variantes-list" class="space-y-2"></div>
+        <p class="text-xs text-muted mt-2">Chaque format = un produit Gelato distinct. L'ID est visible dans ton catalogue Gelato → Product details.</p>
       </div>
     </div>
 
@@ -315,6 +320,54 @@ function onExpeditionChange() {
   document.getElementById('lbl-manuel').style.background  = isGelato ? 'white' : '#FDF0F4';
   document.getElementById('lbl-gelato').style.borderColor = isGelato ? '#C96B8A' : '#E2D4BC';
   document.getElementById('lbl-gelato').style.background  = isGelato ? '#FDF0F4' : 'white';
+}
+
+// ── Gestion variantes Gelato ──
+let gelatoVariantes = [];
+
+function renderGelatoVariantes() {
+  const list = document.getElementById('gelato-variantes-list');
+  if (!list) return;
+  if (gelatoVariantes.length === 0) {
+    list.innerHTML = '<p class="text-xs text-muted">Aucun format. Cliquer sur "Ajouter un format".</p>';
+    return;
+  }
+  list.innerHTML = gelatoVariantes.map(v => `
+    <div class="flex gap-2 items-start p-3 rounded-xl border" style="background:white;border-color:#E8D5DC;">
+      <div class="flex-1 space-y-2">
+        <div class="flex gap-2">
+          <input type="text" placeholder="Label (ex: A4, A3…)" value="${esc(v.label)}"
+            class="f-input text-sm flex-1" style="padding:6px 10px;"
+            oninput="updateGelatoVariante('${v.id}','label',this.value)">
+          <input type="number" step="0.01" placeholder="Prix (€)" value="${v.prix ? (v.prix/100).toFixed(2) : ''}"
+            class="f-input text-sm" style="padding:6px 10px;width:90px;"
+            oninput="updateGelatoVariante('${v.id}','prix',Math.round(parseFloat(this.value||0)*100))">
+        </div>
+        <input type="text" placeholder="ID Gelato (ex: 9375c91b-…)" value="${esc(v.gelato_product_id||'')}"
+          class="f-input text-sm" style="padding:6px 10px;font-size:11px;font-family:monospace;"
+          oninput="updateGelatoVariante('${v.id}','gelato_product_id',this.value.trim())">
+      </div>
+      <button type="button" onclick="removeGelatoVariante('${v.id}')"
+        style="background:none;border:none;cursor:pointer;padding:4px;color:#999;">
+        <span class="ms" style="font-size:18px;">delete</span>
+      </button>
+    </div>
+  `).join('');
+}
+
+function addGelatoVariante() {
+  gelatoVariantes.push({ id: crypto.randomUUID(), label: '', prix: 0, gelato_product_id: '' });
+  renderGelatoVariantes();
+}
+
+function removeGelatoVariante(id) {
+  gelatoVariantes = gelatoVariantes.filter(v => v.id !== id);
+  renderGelatoVariantes();
+}
+
+function updateGelatoVariante(id, field, value) {
+  const v = gelatoVariantes.find(v => v.id === id);
+  if (v) v[field] = value;
 }
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -406,7 +459,6 @@ function editResource(id) {
   document.getElementById('f-preview-pdf').value = r.preview_pdf_url || '';
   document.getElementById('f-preview-pdf-input').value = '';
   document.getElementById('f-preview-pdf-name').textContent = r.preview_pdf_url ? r.preview_pdf_url.split('/').pop() : 'Sélectionner un PDF d\'aperçu…';
-  document.getElementById('f-gelato-product-id').value = r.gelato_product_id || '';
   document.getElementById('f-mode-livraison').value = r.mode_livraison || 'lettre';
   document.getElementById('f-format').value = r.format || 'PDF';
   document.getElementById('f-active').checked = r.is_active;
@@ -415,10 +467,17 @@ function editResource(id) {
 
   // Piloter les sections physique / expédition
   onTypeProduitChange();
-  const isGelato = !!r.gelato_product_id;
+  const isGelato = !!r.gelato_product_id || (r.variantes || []).some(v => v.gelato_product_id);
   document.getElementById('r-gelato').checked = isGelato;
   document.getElementById('r-manuel').checked = !isGelato;
   onExpeditionChange();
+  gelatoVariantes = (r.variantes || []).map(v => ({
+    id: v.id || crypto.randomUUID(),
+    label: v.label || '',
+    prix: v.prix || 0,
+    gelato_product_id: v.gelato_product_id || '',
+  }));
+  renderGelatoVariantes();
 
   document.getElementById('panel').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -438,7 +497,6 @@ function openPanel() {
   document.getElementById('f-preview-pdf-name').textContent = 'Sélectionner un PDF d\'aperçu…';
   document.getElementById('f-preview-input').value = '';
   document.getElementById('f-preview-name').textContent = 'Sélectionner une image…';
-  document.getElementById('f-gelato-product-id').value = '';
   document.getElementById('f-cat').value = '';
   document.getElementById('f-type-produit').value = 'numerique';
   document.getElementById('f-format').value = 'PDF';
@@ -448,6 +506,8 @@ function openPanel() {
   document.getElementById('r-gelato').checked = false;
   onTypeProduitChange();
   onExpeditionChange();
+  gelatoVariantes = [];
+  renderGelatoVariantes();
   const saveBtn = document.getElementById('panel-save-btn');
   saveBtn.disabled = false;
   document.getElementById('panel-save-label').textContent = 'Enregistrer';
@@ -638,7 +698,10 @@ async function saveResource() {
     preview_pdf_url: previewPdfUrl,
     file_url: fileUrl,
     gelato_product_id: document.getElementById('r-gelato').checked
-      ? (document.getElementById('f-gelato-product-id').value.trim() || null)
+      ? (gelatoVariantes[0]?.gelato_product_id || null)
+      : null,
+    variantes: document.getElementById('r-gelato').checked && gelatoVariantes.length > 0
+      ? gelatoVariantes
       : null,
     mode_livraison: !document.getElementById('r-gelato').checked
       ? (document.getElementById('f-mode-livraison').value || 'lettre')
