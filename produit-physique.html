@@ -123,11 +123,14 @@ tailwind.config = {
 
     <!-- Colonne gauche — Image -->
     <div class="fade-up">
-      <div id="product-image-wrap" class="rounded-2xl overflow-hidden bg-teal-light aspect-square flex items-center justify-center" style="background:#EBF5F7;">
+      <div id="product-image-wrap" class="rounded-2xl overflow-hidden bg-teal-light aspect-square flex items-center justify-center relative" style="background:#EBF5F7;">
         <img id="product-image" src="" alt="" class="w-full h-full object-cover cursor-pointer hidden" onclick="openLightbox(currentGalleryIdx)">
         <div id="product-image-placeholder" class="text-center p-8">
           <span class="ms" style="font-size:64px;color:#5B9EAD;">image</span>
           <p class="text-sm text-muted mt-2">Image bientôt disponible</p>
+        </div>
+        <div id="product-watermark" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+          <span class="font-bold select-none" style="color:rgba(255,255,255,0.35);font-size:clamp(1.2rem,5vw,2rem);transform:rotate(-30deg);letter-spacing:0.15em;">APERÇU</span>
         </div>
       </div>
       <div id="gallery-thumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 hidden"></div>
@@ -332,6 +335,7 @@ function renderProduit() {
     img.alt = produit.title;
     img.classList.remove('hidden');
     document.getElementById('product-image-placeholder').classList.add('hidden');
+    document.getElementById('product-watermark').classList.remove('hidden');
 
     if (galleryImages.length > 1) {
       const thumbsEl = document.getElementById('gallery-thumbs');
