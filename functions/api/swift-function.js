@@ -154,14 +154,20 @@ export async function onRequestPost(context) {
     }
 
     const signature = context.request.headers.get('stripe-signature');
+    const testToken = context.request.headers.get('x-test-token');
     const rawBody   = await context.request.text();
 
-    if (!signature) return jsonResponse({ error: 'Missing Stripe signature' }, 400);
-
-    const isValid = await verifyStripeSignature(rawBody, signature, webhookSecret);
-    if (!isValid) return jsonResponse({ error: 'Invalid Stripe signature' }, 400);
-
-    const event = JSON.parse(rawBody);
+    let event;
+    if (testToken) {
+      // Mode test : bypass signature, token secret requis
+      if (testToken !== context.env.TEST_SECRET) return jsonResponse({ error: 'Invalid test token' }, 403);
+      event = JSON.parse(rawBody);
+    } else {
+      if (!signature) return jsonResponse({ error: 'Missing Stripe signature' }, 400);
+      const isValid = await verifyStripeSignature(rawBody, signature, webhookSecret);
+      if (!isValid) return jsonResponse({ error: 'Invalid Stripe signature' }, 400);
+      event = JSON.parse(rawBody);
+    }
     if (event.type !== 'checkout.session.completed') return jsonResponse({ received: true }, 200);
 
     const session       = event.data.object;
