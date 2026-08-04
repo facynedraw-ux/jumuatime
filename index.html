@@ -76,6 +76,7 @@ tailwind.config = {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
+<script src="cart.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   body { font-family: 'DM Sans', sans-serif; background: #FAF6F0; color: #1A1208; margin: 0; }
@@ -165,8 +166,12 @@ tailwind.config = {
       <a href="a-propos.html" class="text-sm font-medium text-muted hover:text-teal transition-colors no-underline">À propos</a>
     </nav>
 
-    <!-- CTA + burger -->
+    <!-- CTA + panier + burger -->
     <div class="flex items-center gap-2">
+      <a href="panier.html" class="relative flex items-center justify-center w-10 h-10 rounded-full transition-colors hover:bg-teal-light" aria-label="Panier">
+        <span class="ms" style="font-size:22px;color:#5B9EAD;">shopping_bag</span>
+        <span class="jt-cart-count" style="display:none;position:absolute;top:0;right:0;background:#C49A5A;color:white;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;"></span>
+      </a>
       <a href="compte.html" class="hidden md:inline-flex btn-teal">
         <span class="ms" style="font-size:16px;">person</span>
         Mon compte
@@ -545,9 +550,10 @@ tailwind.config = {
       <span class="ms" style="font-size:20px;">store</span>
       <span style="font-size:10px;">Boutique</span>
     </a>
-    <a href="personnalisation.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
-      <span class="ms" style="font-size:20px;">brush</span>
-      <span style="font-size:10px;">Perso</span>
+    <a href="panier.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline relative" style="color:#8B7A5A;">
+      <span class="ms" style="font-size:20px;">shopping_bag</span>
+      <span style="font-size:10px;">Panier</span>
+      <span class="jt-cart-count" style="display:none;position:absolute;top:4px;right:20px;background:#C49A5A;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;"></span>
     </a>
     <a href="compte.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
       <span class="ms" style="font-size:20px;">person</span>
