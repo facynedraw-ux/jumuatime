@@ -210,36 +210,7 @@ tailwind.config = {
   <!-- FAQ -->
   <div class="mt-12 bg-white border border-border rounded-2xl p-6 md:p-8">
     <h2 class="font-display text-lg font-bold mb-5" style="color:#1A1208;">Questions fréquentes</h2>
-    <div class="space-y-4">
-      <details class="group">
-        <summary class="cursor-pointer font-medium text-sm flex items-center justify-between">
-          Peut-on offrir cette affiche ?
-          <span class="ms group-open:rotate-180 transition-transform" style="font-size:18px;">expand_more</span>
-        </summary>
-        <p class="text-sm text-muted mt-2 pl-1">Oui ! C'est un cadeau idéal. L'affiche arrive dans un emballage soigné, prête à offrir.</p>
-      </details>
-      <details class="group">
-        <summary class="cursor-pointer font-medium text-sm flex items-center justify-between">
-          Quand vais-je recevoir ma commande ?
-          <span class="ms group-open:rotate-180 transition-transform" style="font-size:18px;">expand_more</span>
-        </summary>
-        <p class="text-sm text-muted mt-2 pl-1">Facyne crée votre affiche personnalisée puis la confie à Gelato pour l'impression et l'expédition. Comptez 5 à 7 jours ouvrés au total.</p>
-      </details>
-      <details class="group">
-        <summary class="cursor-pointer font-medium text-sm flex items-center justify-between">
-          Puis-je modifier ma commande après paiement ?
-          <span class="ms group-open:rotate-180 transition-transform" style="font-size:18px;">expand_more</span>
-        </summary>
-        <p class="text-sm text-muted mt-2 pl-1">Contactez-nous rapidement à contact@jumuatime.com. Si la commande n'est pas encore envoyée à l'imprimeur, nous pouvons modifier le prénom.</p>
-      </details>
-      <details class="group">
-        <summary class="cursor-pointer font-medium text-sm flex items-center justify-between">
-          Quelle est la qualité d'impression ?
-          <span class="ms group-open:rotate-180 transition-transform" style="font-size:18px;">expand_more</span>
-        </summary>
-        <p class="text-sm text-muted mt-2 pl-1">Impression professionnelle sur papier mat premium 200g via Gelato, partenaire d'impression certifié.</p>
-      </details>
-    </div>
+    <div id="faq-list" class="space-y-4"></div>
   </div>
 
 </main>
@@ -389,10 +360,12 @@ function renderProduit() {
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">print</span> Impression professionnelle papier mat premium</div>
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">verified</span> Fabriqué via Gelato, partenaire certifié</div>
     ` : `
-    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">handmade</span> Préparé et expédié à la main</div>
+    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">waving_hand</span> Préparé et expédié à la main</div>
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">favorite</span> Création originale Facyne</div>
     `}
   `;
+
+  renderFaq();
 
   // Variantes
   const variantes = produit.variantes || [];
@@ -438,6 +411,61 @@ function selectVariante(id) {
 
   if (v) updatePrix(v.prix);
   checkFormValid();
+}
+
+function renderFaq() {
+  const faqEl = document.getElementById('faq-list');
+  if (!faqEl) return;
+
+  const isGelato = !!produit.gelato_product_id;
+  const delai    = produit.delai_livraison || (isGelato ? '5 à 7 jours ouvrés' : '2 à 4 jours ouvrés');
+  const modeLivr = produit.mode_livraison === 'lettre' ? 'lettre suivie' : 'colis';
+
+  const faqs = isGelato ? [
+    {
+      q: 'Quand vais-je recevoir ma commande ?',
+      a: `La commande est envoyée à Gelato pour impression puis expédiée directement chez vous. Comptez ${delai} au total.`,
+    },
+    {
+      q: 'Quelle est la qualité d\'impression ?',
+      a: 'Impression professionnelle sur papier mat premium 200g via Gelato, partenaire d\'impression certifié présent dans le monde entier.',
+    },
+    {
+      q: 'Puis-je modifier ma commande après paiement ?',
+      a: 'Contactez-nous rapidement à contact@jumuatime.com. Si la commande n\'est pas encore transmise à l\'imprimeur, nous pouvons la modifier.',
+    },
+    {
+      q: 'Peut-on offrir ce produit ?',
+      a: 'Oui ! C\'est un cadeau idéal. Le produit arrive dans un emballage soigné, prêt à offrir.',
+    },
+  ] : [
+    {
+      q: 'Quand vais-je recevoir ma commande ?',
+      a: `Chaque commande est préparée et expédiée à la main sous 1 à 2 jours ouvrés. Comptez ${delai} de délai total selon votre localisation.`,
+    },
+    {
+      q: 'Comment est expédié le produit ?',
+      a: `Expédition par La Poste en ${modeLivr}. Vous recevrez un numéro de suivi par email dès l'envoi.`,
+    },
+    {
+      q: 'Puis-je modifier ma commande après paiement ?',
+      a: 'Contactez-nous rapidement à contact@jumuatime.com. Nous faisons notre possible pour modifier les commandes non encore expédiées.',
+    },
+    {
+      q: 'Peut-on offrir ce produit ?',
+      a: 'Oui ! C\'est un cadeau idéal. Chaque article est préparé avec soin et peut être accompagné d\'une note si vous nous en faites la demande.',
+    },
+  ];
+
+  faqEl.innerHTML = faqs.map(({ q, a }) => `
+    <details class="group">
+      <summary class="cursor-pointer font-medium text-sm flex items-center justify-between">
+        ${q}
+        <span class="ms group-open:rotate-180 transition-transform" style="font-size:18px;">expand_more</span>
+      </summary>
+      <p class="text-sm text-muted mt-2 pl-1">${a}</p>
+    </details>
+  `).join('');
 }
 
 function updatePrix(prixProduit) {
