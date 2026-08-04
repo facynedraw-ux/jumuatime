@@ -177,10 +177,24 @@ tailwind.config = {
 
 
 <!-- FOOTER -->
-<footer class="py-10 px-4 hidden md:block" style="background:#2D5A66;">
-  <div class="max-w-2xl mx-auto text-center">
-    <p class="text-sm mb-2" style="color:rgba(255,255,255,0.55);">Des questions ? Contactez-nous à <a href="mailto:contact@jumuatime.com" style="color:#5B9EAD;">contact@jumuatime.com</a></p>
-    <p class="text-xs" style="color:rgba(255,255,255,0.35);">© 2026 Jumua Time</p>
+<footer class="px-4" style="background:#2D5A66;">
+  <!-- Desktop -->
+  <div class="hidden md:block py-10">
+    <div class="max-w-2xl mx-auto text-center">
+      <p class="text-sm mb-2" style="color:rgba(255,255,255,0.55);">Des questions ? Contactez-nous à <a href="mailto:contact@jumuatime.com" style="color:#5B9EAD;">contact@jumuatime.com</a></p>
+      <p class="text-xs" style="color:rgba(255,255,255,0.35);">© 2026 Jumua Time</p>
+    </div>
+  </div>
+  <!-- Mobile : légal accessible -->
+  <div class="md:hidden py-6 text-center" style="padding-bottom:max(80px,env(safe-area-inset-bottom));">
+    <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-7 w-auto object-contain mb-5" style="filter:brightness(0) invert(1);display:inline-block;">
+    <div class="flex flex-wrap justify-center gap-x-5 gap-y-3 mb-5">
+      <a href="mentions.html" class="footer-link">Mentions légales</a>
+      <a href="cgv.html" class="footer-link">CGV</a>
+      <a href="confidentialite.html" class="footer-link">Confidentialité</a>
+      <a href="mailto:contact@jumuatime.com" class="footer-link">Contact</a>
+    </div>
+    <p class="text-xs" style="color:rgba(255,255,255,0.3);">© 2026 Jumua Time</p>
   </div>
 </footer>
 

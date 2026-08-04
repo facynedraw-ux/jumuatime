@@ -241,34 +241,48 @@ tailwind.config = {
 
 
 <!-- ═══ FOOTER ═══ -->
-<footer class="py-12 px-4 hidden md:block" style="background:#2D5A66;">
-  <div class="max-w-5xl mx-auto">
-    <div class="grid md:grid-cols-3 gap-8 mb-8">
-      <div>
-        <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-10 w-auto object-contain mb-3" style="filter:brightness(0) invert(1);">
-        <p class="text-sm" style="color:rgba(255,255,255,0.55);">Créations illustrées pour la famille musulmane.</p>
+<footer class="px-4" style="background:#2D5A66;">
+  <!-- Desktop : 3 colonnes -->
+  <div class="hidden md:block py-12">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-10 w-auto object-contain mb-3" style="filter:brightness(0) invert(1);">
+          <p class="text-sm" style="color:rgba(255,255,255,0.55);">Créations illustrées pour la famille musulmane.</p>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Navigation</p>
+          <ul class="space-y-2 list-none p-0 m-0">
+            <li><a href="ressources.html" class="footer-link">Boutique</a></li>
+            <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
+            <li><a href="https://tilawatour.jumuaandme.workers.dev/" target="_blank" rel="noopener" class="footer-link">Tilawa Tour</a></li>
+            <li><a href="a-propos.html" class="footer-link">À propos</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Légal</p>
+          <ul class="space-y-2 list-none p-0 m-0">
+            <li><a href="mentions.html" class="footer-link">Mentions légales</a></li>
+            <li><a href="cgv.html" class="footer-link">CGV</a></li>
+            <li><a href="confidentialite.html" class="footer-link">Confidentialité</a></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Navigation</p>
-        <ul class="space-y-2 list-none p-0 m-0">
-          <li><a href="ressources.html" class="footer-link">Boutique</a></li>
-          <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
-          <li><a href="https://tilawatour.jumuaandme.workers.dev/" target="_blank" rel="noopener" class="footer-link">Tilawa Tour</a></li>
-          <li><a href="a-propos.html" class="footer-link">À propos</a></li>
-        </ul>
-      </div>
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Légal</p>
-        <ul class="space-y-2 list-none p-0 m-0">
-          <li><a href="mentions.html" class="footer-link">Mentions légales</a></li>
-          <li><a href="cgv.html" class="footer-link">CGV</a></li>
-          <li><a href="confidentialite.html" class="footer-link">Confidentialité</a></li>
-        </ul>
+      <div class="border-t pt-6 flex flex-col md:flex-row items-center justify-between gap-2" style="border-color:rgba(255,255,255,0.07);">
+        <p class="text-xs" style="color:rgba(255,255,255,0.35);">© 2026 Jumua Time · Des créations qui ont du sens.</p>
       </div>
     </div>
-    <div class="border-t pt-6 flex flex-col md:flex-row items-center justify-between gap-2" style="border-color:rgba(255,255,255,0.07);">
-      <p class="text-xs" style="color:rgba(255,255,255,0.35);">© 2026 Jumua Time · Des créations qui ont du sens.</p>
+  </div>
+  <!-- Mobile : compact, légal accessible -->
+  <div class="md:hidden py-6 text-center" style="padding-bottom:max(80px,env(safe-area-inset-bottom));">
+    <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-7 w-auto object-contain mb-5" style="filter:brightness(0) invert(1);display:inline-block;">
+    <div class="flex flex-wrap justify-center gap-x-5 gap-y-3 mb-5">
+      <a href="mentions.html" class="footer-link">Mentions légales</a>
+      <a href="cgv.html" class="footer-link">CGV</a>
+      <a href="confidentialite.html" class="footer-link">Confidentialité</a>
+      <a href="mailto:contact@jumuatime.com" class="footer-link">Contact</a>
     </div>
+    <p class="text-xs" style="color:rgba(255,255,255,0.3);">© 2026 Jumua Time</p>
   </div>
 </footer>
 
