@@ -44,6 +44,12 @@ tailwind.config = {
   .footer-link:hover { color:white; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   .fade-up { animation:fadeUp 0.35s ease both; }
+  .resource-card { background:white;border:1px solid #E2D4BC;border-radius:20px;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:block;color:#1A1208; }
+  .resource-card:hover { transform:translateY(-3px);box-shadow:0 10px 28px rgba(91,158,173,0.14); }
+  .badge { display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500; }
+  .skeleton { background:linear-gradient(90deg,#E2D4BC 25%,#F5EDE0 50%,#E2D4BC 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @media (prefers-reduced-motion:reduce) { .resource-card { transition:none !important; } .skeleton { animation:none !important; } }
 </style>
 </head>
 <body class="bg-bg font-body text-dark">
@@ -126,6 +132,53 @@ tailwind.config = {
     </div>
   </div>
 </main>
+
+<!-- VOUS AIMEREZ AUSSI -->
+<section id="related-section" class="hidden max-w-3xl mx-auto px-4 pb-12">
+  <h2 class="font-display font-bold text-lg mb-4" style="color:#1A1208;">Vous aimerez aussi</h2>
+  <div id="related-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="skeleton rounded-2xl" style="height:220px;"></div>
+    <div class="skeleton rounded-2xl" style="height:220px;"></div>
+    <div class="skeleton rounded-2xl" style="height:220px;"></div>
+    <div class="skeleton rounded-2xl" style="height:220px;"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-12 px-4 hidden md:block" style="background:#1C3540;">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-10 w-auto object-contain mb-3" style="filter:brightness(0) invert(1);">
+        <p class="text-sm" style="color:rgba(255,255,255,0.55);">Ressources pédagogiques, décoration<br>et outils pour la famille musulmane.</p>
+        <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-1 mt-3 text-sm no-underline" style="color:rgba(255,255,255,0.55);">@jumuatime</a>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Navigation</p>
+        <ul class="space-y-2 list-none p-0 m-0">
+          <li><a href="ressources.html" class="footer-link">Boutique</a></li>
+          <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
+          <li><a href="https://tilawatour.jumuaandme.workers.dev/" target="_blank" rel="noopener" class="footer-link">Tilawa Tour</a></li>
+          <li><a href="a-propos.html" class="footer-link">À propos</a></li>
+          <li><a href="mailto:contact@jumuatime.com" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Légal</p>
+        <ul class="space-y-2 list-none p-0 m-0">
+          <li><a href="mentions.html" class="footer-link">Mentions légales</a></li>
+          <li><a href="cgv.html" class="footer-link">CGV</a></li>
+          <li><a href="confidentialite.html" class="footer-link">Confidentialité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t pt-6 flex flex-col md:flex-row items-center justify-between gap-2" style="border-color:rgba(255,255,255,0.07);">
+      <p class="text-xs" style="color:rgba(255,255,255,0.35);">© 2026 Jumua Time · Des créations qui ont du sens.</p>
+      <p class="text-xs" style="color:rgba(255,255,255,0.35);">jumuatime.com</p>
+    </div>
+  </div>
+</footer>
 
 <!-- BOTTOM NAV MOBILE -->
 <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-border md:hidden z-50"
@@ -238,6 +291,60 @@ function removeItem(key) {
 
 window.addEventListener('jt-cart-updated', renderCart);
 
+const CAT_STYLES = {
+  enfants:      { bg:'#EBF5F7', color:'#3D7A8A', label:'Enfants' },
+  spiritualite: { bg:'#F5EDE0', color:'#8B6230', label:'Spiritualité' },
+  decoration:   { bg:'#F0EBF5', color:'#7A5F9A', label:'Décoration' },
+  cadeaux:      { bg:'#F7EDE8', color:'#C96B8A', label:'Cadeaux' },
+};
+
+function escR(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function loadRelated() {
+  const cartItems = Cart.get();
+  const cartIds   = cartItems.map(i => i.produit_id).filter(Boolean);
+  const categories = [...new Set(cartItems.map(i => i.category).filter(Boolean))];
+
+  let query = _supabase
+    .from('resources')
+    .select('id, slug, title, preview_url, price, category, type_produit')
+    .eq('is_active', true)
+    .limit(8);
+
+  if (categories.length) query = query.in('category', categories);
+
+  const { data } = await query;
+  if (!data || !data.length) return;
+
+  const related = data.filter(r => !cartIds.includes(r.id)).slice(0, 4);
+  if (!related.length) return;
+
+  document.getElementById('related-section').classList.remove('hidden');
+  document.getElementById('related-grid').innerHTML = related.map(r => {
+    const isPhysique = r.type_produit === 'physique';
+    const href  = isPhysique ? `produit-physique.html?slug=${escR(r.slug)}` : `ressource.html?slug=${escR(r.slug)}`;
+    const cs    = CAT_STYLES[r.category] || null;
+    const bg    = isPhysique ? '#EBF5F7' : (cs ? cs.bg : '#FAF6F0');
+    const cover = r.preview_url
+      ? `<img src="${escR(r.preview_url)}" alt="${escR(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+      : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.2;">${isPhysique?'local_shipping':'description'}</span></div>`;
+    const topBadge = cs
+      ? `<span class="badge" style="background:white;color:${cs.color};box-shadow:0 1px 4px rgba(0,0,0,0.08);">${cs.label}</span>`
+      : '';
+    return `
+      <a href="${href}" class="resource-card">
+        <div class="relative overflow-hidden" style="aspect-ratio:1/1;background:${bg};">
+          ${cover}
+          ${topBadge ? `<div class="absolute top-2 left-2">${topBadge}</div>` : ''}
+        </div>
+        <div class="p-3">
+          <h3 class="font-semibold text-xs leading-snug mb-1" style="color:#1A1208;">${escR(r.title)}</h3>
+          <p class="font-display font-bold text-sm" style="color:#C49A5A;">${fmt(r.price)}</p>
+        </div>
+      </a>`;
+  }).join('');
+}
+
 // ── Checkout ──
 async function startCheckout() {
   const items = Cart.get();
@@ -285,6 +392,7 @@ async function startCheckout() {
 }
 
 renderCart();
+loadRelated();
 </script>
 
 </body>

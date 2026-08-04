@@ -4,7 +4,7 @@
 HTML statique + Tailwind CDN + Vanilla JS
 Supabase (PostgreSQL + Auth + Storage) — project: qsvozaxqeamrdkmujoze.supabase.co
 Stripe mode LIVE (paiements réels)
-Resend via Edge Function "swift-function" (emails)
+Resend (emails transactionnels) — From : contact@jumuatime.com
 Cloudflare Pages — repo: C:\Users\conta\OneDrive\Documents\GitHub\maktaba-tour
 Répertoire de travail local : D:\DEV\jumuatime\
 
@@ -14,6 +14,7 @@ Répertoire de travail local : D:\DEV\jumuatime\
 - Crème : #FAF6F0
 - Texte foncé : #1A1A1A
 - Footer : #2D3154 (bleu nuit)
+- Admin : #C96B8A (rose)
 
 ## Typographie
 - Titres : Playfair Display
@@ -24,7 +25,7 @@ Répertoire de travail local : D:\DEV\jumuatime\
 - Marque boutique : Jumuatime (pas Facyne)
 - Sous-titre : "L'univers illustré de la famille musulmane"
 - Slogan : "Des créations qui ont du sens."
-- Créatrice : Facyne
+- Créatrice : Facyne (facyne.draw@gmail.com)
 
 ## Structure fichiers
 
@@ -35,7 +36,7 @@ Pages principales :
 
 Fiches produit :
 - ressource.html?slug=... — produit numérique
-- produit-physique.html?slug=... — produit physique (Gelato)
+- produit-physique.html?slug=... — produit physique (Gelato ou manuel)
 
 Pages auth/compte :
 - login.html (noindex)
@@ -45,8 +46,8 @@ Pages auth/compte :
 - confirmation-physique.html
 
 Pages admin (noindex) :
-- admin.html — tableau de bord principal (3 items : stats, achats, abonnés)
-- admin-commandes.html — gestion commandes
+- admin.html — tableau de bord principal (stats, achats récents, abonnés)
+- admin-commandes.html — gestion commandes physiques + achats numériques
 - admin-ressources.html — ajout/édition des produits en boutique
 
 Pages légales :
@@ -54,9 +55,10 @@ Pages légales :
 
 Autres :
 - supabase-client.js — client Supabase partagé (NE JAMAIS re-déclarer _supabase)
+- cart.js — panier localStorage (clé `jt_panier`) — Cart.add/remove/setQty/clear/count/subtotal/shipping/total
 - sw.js — service worker
 - media-picker.js
-- functions/ — Edge Functions Cloudflare
+- functions/api/ — Edge Functions Cloudflare Pages
 - assets/, Images/, Products/ — médias
 
 ## Base de données Supabase — NOMS RÉELS
@@ -66,28 +68,49 @@ Colonnes :
 - `id` (uuid)
 - `slug` (text) — utilisé dans les URLs (?slug=...)
 - `title` (text)
-- `preview_url` (text) — image principale (PAS cover_url)
+- `description` (text, nullable)
+- `preview_url` (text) — image principale (PAS cover_url — cover_url N'EXISTE PAS)
+- `preview_pdf_url` (text, nullable)
+- `file_url` (text, nullable) — PDF téléchargeable (numériques uniquement)
 - `price` (integer, centimes)
 - `category` (text) — valeurs : `enfants` | `spiritualite` | `decoration` | `cadeaux`
 - `type_produit` (text) — `numerique` | `physique`
-- `gelato_product_id` (text, nullable) — ID produit Gelato pour les physiques
+- `gelato_product_id` (text, nullable) — ID produit Gelato pour les physiques Gelato
 - `format` (text, nullable)
+- `gallery_urls` (text[], nullable) — galerie d'images supplémentaires
+- `is_active` (boolean) — visible en boutique si true
 
-Filtre technique côté front uniquement (pas en base) : `__physique__`
+### Table `commandes_physiques`
+Colonnes connues :
+- `id` (uuid)
+- `created_at`
+- `stripe_session_id` (text)
+- `statut` (text) — `en_attente` | `en_preparation` | `expedie` | `livre` | `annule`
+- `resource_id` (uuid) → join resources
+- `variante_id` (text, nullable)
+- `adresse_livraison` (jsonb) — { name, email, line1, line2, postal_code, city, country }
+- `personnalisation` (jsonb)
+- `montant_livraison` (integer, centimes)
+- `montant_total` (integer, centimes, nullable)
+- `numero_suivi` (text, nullable) — ajouté via SQL
+- `notes_admin` (text, nullable) — ajouté via SQL
+
+### Table `purchases` — achats numériques
+- `id`, `created_at`, `user_id`, `resource_id`, `download_token`, `downloaded_at`
 
 ### Autres tables actives
-- `profiles` — utilisateurs
-- `purchases` — achats numériques
+- `profiles` — utilisateurs (role: 'admin' pour Facyne)
 - `email_subscribers`
 
 ### ⚠️ Tables reliquats à supprimer (vérifier avant)
 `books`, `authors`, `publishers`, `submissions`, `themes`, `reviews`, `reading_list`
 
-## Gelato (fulfillment physique)
-- Compte créé, clé API générée
-- Produit connecté : Carte At-Tin (La Figue), ID `9375c91b-67e0-4568-ac45-a2f8f76226a7`
+## Gelato (fulfillment physique automatique)
+- Compte créé, clé API dans Cloudflare env: `GELATO_API_KEY`
+- Produit Gelato actif : Carte At-Tin (La Figue), ID `9375c91b-67e0-4568-ac45-a2f8f76226a7`
 - Formats : affiches A4 uniquement ; cartes = deux fiches séparées (carré / rectangulaire)
 - Pas de PDF téléchargeable pour les affiches/cartes
+- Flux : paiement Stripe → webhook Cloudflare → API Gelato → impression + envoi direct client
 
 ## Grille tarifaire
 | Produit | Prix |
@@ -102,9 +125,10 @@ Filtre technique côté front uniquement (pas en base) : `__physique__`
 ## Stripe
 - Mode LIVE (vraie carte) — NE JAMAIS passer en mode TEST
 - Prix en centimes dans Supabase
-- Checkout numérique : Edge Function stripe-checkout (JWT OFF)
-- Checkout physique : à connecter avec Gelato
-- Webhook : stripe-webhook (JWT OFF)
+- Checkout panier : Edge Function `stripe-checkout` (Supabase, JWT OFF)
+- Webhooks Stripe configurés (2 endpoints) :
+  1. Supabase : `https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/stripe-webhook` → DB (commandes_physiques)
+  2. Cloudflare : `https://jumuatime.com/api/swift-function` → Gelato + emails
 
 ## Edge Functions Supabase
 | Fonction | URL | JWT |
@@ -113,9 +137,34 @@ Filtre technique côté front uniquement (pas en base) : `__physique__`
 | `stripe-checkout` | `/functions/v1/stripe-checkout` | OFF |
 | `stripe-webhook` | `/functions/v1/stripe-webhook` | OFF |
 
+## Cloudflare Functions (functions/api/)
+| Fichier | Route | Rôle |
+|---|---|---|
+| `swift-function.js` | `/api/swift-function` | Webhook Stripe → Gelato + emails confirmation |
+| `physique-checkout.js` | `/api/physique-checkout` | Checkout produit physique simple |
+| `email-expedition.js` | `/api/email-expedition` | Email suivi expédition (appelé depuis admin-commandes) |
+
+## Variables d'environnement Cloudflare
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET` — secret du webhook Cloudflare (≠ secret webhook Supabase)
+- `GELATO_API_KEY`
+- `RESEND_API_KEY`
+
 ## Emails (Resend)
 - From : contact@jumuatime.com
-- Templates : confirmation numérique, confirmation physique, notif admin, expédition
+- Admin notif : facyne.draw@gmail.com
+- Templates implémentés dans swift-function.js :
+  - Confirmation client (panier physique payé)
+  - Notification admin nouvelle commande
+- Template dans email-expedition.js :
+  - Email expédition avec numéro de suivi → déclenché depuis admin-commandes quand statut → "expedie"
+
+## Admin — commandes (admin-commandes.html)
+- Onglet Physiques : liste commandes_physiques avec filtres statut
+- Onglet Numériques : liste purchases (lecture seule)
+- Panel glissant : détails commande + adresse + changement statut + numéro de suivi + notes internes
+- Sauvegarde : UPDATE commandes_physiques (statut, numero_suivi, notes_admin)
+- Déclenche email expédition automatiquement quand statut passe à "expedie"
 
 ## Règles importantes
 - NE JAMAIS utiliser balise <form> → event handlers JS uniquement
@@ -123,10 +172,10 @@ Filtre technique côté front uniquement (pas en base) : `__physique__`
 - NE JAMAIS modifier Stripe en mode TEST (on est en LIVE)
 - NE JAMAIS supprimer de données Supabase sans confirmation explicite
 - Toujours RLS activé sur les nouvelles tables
-- Commit par correction : git commit -m "fix: [description]"
 - `supabase-client.js` est le seul endroit où `_supabase` est déclaré
+- cover_url N'EXISTE PAS dans la table resources → toujours utiliser preview_url
 
 ## Ecosystème Jumua & Me
 - jumuatime.com — boutique illustrée famille musulmane
-- tilawatour.com — app récitation Coran
+- https://tilawatour.jumuaandme.workers.dev/ — app récitation Coran (Tilawa Tour)
 - facyne.com — portfolio et freelance de Facyne

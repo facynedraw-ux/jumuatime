@@ -1,7 +1,8 @@
 (function () {
-  const KEY           = 'jt_panier';
-  const SHIPPING_COST = 300;   // 3,00 €
-  const SHIPPING_FREE = 4500;  // 45,00 € — seuil franchise sur produits physiques
+  const KEY             = 'jt_panier';
+  const SHIPPING_LETTRE = 200;   // 2,00 € — petits objets (marque-pages, cartes)
+  const SHIPPING_COLIS  = 490;   // 4,90 € — colis (mugs, grands formats)
+  const SHIPPING_FREE   = 4500;  // 45,00 € — livraison offerte sur produits manuels
 
   window.Cart = {
     get() {
@@ -19,7 +20,8 @@
 
     // item = { produit_id, slug, title, preview_url, price_cents,
     //          type_produit ('numerique'|'physique'),
-    //          gelato_product_id, variante_id, personnalisation }
+    //          gelato_product_id, mode_livraison ('lettre'|'colis'),
+    //          variante_id, personnalisation }
     add(item) {
       const cart = this.get();
       const key  = this._k(item);
@@ -50,17 +52,22 @@
       return this.get().reduce((s, i) => s + (i.price_cents || 0) * (i.quantity || 1), 0);
     },
 
-    // La livraison ne s'applique que sur les produits physiques
-    _physicalSubtotal() {
-      return this.get()
-        .filter(i => i.type_produit === 'physique')
-        .reduce((s, i) => s + (i.price_cents || 0) * (i.quantity || 1), 0);
+    // Produits physiques NON-Gelato uniquement (Gelato gère sa propre livraison)
+    _manualPhysical() {
+      return this.get().filter(i => i.type_produit === 'physique' && !i.gelato_product_id);
+    },
+
+    _manualSubtotal() {
+      return this._manualPhysical().reduce((s, i) => s + (i.price_cents || 0) * (i.quantity || 1), 0);
     },
 
     shipping() {
-      const hasPhysical = this.get().some(i => i.type_produit === 'physique');
-      if (!hasPhysical) return 0;
-      return this._physicalSubtotal() >= SHIPPING_FREE ? 0 : SHIPPING_COST;
+      const manual = this._manualPhysical();
+      if (!manual.length) return 0;
+      if (this._manualSubtotal() >= SHIPPING_FREE) return 0;
+      // Si au moins un article nécessite un colis → tarif colis
+      const hasColis = manual.some(i => !i.mode_livraison || i.mode_livraison === 'colis');
+      return hasColis ? SHIPPING_COLIS : SHIPPING_LETTRE;
     },
 
     total() { return this.subtotal() + this.shipping(); },

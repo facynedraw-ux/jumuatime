@@ -559,6 +559,7 @@ function addToCartFromPage() {
     price_cents:       priceCents,
     type_produit:      'physique',
     gelato_product_id: produit.gelato_product_id || '',
+    mode_livraison:    produit.mode_livraison || 'colis',
     variante_id:       varianteChoisie || '',
     personnalisation:  persoValues,
   });
@@ -598,6 +599,7 @@ async function startCheckout() {
           price_cents:       priceCents,
           type_produit:      'physique',
           gelato_product_id: produit.gelato_product_id || '',
+          mode_livraison:    produit.mode_livraison || 'colis',
           variante_id:       varianteChoisie || '',
           personnalisation:  persoValues,
           quantity:          1,
