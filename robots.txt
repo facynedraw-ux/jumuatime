@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Pages privées / admin
+Disallow: /admin.html
+Disallow: /admin-ressources.html
+Disallow: /admin-commandes.html
+Disallow: /telechargement.html
+Disallow: /success.html
+Disallow: /commande-confirmee.html
+Disallow: /confirmation-physique.html
+
+Sitemap: https://jumuatime.com/sitemap.xml
