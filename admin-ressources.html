@@ -341,9 +341,20 @@ function renderGelatoVariantes() {
     list.innerHTML = '<p class="text-xs text-muted">Aucun format. Cliquer sur "Ajouter un format".</p>';
     return;
   }
-  list.innerHTML = gelatoVariantes.map(v => `
-    <div class="flex gap-2 items-start p-3 rounded-xl border" style="background:white;border-color:#E8D5DC;">
+  list.innerHTML = gelatoVariantes.map((v, idx) => `
+    <div class="flex gap-2 items-start p-3 rounded-xl border" style="background:white;border-color:${idx === 0 ? '#C96B8A' : '#E8D5DC'};">
+      <div class="flex flex-col gap-1 flex-shrink-0" style="padding-top:2px;">
+        <button type="button" onclick="moveGelatoVariante('${v.id}',-1)" ${idx === 0 ? 'disabled' : ''}
+          style="background:none;border:none;cursor:${idx === 0 ? 'default' : 'pointer'};padding:2px;color:${idx === 0 ? '#ddd' : '#C96B8A'};" title="Monter">
+          <span class="ms" style="font-size:18px;">arrow_upward</span>
+        </button>
+        <button type="button" onclick="moveGelatoVariante('${v.id}',1)" ${idx === gelatoVariantes.length - 1 ? 'disabled' : ''}
+          style="background:none;border:none;cursor:${idx === gelatoVariantes.length - 1 ? 'default' : 'pointer'};padding:2px;color:${idx === gelatoVariantes.length - 1 ? '#ddd' : '#C96B8A'};" title="Descendre">
+          <span class="ms" style="font-size:18px;">arrow_downward</span>
+        </button>
+      </div>
       <div class="flex-1 space-y-2">
+        ${idx === 0 ? `<p class="text-xs font-medium" style="color:#C96B8A;">⭐ Variante par défaut (affichée en premier)</p>` : ''}
         <div class="flex gap-2">
           <input type="text" placeholder="Label (ex: A4, A3…)" value="${esc(v.label)}"
             class="f-input text-sm flex-1" style="padding:6px 10px;"
@@ -379,6 +390,16 @@ function addGelatoVariante() {
 
 function removeGelatoVariante(id) {
   gelatoVariantes = gelatoVariantes.filter(v => v.id !== id);
+  renderGelatoVariantes();
+}
+
+function moveGelatoVariante(id, dir) {
+  const idx = gelatoVariantes.findIndex(v => v.id === id);
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= gelatoVariantes.length) return;
+  const arr = [...gelatoVariantes];
+  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+  gelatoVariantes = arr;
   renderGelatoVariantes();
 }
 
