@@ -5,6 +5,7 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin-ressources.html
 Disallow: /admin-commandes.html
+Disallow: /admin-stock.html
 Disallow: /telechargement.html
 Disallow: /success.html
 Disallow: /commande-confirmee.html

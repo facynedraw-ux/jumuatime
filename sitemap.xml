@@ -32,24 +32,6 @@
   </url>
 
   <url>
-    <loc>https://jumuatime.com/panier.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://jumuatime.com/login.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://jumuatime.com/compte.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
     <loc>https://jumuatime.com/personnalisation.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

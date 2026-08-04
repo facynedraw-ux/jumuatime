@@ -1,118 +1,138 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-06-01T00:00:00Z",
-  "title": "Design System: Maktaba Tour",
+  "generatedAt": "2026-08-04T00:00:00Z",
+  "title": "Design System: Jumua Time",
   "extensions": {
     "colorMeta": {
-      "rose-pivoine":   { "role": "primary",   "displayName": "Rose Pivoine Poudré",  "canonical": "#C96B8A", "tonalRamp": ["#4a1a2d","#6b2840","#8c3d5c","#ae5278","#C96B8A","#d98aa5","#e9aec2","#f4d1df","#faf0f4"] },
-      "mauve-ardoise":  { "role": "secondary",  "displayName": "Mauve Ardoise",        "canonical": "#9B7FA6", "tonalRamp": ["#2d1f3a","#4a3460","#67508a","#836aa0","#9B7FA6","#b29bc0","#cab8d6","#e3d6eb","#f4eff8"] },
-      "abricot-chaud":  { "role": "tertiary",   "displayName": "Abricot Chaud",        "canonical": "#F0A87A", "tonalRamp": ["#4a2a10","#7a4520","#a86030","#d07848","#F0A87A","#f4bc96","#f7cfb2","#fbe3cf","#fdf4ec"] },
-      "prune-encre":    { "role": "neutral",    "displayName": "Prune Encre",          "canonical": "#3D1F2D", "tonalRamp": ["#1a0a12","#2d1220","#3D1F2D","#5a3044","#78485e","#9a6a7e","#bc8fa0","#dbbac5","#f5ecf0"] },
-      "blanc-rose":     { "role": "neutral",    "displayName": "Blanc Rosé",           "canonical": "#FFF5F7", "tonalRamp": ["#f5d0d8","#f8dde4","#fae8ec","#fbeff2","#FFF5F7","#fff8f9","#fffbfc","#fffefe","#ffffff"] },
-      "lavande-pale":   { "role": "neutral",    "displayName": "Lavande Pâle",         "canonical": "#F5F0FA", "tonalRamp": ["#d0c0e8","#dbd0ef","#e5ddf4","#eee9f8","#F5F0FA","#f8f5fc","#faf9fd","#fcfcfe","#ffffff"] },
-      "mauve-cendre":   { "role": "neutral",    "displayName": "Mauve Cendré",         "canonical": "#7A5A6A", "tonalRamp": ["#2a1820","#442838","#5c3a50","#7A5A6A","#967888","#b298a6","#ccbac4","#e4d8de","#f5eff2"] },
-      "rose-cendre":    { "role": "neutral",    "displayName": "Rose Cendré",          "canonical": "#E8D5DC", "tonalRamp": ["#c0909a","#cca4ae","#d8b8c2","#e2c8d0","#E8D5DC","#ede0e5","#f2eaed","#f8f4f6","#fdfbfc"] },
-      "vert-validation":{ "role": "neutral",    "displayName": "Vert Validation",      "canonical": "#5B8A5F", "tonalRamp": ["#1a3018","#2c4e2a","#3e6c3e","#4e7c50","#5B8A5F","#72a074","#94bc96","#b8d6ba","#dff0e0"] }
+      "turquoise-du-soir":  { "role": "primary",   "displayName": "Turquoise du Soir",   "canonical": "oklch(0.675 0.072 205)", "tonalRamp": ["#0e2a31","#1c4a58","#2b6678","#3D7A8A","#5B9EAD","#87bbc8","#b5d9e2","#EBF5F7"] },
+      "or-artisanal":       { "role": "secondary",  "displayName": "Or Artisanal",        "canonical": "oklch(0.70 0.10 65)",   "tonalRamp": ["#2a1e06","#4a3410","#6b4b1e","#8B6230","#C49A5A","#d9ba85","#eadbb7","#F5EDE0"] },
+      "rose-aquarelle":     { "role": "tertiary",   "displayName": "Rose Aquarelle",      "canonical": "oklch(0.85 0.06 25)",   "tonalRamp": ["#5c2a1e","#8c4232","#b8624e","#d4886e","#F2C4B2","#f7d8cb","#faeae3","#fdf5f1"] },
+      "mauve-doux":         { "role": "tertiary",   "displayName": "Mauve Doux",          "canonical": "oklch(0.60 0.06 310)",  "tonalRamp": ["#2a1c35","#4a3260","#6b4e87","#8566a0","#9B7FA6","#b89dc0","#d4bfda","#eee4f4"] },
+      "encre-profonde":     { "role": "neutral",    "displayName": "Encre Profonde",      "canonical": "oklch(0.15 0.015 60)",  "tonalRamp": ["#0a0804","#1A1208","#2e2014","#453220","#5e4830","#7a6248","#987e64","#c0a888"] },
+      "ivoire-chaleureux":  { "role": "neutral",    "displayName": "Ivoire Chaleureux",   "canonical": "oklch(0.97 0.01 70)",   "tonalRamp": ["#c0b090","#d4c4a4","#e2d4bc","#ede4d0","#f4ece2","#F5EDE0","#faf4ea","#FAF6F0"] },
+      "sable-voile":        { "role": "neutral",    "displayName": "Sable Voilé",         "canonical": "oklch(0.55 0.04 70)",   "tonalRamp": ["#2e2414","#4a3c24","#64523a","#8B7A5A","#a89878","#c0b098","#d8ccb8","#ede8de"] },
+      "sable-clair":        { "role": "neutral",    "displayName": "Sable Clair",         "canonical": "oklch(0.87 0.025 70)",  "tonalRamp": ["#a09080","#b8a894","#c8b8a4","#d8ccb8","#E2D4BC","#ece4d2","#f2ece2","#f8f4ee"] }
     },
     "typographyMeta": {
-      "display":  { "displayName": "Display",  "purpose": "Hero h1 uniquement. Fluid clamp. Italic rose autorisé sur le slogan." },
-      "headline": { "displayName": "Headline", "purpose": "H2 sections principales." },
-      "title":    { "displayName": "Title",    "purpose": "H3, sous-titres de fiches, noms de section." },
-      "body":     { "displayName": "Body",     "purpose": "Corps de texte. Max 70ch sur prose longue." },
-      "label":    { "displayName": "Label",    "purpose": "Badges, pills, meta, breadcrumbs." }
+      "display":  { "displayName": "Display",  "purpose": "Hero h1 et titres de page principale. Playfair Display 700. Italique or autorisé sur mots d'emphase." },
+      "headline": { "displayName": "Headline", "purpose": "Titres de sections principales (h2). Playfair Display 600." },
+      "title":    { "displayName": "Title",    "purpose": "Noms de produit, titres de carte, sous-titres. DM Sans 600." },
+      "body":     { "displayName": "Body",     "purpose": "Corps de texte. DM Sans 400. Max 65–75ch sur prose longue." },
+      "label":    { "displayName": "Label",    "purpose": "Eyebrows (✦ LA BOUTIQUE), badges de catégorie, meta. DM Sans 700 uppercase, tracking 0.12em. Un par page." }
     },
     "shadows": [
-      { "name": "hover-card",      "value": "0 8px 24px rgba(201,107,138,0.12)",   "purpose": "Cartes auteur au hover." },
-      { "name": "hover-book-card", "value": "0 12px 32px rgba(201,107,138,0.15)",  "purpose": "Cartes livre au hover." },
-      { "name": "frosted-stat",    "value": "backdrop-filter:blur(4px); background:rgba(255,255,255,0.8)", "purpose": "Stats flottantes hero desktop uniquement." }
+      { "name": "hover-card",        "value": "0 10px 28px rgba(91,158,173,0.14)", "purpose": "Cartes produit au hover — translateY(-3px) simultané." },
+      { "name": "hover-card-strong", "value": "0 12px 32px rgba(91,158,173,0.15)", "purpose": "Cartes de catégorie (hero index) au hover." }
     ],
     "motion": [
-      { "name": "ease-standard", "value": "ease",                    "purpose": "Transitions boutons et liens (0.15–0.2s)." },
-      { "name": "fade-up",       "value": "fadeUp 0.6s ease both",   "purpose": "Entrée hero uniquement. Désactivé prefers-reduced-motion." }
+      { "name": "ease-standard",   "value": "ease",                            "purpose": "Transitions boutons, liens, filter pills (0.15–0.2s)." },
+      { "name": "fade-up",         "value": "opacity+translateY(12px→0), 0.45–0.6s ease", "purpose": "Entrée de sections au chargement. Stagger 0.1s entre éléments." },
+      { "name": "float-card",      "value": "translateY(0→-10px), 4.5–6s ease-in-out infinite", "purpose": "Hero cards flottantes (index uniquement). Rotation légère pour chaque carte." },
+      { "name": "skeleton-shimmer","value": "background-position 200%→-200%, 1.4s infinite linear", "purpose": "Loader squelette pendant chargement Supabase." }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" }
+      { "name": "md", "value": "768px", "purpose": "Breakpoint principal — desktop vs mobile. Tailwind md:." }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Bouton Or (Primaire)",
       "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Action principale. Rose pivoine plein, blanc, radius 12px.",
-      "html": "<button class=\"ds-btn-primary\">Voir le catalogue</button>",
-      "css": ".ds-btn-primary{background:#C96B8A;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:background 0.2s,transform 0.1s}.ds-btn-primary:hover{background:#b55a78}.ds-btn-primary:focus-visible{outline:2px solid #C96B8A;outline-offset:2px}.ds-btn-primary:active{transform:scale(0.98)}"
+      "refersTo": "btn-gold",
+      "description": "CTA principal : ajouter au panier, voir la ressource, valider. Fond or artisanal.",
+      "html": "<button class=\"ds-btn-gold\">Ajouter au panier</button>",
+      "css": ".ds-btn-gold { background: #C49A5A; color: #ffffff; border: none; border-radius: 24px; padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s, transform 0.1s; } .ds-btn-gold:hover { background: #8B6230; } .ds-btn-gold:active { transform: scale(0.98); } .ds-btn-gold:focus-visible { outline: 2px solid #C49A5A; outline-offset: 3px; } @media (prefers-reduced-motion: reduce) { .ds-btn-gold { transition: none; } }"
     },
     {
-      "name": "Secondary Button",
+      "name": "Bouton Teal (Secondaire)",
       "kind": "button",
-      "refersTo": "button-secondary",
-      "description": "Action secondaire. Contour rose, fond transparent.",
-      "html": "<button class=\"ds-btn-secondary\">Soumettre un livre</button>",
-      "css": ".ds-btn-secondary{background:transparent;color:#C96B8A;border:1.5px solid #C96B8A;border-radius:12px;padding:11px 24px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:all 0.2s}.ds-btn-secondary:hover{background:#FFF5F7}.ds-btn-secondary:focus-visible{outline:2px solid #C96B8A;outline-offset:2px}"
+      "refersTo": "btn-teal",
+      "description": "Actions secondaires : Mon compte, navigation contextuelle. Fond turquoise.",
+      "html": "<button class=\"ds-btn-teal\">Mon compte</button>",
+      "css": ".ds-btn-teal { background: #5B9EAD; color: #ffffff; border: none; border-radius: 20px; padding: 10px 22px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: background 0.2s; } .ds-btn-teal:hover { background: #3D7A8A; } .ds-btn-teal:focus-visible { outline: 2px solid #5B9EAD; outline-offset: 3px; } @media (prefers-reduced-motion: reduce) { .ds-btn-teal { transition: none; } }"
     },
     {
-      "name": "Filter Pill",
+      "name": "Bouton Ghost (Sur fond foncé)",
+      "kind": "button",
+      "refersTo": "btn-ghost",
+      "description": "Réservé aux fonds teal ou sombres (hero, footer). Jamais sur ivoire ou blanc.",
+      "html": "<div style=\"background:#5B9EAD;padding:20px;display:inline-block;border-radius:8px;\"><button class=\"ds-btn-ghost\">Voir la boutique</button></div>",
+      "css": ".ds-btn-ghost { background: transparent; color: #ffffff; border: 1.5px solid rgba(255,255,255,0.75); border-radius: 24px; padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s, border-color 0.2s; } .ds-btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: #ffffff; } .ds-btn-ghost:focus-visible { outline: 2px solid rgba(255,255,255,0.8); outline-offset: 3px; } @media (prefers-reduced-motion: reduce) { .ds-btn-ghost { transition: none; } }"
+    },
+    {
+      "name": "Carte Produit",
+      "kind": "card",
+      "refersTo": "resource-card",
+      "description": "Carte de boutique. L'illustration domine (~60% de la hauteur). Prix en or. Ombre teal au hover.",
+      "html": "<a class=\"ds-resource-card\" href=\"#\"><div class=\"ds-rc-img\"></div><div class=\"ds-rc-body\"><span class=\"ds-badge-num\">PDF</span><p class=\"ds-rc-title\">Cahier de Ramadan illustré</p><p class=\"ds-rc-price\">9,90 €</p></div></a>",
+      "css": ".ds-resource-card { background: #ffffff; border: 1px solid #E2D4BC; border-radius: 20px; overflow: hidden; text-decoration: none; display: block; color: #1A1208; transition: transform 0.2s, box-shadow 0.2s; width: 200px; } .ds-resource-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(91,158,173,0.14); } .ds-rc-img { height: 130px; background: linear-gradient(135deg, #EBF5F7, #F5EDE0); } .ds-rc-body { padding: 14px 16px 16px; } .ds-badge-num { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; background: #EBF5F7; color: #3D7A8A; margin-bottom: 8px; } .ds-rc-title { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; color: #1A1208; margin: 0 0 6px; line-height: 1.4; } .ds-rc-price { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 16px; color: #C49A5A; margin: 0; } @media (prefers-reduced-motion: reduce) { .ds-resource-card { transition: none; } }"
+    },
+    {
+      "name": "Filter Pills",
       "kind": "chip",
       "refersTo": "filter-pill",
-      "description": "Filtre catalogue. Contour gris repos, rose plein actif.",
-      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-pill\">Ramadan</button><button class=\"ds-pill ds-pill--active\">Famille</button></div>",
-      "css": ".ds-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #E8D5DC;background:#fff;color:#7A5A6A;font-family:'DM Sans',sans-serif;transition:all 0.15s}.ds-pill:hover{border-color:#C96B8A;color:#C96B8A}.ds-pill--active{background:#C96B8A;color:#fff;border-color:#C96B8A}"
+      "description": "Filtres de catégorie boutique. Actif = fond teal. Hover = bordure + texte teal.",
+      "html": "<div class=\"ds-filter-bar\"><button class=\"ds-filter-pill ds-filter-active\">Tout</button><button class=\"ds-filter-pill\">Pour les enfants</button><button class=\"ds-filter-pill\">Spiritualité</button></div>",
+      "css": ".ds-filter-bar { display: flex; gap: 8px; flex-wrap: wrap; } .ds-filter-pill { padding: 6px 14px; border-radius: 20px; border: 1.5px solid #E2D4BC; background: #ffffff; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #8B7A5A; cursor: pointer; white-space: nowrap; transition: all 0.15s; } .ds-filter-pill:hover { border-color: #5B9EAD; color: #5B9EAD; } .ds-filter-active { background: #5B9EAD; color: #ffffff; border-color: #5B9EAD; } @media (prefers-reduced-motion: reduce) { .ds-filter-pill { transition: none; } }"
     },
     {
-      "name": "Book Card",
-      "kind": "card",
-      "refersTo": "book-card",
-      "description": "Carte livre. Couverture 3/4 object-contain, hover rose.",
-      "html": "<a class=\"ds-book-card\" href=\"#\"><div class=\"ds-book-cover\"></div><div class=\"ds-book-body\"><span class=\"ds-badge-age\">3–6 ans</span><h3 class=\"ds-book-title\">Le Ramadan de Lina</h3><p class=\"ds-book-author\">Sarah Oumna</p><div class=\"ds-stars\">★★★★★</div></div></a>",
-      "css": ".ds-book-card{display:block;background:#fff;border:1px solid #E8D5DC;border-radius:16px;overflow:hidden;text-decoration:none;color:#3D1F2D;transition:transform 0.2s ease,box-shadow 0.2s ease}.ds-book-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(201,107,138,0.15)}.ds-book-cover{aspect-ratio:3/4;background:#F5F0FA;width:100%}.ds-book-body{padding:12px}.ds-badge-age{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:#F5E8F0;color:#C96B8A;margin-bottom:6px;font-family:'DM Sans',sans-serif}.ds-book-title{font-family:'Playfair Display',serif;font-weight:600;font-size:14px;margin:4px 0;line-height:1.3}.ds-book-author{font-family:'DM Sans',sans-serif;font-size:12px;color:#7A5A6A;margin:0 0 6px}.ds-stars{color:#F0A87A;font-size:12px}"
-    },
-    {
-      "name": "Search Input",
-      "kind": "input",
-      "refersTo": "input-field",
-      "description": "Barre de recherche hero. Icône gauche, focus rose, placeholder contrasté.",
-      "html": "<div class=\"ds-search-wrap\"><input class=\"ds-search\" type=\"text\" placeholder=\"Rechercher un titre, un auteur…\"/></div>",
-      "css": ".ds-search-wrap{position:relative;max-width:480px}.ds-search{width:100%;padding:14px 20px 14px 48px;border:1.5px solid #E8D5DC;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:15px;color:#3D1F2D;background:#fff;outline:none;transition:border-color 0.2s;box-sizing:border-box}.ds-search:focus{border-color:#C96B8A}.ds-search::placeholder{color:#7A5A6A}"
-    },
-    {
-      "name": "Badge",
+      "name": "Badges Produit",
       "kind": "chip",
-      "refersTo": "badge-theme",
-      "description": "Badge thème, âge, langue. Non interactif.",
-      "html": "<div style=\"display:flex;gap:6px\"><span class=\"ds-badge-age\">3–6 ans</span><span class=\"ds-badge-theme\">Ramadan</span><span class=\"ds-badge-lang\">FR / AR</span></div>",
-      "css": ".ds-badge-age,.ds-badge-theme,.ds-badge-lang{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif}.ds-badge-age{background:#F5E8F0;color:#C96B8A}.ds-badge-theme{background:#EEE8F5;color:#7A5F9A}.ds-badge-lang{background:#E8F0E8;color:#4A7A4A}"
+      "description": "Badges de type produit (Numérique/Physique) et statut. Pill 20px, 11px.",
+      "html": "<div style=\"display:flex;gap:8px;\"><span class=\"ds-badge ds-badge-num\">Numérique</span><span class=\"ds-badge ds-badge-phys\">Physique</span></div>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; } .ds-badge-num { background: #EBF5F7; color: #3D7A8A; } .ds-badge-phys { background: #F5EDE0; color: #8B6230; }"
+    },
+    {
+      "name": "Skeleton Loader",
+      "kind": "custom",
+      "description": "Placeholder animé pendant le chargement des grilles Supabase. Shimmer gauche-droite en palette ivoire/sable.",
+      "html": "<div style=\"width:200px;\"><div class=\"ds-skeleton\" style=\"height:130px;border-radius:20px 20px 0 0;\"></div><div style=\"padding:14px 16px;\"><div class=\"ds-skeleton\" style=\"height:14px;border-radius:4px;margin-bottom:8px;\"></div><div class=\"ds-skeleton\" style=\"height:16px;width:60%;border-radius:4px;\"></div></div></div>",
+      "css": "@keyframes ds-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } } .ds-skeleton { background: linear-gradient(90deg, #E2D4BC 25%, #F5EDE0 50%, #E2D4BC 75%); background-size: 200% 100%; animation: ds-shimmer 1.4s infinite linear; } @media (prefers-reduced-motion: reduce) { .ds-skeleton { animation: none; background: #E2D4BC; } }"
+    },
+    {
+      "name": "Eyebrow Section",
+      "kind": "custom",
+      "description": "Label de section. DM Sans 700, uppercase, tracking 2px, couleur or. Symbole ✦ en préfixe. Un seul par page.",
+      "html": "<p class=\"ds-eyebrow\">✦ La Boutique</p>",
+      "css": ".ds-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C49A5A; margin: 0 0 12px; }"
     }
   ],
   "narrative": {
-    "northStar": "La Libraire de Confiance",
-    "overview": "Maktaba Tour se comporte comme une libraire indépendante qui connaît chaque livre de son fond, recommande avec expertise et chaleur, et ne vend jamais à la dure. Chaleureux sans être sucré, éditorial sans être froid, fiable sans être ennuyeux.\n\nLa palette rose pivoine, mauve ardoise et abricot chaud sur fond blanc rosé évoque un intérieur de librairie bien tenu. Playfair Display pour l'autorité éditoriale, DM Sans pour la lisibilité mobile.",
+    "northStar": "L'Atelier de l'Illustratrice",
+    "overview": "Jumua Time est un atelier, pas une boutique. Chaque page révèle la main de Facyne — l'illustration est le produit, le produit est l'illustration. Le système visuel part de ce fait et en tire toutes les conséquences : fond ivoire chaud comme une feuille de papier aquarelle, typographie serif qui rappelle les albums jeunesse illustrés, palettes douces inspirées des pigments naturels.\n\nCe n'est pas un e-commerce islamique. Ce n'est pas une boutique généraliste. C'est un univers cohérent, bienveillant et sincère, destiné aux familles qui cherchent à ancrer la culture islamique dans le quotidien — par le beau, pas par l'injonction.\n\nLa chaleur de la palette, la douceur des rayons et la présence de l'illustration sont les gardes-fous contre la standardisation.",
     "keyCharacteristics": [
-      "Palette à 3 rôles : accent (rose pivoine), support (mauve + abricot), neutre (blancs rosés + prune)",
-      "Typo éditoriale : Playfair Display pour l'autorité, DM Sans pour la lisibilité",
-      "Rayon d'angle cohérent : pilules 20px — cartes 16px — boutons 12px — inputs 10px",
-      "Élévation plate par défaut, ombre rose expressive au survol uniquement",
-      "Mobile first : bottom nav fixe, carousels scroll-snap, touch targets 44px+"
+      "Fond ivoire chaud — le papier de l'atelier",
+      "Typographie serif en display, sans-serif en corps",
+      "Palette pigmentaire : turquoise mat, or chaud, rose aquarelle",
+      "Cartes blanches sur fond ivoire : l'illustration ressort sans compétition",
+      "Mouvements doux et organiques",
+      "Zéro chrome inutile"
     ],
     "rules": [
-      { "name": "La Règle du Murmure",         "body": "Le rose pivoine murmure, il ne crie pas. Maximum 15% de surface par écran.",                              "section": "colors" },
-      { "name": "La Règle du Neutre Teinté",   "body": "Aucun gris pur. Chaque neutre penche vers le mauve ou le rose. #888888 est interdit.",                  "section": "colors" },
-      { "name": "La Règle du Serif Réservé",   "body": "Playfair Display uniquement dans h1–h3, logo, pull quotes. Jamais dans les boutons ni le corps de texte.", "section": "typography" },
-      { "name": "La Règle du Plat-par-Défaut", "body": "Surfaces sans ombre au repos. L'ombre rose apparaît au hover uniquement.",                               "section": "elevation" }
+      { "name": "La Règle de l'Or Rare",      "body": "L'or (#C49A5A) apparaît sur ≤15 % de n'importe quel écran. Sa rareté est sa valeur.", "section": "colors" },
+      { "name": "La Règle Pigment",            "body": "Toute nouvelle couleur doit pouvoir exister dans une boîte d'aquarelle. Pas de couleurs saturées au max, pas de teintes fluo.", "section": "colors" },
+      { "name": "La Règle du Dialogue",        "body": "Playfair Display est la voix de l'illustratrice. DM Sans est la voix du quotidien. Ne jamais les mélanger dans un même élément.", "section": "typography" },
+      { "name": "La Règle du Plafond",         "body": "Aucun titre en display ne dépasse 2.441rem (clamp max) sur les pages publiques.", "section": "typography" },
+      { "name": "La Règle du Repos Plat",      "body": "Les ombres n'existent qu'en réponse à l'interaction. Une ombre au repos contredit le registre planaire de l'atelier.", "section": "elevation" }
     ],
     "dos": [
-      "Do utiliser #C96B8A comme seule couleur d'action : boutons, links, focus rings, états actifs.",
-      "Do respecter la hiérarchie Playfair/DM Sans.",
-      "Do appliquer aspect-ratio:3/4 + object-contain + fond #F5F0FA sur toutes les couvertures.",
-      "Do conserver prefers-reduced-motion sur chaque animation."
+      "Do utiliser Playfair Display exclusivement pour les titres (h1–h3) et les mots d'emphase en italique or.",
+      "Do placer les cartes produit sur fond ivoire #FAF6F0 — le contraste blanc/ivoire remplace toute ombre au repos.",
+      "Do afficher l'illustration en priorité : le ratio image/texte dans une carte doit favoriser l'image (≥60%).",
+      "Do maintenir le padding bottom max(80px, env(safe-area-inset-bottom)) sur mobile pour dégager la bottom nav fixe.",
+      "Do écrire les labels d'eyebrow en format ✦ MOT CLÉ — le symbole ✦ est partie intégrante du système.",
+      "Do appliquer prefers-reduced-motion: reduce à toutes les animations."
     ],
     "donts": [
-      "Don't utiliser #C96B8A comme fond de section étendu.",
-      "Don't créer des grilles de 3 cartes identiques sans hiérarchie.",
-      "Don't placer un eyebrow uppercase sur chaque section.",
-      "Don't reproduire les anti-références : Amazon, ornements islamiques génériques, SaaS blanc, blog tout rose."
+      "Don't créer une grille de cartes identiques avec icône + titre + texte. L'illustration est le produit.",
+      "Don't utiliser de dégradé de texte (background-clip: text).",
+      "Don't imiter l'e-commerce générique : grilles froides, sans illustration, hiérarchie purement fonctionnelle.",
+      "Don't reproduire les codes de la boutique islamique traditionnelle : fond vert foncé, arabesque chargée, texte doré sur foncé.",
+      "Don't faire du minimalisme scandinave (blanc total, typographie fine, zéro couleur).",
+      "Don't introduire un eyebrow uppercase-tracké sur chaque section — un seul par page.",
+      "Don't utiliser des ombres structurelles au repos sur les cartes ou sections.",
+      "Don't saturer l'or #C49A5A sur tous les textes, tous les titres, tous les liens.",
+      "Don't utiliser btn-ghost (outline blanc) sur fond ivoire ou blanc — il est invisible."
     ]
   }
 }
