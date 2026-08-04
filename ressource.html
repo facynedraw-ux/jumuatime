@@ -295,6 +295,12 @@ async function init() {
   ]);
 
   if (!resource) { showNotFound(); return; }
+
+  // Redirection si le produit est physique
+  if (resource.type_produit === 'physique') {
+    window.location.replace(`produit-physique.html?slug=${encodeURIComponent(resource.slug)}`);
+    return;
+  }
   currentResource = resource;
 
   if (session) {
