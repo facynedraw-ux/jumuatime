@@ -438,7 +438,10 @@ async function init() {
 
   // Auto-ouvrir le panel si ?edit=<id> dans l'URL (lien depuis la fiche produit)
   const editId = new URLSearchParams(window.location.search).get('edit');
-  if (editId && allResources.find(x => x.id === editId)) editResource(editId);
+  if (editId && allResources.find(x => x.id === editId)) {
+    editResource(editId);
+    history.replaceState(null, '', window.location.pathname);
+  }
 }
 
 async function loadResources() {
