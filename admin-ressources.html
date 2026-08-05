@@ -35,8 +35,9 @@
 
   /* Panel */
   .panel-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.4); display:flex; justify-content:flex-end; }
+  .panel-overlay.hidden { display:none; }
   .panel-box { background:white; width:100%; max-width:520px; height:100%; display:flex; flex-direction:column; overflow:hidden; }
-  .panel-header { flex-shrink:0; padding:24px 24px 0; position:sticky; top:0; background:white; z-index:10; }
+  .panel-header { flex-shrink:0; padding:24px 24px 0; background:white; }
   .panel-body { flex:1; overflow-y:auto; padding:16px 24px 24px; }
   .f-label { display:block; font-size:11px; font-weight:700; color:#7A5A6A; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
   .f-input { width:100%; padding:9px 12px; border:1.5px solid #E8D5DC; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; color:#3D1F2D; background:white; outline:none; transition:border-color 0.2s; }
