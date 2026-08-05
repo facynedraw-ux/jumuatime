@@ -103,8 +103,8 @@ tailwind.config = {
 <!-- ═══ HEADER ═══ -->
 <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-border">
   <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-    <a href="index.html" class="flex items-center no-underline">
-      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
+    <a href="index.html" class="flex items-center no-underline" aria-label="Jumua Time — Accueil">
+      <img src="Images/logo_jumuatime.svg" alt="" class="h-9 w-auto object-contain">
     </a>
     <nav class="hidden md:flex items-center gap-5">
       <a href="ressources.html" class="text-sm font-semibold no-underline" style="color:#5B9EAD;">Boutique</a>
@@ -118,7 +118,7 @@ tailwind.config = {
       <a id="header-account-link" href="login.html" class="btn-teal hidden md:inline-flex" style="font-size:13px;padding:8px 18px;">
         <span class="ms" style="font-size:16px;">person</span> Mon compte
       </a>
-      <button class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-border bg-white" onclick="toggleMenu()" id="menu-btn" aria-label="Menu">
+      <button class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-border bg-white" onclick="toggleMenu()" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
         <span class="ms">menu</span>
       </button>
     </div>
