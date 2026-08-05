@@ -47,8 +47,6 @@
   .skeleton { background:linear-gradient(90deg,#E2D4BC 25%,#F5EDE0 50%,#E2D4BC 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px; }
   @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-  .section-eyebrow { font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C49A5A; }
-
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .fade-up { animation:fadeUp 0.45s ease both; }
 
@@ -103,7 +101,6 @@
 
   <!-- HERO -->
   <div class="text-center mb-10 fade-up">
-    <p class="section-eyebrow mb-3">✦ LA BOUTIQUE</p>
     <h1 class="font-display text-3xl md:text-4xl font-bold mb-3" style="color:#1A1208;">
       Des créations pour <em style="font-style:italic;color:#C49A5A;">toute la famille</em>
     </h1>
@@ -126,9 +123,7 @@
     </div>
   </div>
 
-  <div class="flex items-center justify-between mb-5">
-    <p class="text-sm" style="color:#8B7A5A;"><span id="results-count">…</span> ressource(s)</p>
-  </div>
+  <p class="text-sm mb-5" style="color:#8B7A5A;"><span id="results-count">…</span> ressource(s)</p>
 
   <!-- Squelettes -->
   <div id="grid-skeleton" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
