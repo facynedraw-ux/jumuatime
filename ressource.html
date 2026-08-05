@@ -20,9 +20,6 @@
 <link rel="stylesheet" href="assets/tailwind.css">
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-<script src="cart.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   body { font-family:'DM Sans',sans-serif; background:#FAF6F0; color:#1A1208; margin:0; }
@@ -34,8 +31,8 @@
   .btn-buy:active { transform:scale(0.98); }
   .btn-buy:disabled { opacity:0.5; cursor:not-allowed; }
 
-  .btn-teal { background:#5B9EAD; color:white; border:none; border-radius:20px; padding:10px 22px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:background 0.2s; display:inline-flex; align-items:center; gap:6px; text-decoration:none; }
-  .btn-teal:hover { background:#3D7A8A; }
+  .btn-teal { background:#2F6372; color:white; border:none; border-radius:20px; padding:10px 22px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:background 0.2s; display:inline-flex; align-items:center; gap:6px; text-decoration:none; }
+  .btn-teal:hover { background:#1E4A58; }
 
   .badge { display:inline-flex; align-items:center; gap:3px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500; }
 
@@ -242,6 +239,10 @@
   <img id="lightbox-img" src="" alt="">
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="cart.js"></script>
 
 <script>
 const CAT_STYLES = {

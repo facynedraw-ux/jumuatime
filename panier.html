@@ -14,15 +14,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/tailwind.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-<script src="cart.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   body { font-family:'DM Sans',sans-serif; background:#FAF6F0; color:#1A1208; margin:0; }
   .ms { font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased; }
-  .btn-teal { background:#5B9EAD;color:white;border:none;border-radius:20px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:background 0.2s;display:inline-flex;align-items:center;gap:8px;text-decoration:none; }
-  .btn-teal:hover { background:#3D7A8A; }
+  .btn-teal { background:#2F6372;color:white;border:none;border-radius:20px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:background 0.2s;display:inline-flex;align-items:center;gap:8px;text-decoration:none; }
+  .btn-teal:hover { background:#1E4A58; }
   .btn-teal:disabled { opacity:0.5;cursor:not-allowed; }
   .qty-btn { width:30px;height:30px;border:1.5px solid #E2D4BC;border-radius:8px;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1208;transition:border-color 0.15s; }
   .qty-btn:hover { border-color:#5B9EAD; }
@@ -205,6 +202,10 @@
     </a>
   </div>
 </nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="cart.js"></script>
 
 <script>
 function fmt(cents) {
