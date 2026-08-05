@@ -47,8 +47,9 @@
 
   .preview-box { background:#F5F0E8;border:1.5px dashed #C49A5A;border-radius:14px;padding:20px;text-align:center;min-height:70px;display:flex;align-items:center;justify-content:center; }
 
-  .skeleton { background:linear-gradient(90deg,#E2D4BC 25%,#F5EDE0 50%,#E2D4BC 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px; }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skeleton { position:relative;overflow:hidden;background:#E2D4BC;border-radius:8px; }
+  .skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
+  @keyframes shimmer { to{transform:translateX(100%)} }
 
   #toast { position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1208;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all 0.3s;z-index:200;pointer-events:none;white-space:nowrap; }
   #toast.show { opacity:1;transform:translateX(-50%) translateY(0); }

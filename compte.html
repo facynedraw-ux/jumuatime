@@ -42,8 +42,9 @@
   .cmd-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
 
   /* Skeleton */
-  .skeleton { background:linear-gradient(90deg,#E2D4BC 25%,#F5EDE0 50%,#E2D4BC 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px; }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skeleton { position:relative;overflow:hidden;background:#E2D4BC;border-radius:8px; }
+  .skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
+  @keyframes shimmer { to{transform:translateX(100%)} }
 
   /* Field */
   .field-input { width:100%;padding:11px 14px;border:1.5px solid #E2D4BC;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1A1208;background:white;outline:none;transition:border-color 0.2s,box-shadow 0.2s; }
@@ -60,7 +61,7 @@
 
   @media (prefers-reduced-motion:reduce) {
     .fade-up { animation:none !important;opacity:1 !important; }
-    .skeleton { animation:none !important; }
+    .skeleton::after { animation:none !important; }
   }
 </style>
 </head>

@@ -30,8 +30,9 @@
   .btn-sm-green:hover { background:#D4E8D4; }
   .btn-toggle { background:#E8F0E8; color:#5B8A5F; border:none; border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; }
   .btn-toggle.off { background:#FDE8EE; color:#C96B8A; }
-  .skeleton { background:linear-gradient(90deg,#F5E8F0 25%,#FAF0F5 50%,#F5E8F0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skeleton { position:relative;overflow:hidden;background:#F5E8F0;border-radius:8px; }
+  .skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
+  @keyframes shimmer { to{transform:translateX(100%)} }
 
   /* Panel */
   .panel-overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.4); display:flex; justify-content:flex-end; }

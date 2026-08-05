@@ -28,8 +28,9 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 .stock-input { width:80px; padding:7px 10px; border:1.5px solid #E8D5DC; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:#3D1F2D; text-align:center; outline:none; transition:border-color 0.2s; }
 .stock-input:focus { border-color:#C96B8A; }
 .stock-badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:700; }
-.skeleton { background:linear-gradient(90deg,#F5E8F0 25%,#FAF0F5 50%,#F5E8F0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.skeleton { position:relative;overflow:hidden;background:#F5E8F0;border-radius:8px; }
+.skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
+@keyframes shimmer { to{transform:translateX(100%)} }
 </style>
 </head>
 <body class="bg-bg font-body text-text">

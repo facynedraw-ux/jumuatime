@@ -63,9 +63,10 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 .f-sep { height:1px; background:#E8D5DC; margin:16px 0; }
 
 /* Skeleton */
-.skeleton { background:linear-gradient(90deg,#F5E8F0 25%,#FAF0F5 50%,#F5E8F0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:8px; }
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-@media (prefers-reduced-motion:reduce) { .skeleton { animation:none !important; } }
+.skeleton { position:relative;overflow:hidden;background:#F5E8F0;border-radius:8px; }
+.skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
+@keyframes shimmer { to{transform:translateX(100%)} }
+@media (prefers-reduced-motion:reduce) { .skeleton::after { animation:none !important; } }
 </style>
 </head>
 <body class="bg-bg font-body text-text">
