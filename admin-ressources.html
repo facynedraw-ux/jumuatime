@@ -131,13 +131,16 @@
 <div id="panel" class="panel-overlay hidden" onclick="closePanelOverlay(event)">
   <div class="panel-box" onclick="event.stopPropagation()">
 
-    <div class="flex items-center justify-between mb-5">
-      <h2 class="font-display text-lg font-bold" id="panel-title">Ajouter une ressource</h2>
-      <button onclick="closePanel()" class="w-9 h-9 flex items-center justify-center rounded-xl border border-border hover:bg-card transition-colors flex-shrink-0">
-        <span class="ms" style="font-size:18px;">close</span>
-      </button>
+    <div class="panel-header">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-display text-lg font-bold" id="panel-title">Ajouter une ressource</h2>
+        <button onclick="closePanel()" class="w-9 h-9 flex items-center justify-center rounded-xl border border-border hover:bg-card transition-colors flex-shrink-0">
+          <span class="ms" style="font-size:18px;">close</span>
+        </button>
+      </div>
     </div>
 
+    <div class="panel-body">
     <input type="hidden" id="f-id">
 
     <div class="mb-3">
@@ -297,6 +300,7 @@
       </button>
       <button onclick="closePanel()" class="px-4 py-2 rounded-xl border border-border text-sm font-medium text-muted hover:bg-card bg-white">Annuler</button>
     </div>
+    </div><!-- /panel-body -->
 
   </div>
 </div>
@@ -542,6 +546,7 @@ function editResource(id) {
 
   document.getElementById('panel').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  const pb = document.querySelector('.panel-body'); if (pb) pb.scrollTop = 0;
 }
 
 function openPanel() {
@@ -576,6 +581,7 @@ function openPanel() {
 
   document.getElementById('panel').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  const pb2 = document.querySelector('.panel-body'); if (pb2) pb2.scrollTop = 0;
 }
 
 function clearFile(fieldKey) {
