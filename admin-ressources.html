@@ -429,6 +429,10 @@ async function init() {
   const admin = await isAdmin();
   if (!admin) { window.location.href = 'index.html'; return; }
   await loadResources();
+
+  // Auto-ouvrir le panel si ?edit=<id> dans l'URL (lien depuis la fiche produit)
+  const editId = new URLSearchParams(window.location.search).get('edit');
+  if (editId && allResources.find(x => x.id === editId)) editResource(editId);
 }
 
 async function loadResources() {
@@ -473,6 +477,9 @@ async function loadResources() {
           </a>
           <button class="btn-sm-green" onclick="editResource('${r.id}')" title="Modifier">
             <span class="ms" style="font-size:14px;">edit</span>
+          </button>
+          <button class="btn-sm" onclick="duplicateResource('${r.id}')" title="Dupliquer">
+            <span class="ms" style="font-size:14px;">content_copy</span>
           </button>
         </div>
       </div>`;
@@ -782,6 +789,25 @@ async function saveResource() {
 
   showToast(editingId ? 'Ressource mise à jour ✓' : 'Ressource ajoutée ✓', 'success');
   closePanel();
+  await loadResources();
+}
+
+async function duplicateResource(id) {
+  const r = allResources.find(x => x.id === id);
+  if (!r) return;
+
+  const newSlug = slugify('copie-' + r.slug + '-' + Date.now().toString(36));
+  const { id: _omit, created_at: _c, updated_at: _u, stripe_price_id: _s, ...rest } = r;
+  const payload = {
+    ...rest,
+    title: 'Copie de ' + r.title,
+    slug: newSlug,
+    is_active: false,
+  };
+
+  const { error } = await _supabase.from('resources').insert([payload]);
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  showToast('Fiche dupliquée (inactive) ✓', 'success');
   await loadResources();
 }
 

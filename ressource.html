@@ -310,6 +310,16 @@ async function init() {
 
   renderResource(resource);
   loadSimilar(resource);
+  showAdminBar(resource.id);
+}
+
+async function showAdminBar(resourceId) {
+  if (!(await isAdmin())) return;
+  const btn = document.createElement('a');
+  btn.href = `admin-ressources.html?edit=${resourceId}`;
+  btn.style.cssText = 'position:fixed;top:72px;right:16px;z-index:100;display:inline-flex;align-items:center;gap:6px;background:#C96B8A;color:white;border-radius:12px;padding:8px 14px;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 2px 12px rgba(201,107,138,0.35);';
+  btn.innerHTML = '<span style="font-family:\'Material Symbols Outlined\';font-size:16px;line-height:1;">edit</span> Modifier';
+  document.body.appendChild(btn);
 }
 
 function showNotFound() {
