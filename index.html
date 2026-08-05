@@ -602,6 +602,7 @@ async function submitTilawa(e) {
   }
 
   // Envoyer email de bienvenue via Edge Function
+  console.log('[send-email] appel en cours pour:', email);
   try {
     const res = await fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/send-email', {
       method: 'POST',
@@ -611,7 +612,8 @@ async function submitTilawa(e) {
       },
       body: JSON.stringify({ type: 'tilawa_gift', data: { to: email } })
     });
-    if (!res.ok) console.error('[send-email] status:', res.status, await res.text());
+    const body = await res.text();
+    console.log('[send-email] status:', res.status, body);
   } catch(err) { console.error('[send-email] fetch error:', err); }
 
   msg.textContent = 'Accès accordé ! Vérifiez votre boîte mail pour le lien vers Tilawa Tour. ✦';
