@@ -401,7 +401,7 @@ function renderProduit() {
   document.getElementById('product-title').textContent = produit.title;
 
   // Image + galerie
-  galleryImages = [produit.preview_url, ...(produit.gallery_urls || [])].filter(Boolean);
+  galleryImages = [produit.preview_url, ...(produit.gallery_urls || [])].filter(Boolean).map(url => thumbUrl(url, 800));
   currentGalleryIdx = 0;
   if (galleryImages.length > 0) {
     const img = document.getElementById('product-image');
