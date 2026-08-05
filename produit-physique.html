@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title id="page-title">Produit — Jumua Time</title>
 <meta name="description" content="Produit personnalisé Jumua Time — fait avec soin pour votre famille.">
+<script type="application/ld+json" id="product-schema"></script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="favicon.png">
 <meta name="theme-color" content="#5B9EAD">
@@ -313,6 +314,28 @@ tailwind.config = {
 <div id="toast" role="alert" aria-live="polite"></div>
 
 <script>
+// ── Schema.org Product ──
+function injectProductSchema({ name, description, image, price, url, outOfStock }) {
+  const schema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": name,
+    "brand": { "@type": "Brand", "name": "Jumua Time" },
+    "offers": {
+      "@type": "Offer",
+      "url": url,
+      "priceCurrency": "EUR",
+      "price": Number(price).toFixed(2),
+      "availability": outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      "seller": { "@type": "Organization", "name": "Jumua Time" }
+    }
+  };
+  if (image) schema.image = image;
+  if (description) schema.description = description;
+  const el = document.getElementById('product-schema');
+  if (el) el.textContent = JSON.stringify(schema);
+}
+
 // ── Markdown léger ──
 function inlineMd(t) {
   return t
@@ -456,6 +479,20 @@ function renderProduit() {
     // Pas de personnalisation requise — activer le bouton directement
     checkFormValid();
   }
+
+  // Schema.org Product — Pinterest Rich Pins + Google
+  const basePrice = (produit.variantes && produit.variantes.length > 0)
+    ? Math.min(...produit.variantes.map(v => Number(v.prix) / 100))
+    : (Number(produit.price) || 0);
+  const slug = new URLSearchParams(window.location.search).get('slug') || '';
+  injectProductSchema({
+    name: produit.title,
+    description: (produit.description || `${produit.title} — Produit Jumua Time`).slice(0, 200),
+    image: produit.preview_url || '',
+    price: basePrice,
+    url: `https://jumuatime.com/produit-physique.html?slug=${encodeURIComponent(slug)}`,
+    outOfStock: produit.stock === 0
+  });
 }
 
 function renderStockBadge() {

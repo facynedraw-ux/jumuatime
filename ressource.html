@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ressource — Jumua Time</title>
 <meta name="description" content="Ressource pédagogique illustrée — Jumua Time">
+<script type="application/ld+json" id="product-schema"></script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="favicon.png">
 <meta name="theme-color" content="#5B9EAD">
@@ -285,6 +286,27 @@ let currentGalleryIdx = 0;
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+function injectProductSchema({ name, description, image, price, url }) {
+  const schema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": name,
+    "brand": { "@type": "Brand", "name": "Jumua Time" },
+    "offers": {
+      "@type": "Offer",
+      "url": url,
+      "priceCurrency": "EUR",
+      "price": Number(price).toFixed(2),
+      "availability": "https://schema.org/InStock",
+      "seller": { "@type": "Organization", "name": "Jumua Time" }
+    }
+  };
+  if (image) schema.image = image;
+  if (description) schema.description = description;
+  const el = document.getElementById('product-schema');
+  if (el) el.textContent = JSON.stringify(schema);
+}
+
 async function init() {
   const slug = new URLSearchParams(window.location.search).get('slug');
   if (!slug) { showNotFound(); return; }
@@ -377,6 +399,15 @@ function renderResource(r) {
   document.getElementById('resource-infos').innerHTML = infosHtml;
 
   document.getElementById('resource-content').classList.remove('hidden');
+
+  // Schema.org Product — Pinterest Rich Pins + Google
+  injectProductSchema({
+    name: r.title,
+    description: (r.description || `${r.title} — Ressource pédagogique Jumua Time`).slice(0, 200),
+    image: r.preview_url || '',
+    price: Number(r.price) || 0,
+    url: `https://jumuatime.com/ressource.html?slug=${encodeURIComponent(r.slug)}`
+  });
 
   if (r.preview_pdf_url) {
     document.getElementById('preview-pdf-section').classList.remove('hidden');
