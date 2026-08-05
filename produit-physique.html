@@ -398,7 +398,7 @@ function renderProduit() {
   document.getElementById('product-title').textContent = produit.title;
 
   // Image + galerie
-  galleryImages = [produit.preview_url, ...(produit.gallery_urls || [])].filter(Boolean).map(u => thumbUrl(u, 800));
+  galleryImages = [produit.preview_url, ...(produit.gallery_urls || [])].filter(Boolean);
   currentGalleryIdx = 0;
   if (galleryImages.length > 0) {
     const img = document.getElementById('product-image');
@@ -522,7 +522,7 @@ function selectVariante(id) {
   // Basculer l'image principale si la variante a son propre mockup
   const img = document.getElementById('product-image');
   if (img) {
-    img.src = thumbUrl(v?.preview_url || galleryImages[0] || produit.preview_url || '', 800);
+    img.src = v?.preview_url || galleryImages[0] || produit.preview_url || '';
   }
 
   if (v) updatePrix(v.prix);

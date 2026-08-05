@@ -335,7 +335,7 @@ function renderResource(r) {
   document.getElementById('bc-title').textContent = r.title;
 
   // Image principale + galerie
-  galleryImages = [r.preview_url, ...(r.gallery_urls || [])].filter(Boolean).map(u => thumbUrl(u, 800));
+  galleryImages = [r.preview_url, ...(r.gallery_urls || [])].filter(Boolean);
   currentGalleryIdx = 0;
   if (galleryImages.length > 0) {
     setMainImage(0);
@@ -424,7 +424,7 @@ async function loadSimilar(r) {
   document.getElementById('similar-section').classList.remove('hidden');
   document.getElementById('similar-grid').innerHTML = data.map(s => {
     const cs = CAT_STYLES[s.category];
-    const imgUrl = thumbUrl(s.preview_url, 400);
+    const imgUrl = s.preview_url;
     const cover = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${esc(s.title)}" class="w-full h-full object-cover" loading="lazy">`
       : `<div class="absolute inset-0 flex items-center justify-center">
