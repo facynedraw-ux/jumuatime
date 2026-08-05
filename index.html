@@ -637,7 +637,7 @@ const CAT_STYLES = {
 
 function renderResourceCard(r) {
   const cover = r.preview_url
-    ? `<img src="${escHtml(r.preview_url)}" alt="${escHtml(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+    ? `<img src="${escHtml(thumbUrl(r.preview_url, 400))}" alt="${escHtml(r.title)}" class="w-full h-full object-cover" loading="lazy">`
     : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.3;">description</span></div>`;
 
   const cs = CAT_STYLES[r.category] || null;

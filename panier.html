@@ -26,7 +26,7 @@
   .btn-teal:disabled { opacity:0.5;cursor:not-allowed; }
   .qty-btn { width:30px;height:30px;border:1.5px solid #E2D4BC;border-radius:8px;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#1A1208;transition:border-color 0.15s; }
   .qty-btn:hover { border-color:#5B9EAD; }
-  .footer-link { color:rgba(255,255,255,0.55);font-size:14px;text-decoration:none;transition:color 0.2s; }
+  .footer-link { color:rgba(255,255,255,0.82);font-size:14px;text-decoration:none;transition:color 0.2s; }
   .footer-link:hover { color:white; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   .fade-up { animation:fadeUp 0.35s ease both; }
@@ -232,7 +232,7 @@ function renderCart() {
         : `<span style="font-size:10px;background:#F5EDE0;color:#8B6230;padding:2px 8px;border-radius:20px;font-weight:600;">📄 Numérique</span>`;
 
     const thumb = item.preview_url
-      ? `<img src="${item.preview_url}" alt="${item.title}" class="w-full h-full object-cover">`
+      ? `<img src="${thumbUrl(item.preview_url, 200)}" alt="${item.title}" class="w-full h-full object-cover">`
       : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:28px;color:#C49A5A;opacity:0.4;">image</span></div>`;
 
     return `
@@ -330,7 +330,7 @@ async function loadRelated() {
     const cs    = CAT_STYLES[r.category] || null;
     const bg    = isPhysique ? '#EBF5F7' : (cs ? cs.bg : '#FAF6F0');
     const cover = r.preview_url
-      ? `<img src="${escR(r.preview_url)}" alt="${escR(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+      ? `<img src="${escR(thumbUrl(r.preview_url, 400))}" alt="${escR(r.title)}" class="w-full h-full object-cover" loading="lazy">`
       : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.2;">${isPhysique?'local_shipping':'description'}</span></div>`;
     const topBadge = cs
       ? `<span class="badge" style="background:white;color:${cs.color};box-shadow:0 1px 4px rgba(0,0,0,0.08);">${cs.label}</span>`

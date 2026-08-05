@@ -1,0 +1,25 @@
+# Jumua Time
+
+Jumua Time est une boutique illustrée dédiée à la famille musulmane. Créée par Facyne, illustratrice jeunesse et graphiste, elle propose des ressources pédagogiques numériques et des produits physiques illustrés pour les enfants et les familles.
+
+## Pages principales
+
+- [Accueil](https://jumuatime.com/)
+- [Boutique — toutes les ressources](https://jumuatime.com/ressources.html)
+- [À propos de Facyne](https://jumuatime.com/a-propos.html)
+- [Mon compte](https://jumuatime.com/compte.html)
+- [Panier](https://jumuatime.com/panier.html)
+
+## Catégories
+
+- Ressources pour enfants : coloriages, activités pédagogiques, histoires illustrées
+- Décoration islamique : affiches, cartes, illustrations
+- Cadeaux : produits physiques personnalisables
+- Outils islamiques : planners, calendriers hijri
+
+## À propos
+
+Facyne est illustratrice jeunesse, graphiste et développeuse d'applications basée en France. Elle crée des univers visuels accessibles et bienveillants pour les familles musulmanes francophones.
+
+Site : [facyne.com](https://facyne.com)
+Instagram : [@jumuatime](https://www.instagram.com/jumuatime)

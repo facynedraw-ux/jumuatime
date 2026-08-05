@@ -50,7 +50,7 @@
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .fade-up { animation:fadeUp 0.45s ease both; }
 
-  .footer-link { color:rgba(255,255,255,0.55);font-size:14px;text-decoration:none;transition:color 0.2s; }
+  .footer-link { color:rgba(255,255,255,0.82);font-size:14px;text-decoration:none;transition:color 0.2s; }
   .footer-link:hover { color:white; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -345,7 +345,7 @@ function renderGrid() {
 
     const cs = CAT_STYLES[r.category] || null;
     const cover = r.preview_url
-      ? `<img src="${esc(r.preview_url)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+      ? `<img src="${esc(thumbUrl(r.preview_url, 400))}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
       : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:48px;color:#5B9EAD;opacity:0.2;">${isPhysique ? 'local_shipping' : 'description'}</span></div>`;
     const bg = isPhysique ? '#EBF5F7' : (cs ? cs.bg : '#FAF6F0');
 

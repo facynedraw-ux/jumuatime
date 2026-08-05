@@ -54,7 +54,7 @@
   #toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
   #toast.error { background:#C0392B; }
 
-  .footer-link { color:rgba(255,255,255,0.55);font-size:14px;text-decoration:none;transition:color 0.2s; }
+  .footer-link { color:rgba(255,255,255,0.82);font-size:14px;text-decoration:none;transition:color 0.2s; }
   .footer-link:hover { color:white; }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
@@ -397,7 +397,7 @@ function renderProduit() {
   document.getElementById('product-title').textContent = produit.title;
 
   // Image + galerie
-  galleryImages = [produit.preview_url, ...(produit.gallery_urls || [])].filter(Boolean);
+  galleryImages = [produit.preview_url, ...(produit.gallery_urls || [])].filter(Boolean).map(u => thumbUrl(u, 800));
   currentGalleryIdx = 0;
   if (galleryImages.length > 0) {
     const img = document.getElementById('product-image');
@@ -521,7 +521,7 @@ function selectVariante(id) {
   // Basculer l'image principale si la variante a son propre mockup
   const img = document.getElementById('product-image');
   if (img) {
-    img.src = v?.preview_url || galleryImages[0] || produit.preview_url || '';
+    img.src = thumbUrl(v?.preview_url || galleryImages[0] || produit.preview_url || '', 800);
   }
 
   if (v) updatePrix(v.prix);

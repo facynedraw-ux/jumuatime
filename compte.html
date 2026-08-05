@@ -50,7 +50,7 @@
   .field-input:focus { border-color:#5B9EAD;box-shadow:0 0 0 3px rgba(91,158,173,0.1); }
 
   /* Footer nav */
-  .footer-link { color:rgba(255,255,255,0.55);font-size:14px;text-decoration:none;transition:color 0.2s; }
+  .footer-link { color:rgba(255,255,255,0.82);font-size:14px;text-decoration:none;transition:color 0.2s; }
   .footer-link:hover { color:white; }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
@@ -276,7 +276,7 @@ function renderAchat(purchase) {
   const r = purchase.resources;
   if (!r) return '';
   const cover = r.preview_url
-    ? `<img src="${esc(r.preview_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
+    ? `<img src="${esc(thumbUrl(r.preview_url, 200))}" alt="" class="w-full h-full object-cover" loading="lazy">`
     : `<div class="w-full h-full flex items-center justify-center">
          <span class="ms" style="font-size:22px;color:#5B9EAD;opacity:0.4;">description</span>
        </div>`;
@@ -366,7 +366,7 @@ function renderCommande(c) {
   const total  = c.montant_total ? (c.montant_total / 100).toFixed(2) + ' €' : '—';
   const title  = c.resources?.title || 'Produit physique';
   const cover  = c.resources?.preview_url
-    ? `<img src="${esc(c.resources.preview_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
+    ? `<img src="${esc(thumbUrl(c.resources.preview_url, 200))}" alt="" class="w-full h-full object-cover" loading="lazy">`
     : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:22px;color:#5B9EAD;opacity:0.4;">inventory_2</span></div>`;
 
   const tracking = c.numero_suivi
