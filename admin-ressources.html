@@ -781,7 +781,13 @@ async function saveResource() {
   }
 
   if (error) {
-    showToast('Erreur : ' + error.message, 'error');
+    if (error.code === '23505') {
+      const newSlug = payload.slug + '-' + Math.random().toString(36).slice(2, 5);
+      document.getElementById('f-slug').value = newSlug;
+      showToast('Slug déjà utilisé — slug corrigé automatiquement, réessaie.', 'error');
+    } else {
+      showToast('Erreur : ' + error.message, 'error');
+    }
     btn.disabled = false;
     document.getElementById('panel-save-label').textContent = editingId ? 'Mettre à jour' : 'Enregistrer';
     return;

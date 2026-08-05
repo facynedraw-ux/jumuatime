@@ -601,10 +601,10 @@ async function submitTilawa(e) {
 
   // Envoyer email de bienvenue via Edge Function
   try {
-    await fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/swift-function', {
+    await fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'tilawa_gift', to: email })
+      body: JSON.stringify({ type: 'tilawa_gift', data: { to: email } })
     });
   } catch(_) {}
 
