@@ -724,20 +724,57 @@ function renderResourceCard(r) {
     </a>`;
 }
 
+function renderPersoCard(p) {
+  const img = p.image_url
+    ? `<img src="${escHtml(p.image_url)}" alt="${escHtml(p.name)}" class="w-full h-full object-cover" loading="lazy">`
+    : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:40px;color:#C96B8A;opacity:0.25;">brush</span></div>`;
+  const priceStr = p.price_cents > 0
+    ? `${(p.price_cents / 100).toFixed(2).replace('.', ',')} €`
+    : 'Sur commande';
+  return `
+    <a href="personnalisation.html?type=${escHtml(p.type_key)}" class="resource-card">
+      <div class="overflow-hidden" style="aspect-ratio:1/1;background:#F7EDE8;">${img}</div>
+      <div class="p-4">
+        <div class="mb-2"><span style="background:#F7EDE8;color:#C96B8A;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;">✦ Sur-mesure</span></div>
+        <h3 class="font-display font-semibold text-sm leading-snug mb-1" style="color:#1A1208;">${escHtml(p.name)}</h3>
+        <p class="text-sm font-semibold mt-2" style="color:#C49A5A;">${priceStr}</p>
+      </div>
+    </a>`;
+}
+
 async function loadResources() {
   const grid = document.getElementById('resources-grid');
-  const { data } = await _supabase
-    .from('resources')
-    .select('id, slug, title, preview_url, price, category, type_produit')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false })
-    .limit(3);
 
-  if (!data || data.length === 0) {
+  const [{ data: resVedette }, { data: persoVedette }] = await Promise.all([
+    _supabase.from('resources')
+      .select('id, slug, title, preview_url, price, category, type_produit, vedette_ordre')
+      .eq('is_active', true).eq('vedette', true).order('vedette_ordre'),
+    _supabase.from('produits_perso')
+      .select('id, type_key, name, image_url, price_cents, vedette_ordre')
+      .eq('actif', true).eq('vedette', true).order('vedette_ordre'),
+  ]);
+
+  let items = [
+    ...(resVedette  || []).map(r => ({ ...r, _type: 'resource' })),
+    ...(persoVedette || []).map(p => ({ ...p, _type: 'perso' })),
+  ].sort((a, b) => a.vedette_ordre - b.vedette_ordre).slice(0, 3);
+
+  // Fallback : 3 dernières créations si aucune vedette
+  if (!items.length) {
+    const { data: recent } = await _supabase
+      .from('resources')
+      .select('id, slug, title, preview_url, price, category, type_produit')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(3);
+    items = (recent || []).map(r => ({ ...r, _type: 'resource' }));
+  }
+
+  if (!items.length) {
     grid.innerHTML = `<div class="col-span-2 md:col-span-3 text-center py-12 text-sm" style="color:#8B7A5A;">Les ressources arrivent bientôt ✦</div>`;
     return;
   }
-  grid.innerHTML = data.map(renderResourceCard).join('');
+  grid.innerHTML = items.map(item => item._type === 'perso' ? renderPersoCard(item) : renderResourceCard(item)).join('');
 }
 
 loadResources();

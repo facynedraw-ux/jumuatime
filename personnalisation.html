@@ -399,6 +399,8 @@ async function init() {
     if (error) throw error;
     (data || []).forEach(p => { dbProduits[p.type_key] = p; });
     renderProductCards(data || []);
+    const urlType = new URLSearchParams(window.location.search).get('type');
+    if (urlType && dbProduits[urlType]) selectProduct(urlType);
   } catch {
     document.getElementById('products-grid').innerHTML =
       '<p class="text-sm col-span-2" style="color:#C96B8A;">Impossible de charger les produits. Rafraîchissez la page.</p>';

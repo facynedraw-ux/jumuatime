@@ -320,6 +320,7 @@ const CAT_STYLES = {
 };
 
 let allResources = [];
+let allPerso     = [];
 let activeCategory = null;
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -357,13 +358,21 @@ async function init() {
     });
   }
 
-  const { data } = await _supabase
-    .from('resources')
-    .select('id, slug, title, preview_url, price, category, type_produit, stock, variantes')
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
+  const [{ data: resources }, { data: perso }] = await Promise.all([
+    _supabase
+      .from('resources')
+      .select('id, slug, title, preview_url, price, category, type_produit, stock, variantes')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false }),
+    _supabase
+      .from('produits_perso')
+      .select('id, type_key, name, description, price_cents, image_url, categories')
+      .eq('actif', true)
+      .order('ordre'),
+  ]);
 
-  allResources = data || [];
+  allResources = resources || [];
+  allPerso     = (perso || []).map(p => ({ ...p, _perso: true }));
   document.getElementById('grid-skeleton').classList.add('hidden');
 
   if (catParam && CAT_STYLES[catParam]) {
@@ -396,16 +405,43 @@ async function init() {
   });
 }
 
+function renderPersoCard(p) {
+  const bientot  = p.price_cents === 0;
+  const priceStr = bientot
+    ? `<span class="text-xs font-medium" style="color:#C49A5A;">Bientôt disponible</span>`
+    : `<p class="font-display font-bold text-base mt-1" style="color:#C49A5A;">${(p.price_cents / 100).toFixed(2).replace('.', ',')} €</p>`;
+  const img = p.image_url
+    ? `<img src="${esc(p.image_url)}" alt="${esc(p.name)}" class="w-full h-full object-cover" loading="lazy">`
+    : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:48px;color:#C96B8A;opacity:0.25;">brush</span></div>`;
+  return `
+    <a href="personnalisation.html?type=${esc(p.type_key)}" class="resource-card">
+      <div class="relative overflow-hidden" style="aspect-ratio:1/1;background:#F7EDE8;">
+        ${img}
+        <div class="absolute top-2 right-2">
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:white;color:#C96B8A;box-shadow:0 1px 4px rgba(0,0,0,0.08);">✦ Sur-mesure</span>
+        </div>
+      </div>
+      <div class="p-3">
+        <h3 class="font-semibold text-xs leading-snug mb-1.5" style="color:#1A1208;">${esc(p.name)}</h3>
+        ${priceStr}
+        <p class="text-xs mt-0.5" style="color:#8B7A5A;">Fait à la main · Sur commande</p>
+      </div>
+    </a>`;
+}
+
 function renderGrid() {
   let list;
   if (activeCategory === '__physique__') {
-    list = allResources.filter(r => r.type_produit === 'physique');
+    list = [...allResources.filter(r => r.type_produit === 'physique'), ...allPerso];
   } else if (activeCategory === '__numerique__') {
     list = allResources.filter(r => r.type_produit === 'numerique');
   } else if (activeCategory) {
-    list = allResources.filter(r => r.category === activeCategory);
+    list = [
+      ...allResources.filter(r => r.category === activeCategory),
+      ...allPerso.filter(p => (p.categories || []).includes(activeCategory)),
+    ];
   } else {
-    list = allResources;
+    list = [...allResources, ...allPerso];
   }
   document.getElementById('results-count').textContent = list.length;
   const grid = document.getElementById('resource-grid');
@@ -420,10 +456,12 @@ function renderGrid() {
   grid.classList.remove('hidden');
 
   grid.innerHTML = list.map((r, idx) => {
+    if (r._perso) return renderPersoCard(r);
+
     const isPhysique = r.type_produit === 'physique';
     const href = isPhysique
-    ? `produit-physique.html?slug=${esc(r.slug)}`
-    : `ressource.html?slug=${esc(r.slug)}`;
+      ? `produit-physique.html?slug=${esc(r.slug)}`
+      : `ressource.html?slug=${esc(r.slug)}`;
 
     const cs = CAT_STYLES[r.category] || null;
     const cover = r.preview_url
@@ -431,18 +469,15 @@ function renderGrid() {
       : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:48px;color:#5B9EAD;opacity:0.2;">${isPhysique ? 'local_shipping' : 'description'}</span></div>`;
     const bg = isPhysique ? '#EBF5F7' : (cs ? cs.bg : '#FAF6F0');
 
-    // Badge catégorie
     const topBadge = cs
       ? `<span class="badge" style="background:white;color:${cs.color};box-shadow:0 1px 4px rgba(0,0,0,0.08);">${cs.label}</span>`
       : '';
 
-    // Badge épuisé
     const isEpuise = r.stock !== null && r.stock !== undefined && r.stock === 0;
     const epuiseBadge = isEpuise
       ? `<div class="absolute top-2 right-2"><span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:#FEE2E2;color:#B91C1C;">Épuisé</span></div>`
       : '';
 
-    // Sous-info sous le prix
     const subInfo = isPhysique && !isEpuise
       ? `<p class="text-xs mt-0.5" style="color:#8B7A5A;">Expédié en 5–7 jours</p>`
       : '';

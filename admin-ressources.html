@@ -545,6 +545,9 @@ async function loadResources() {
           ${r.is_active ? 'Actif' : 'Inactif'}
         </button>
         <div class="flex gap-2 flex-shrink-0">
+          <button class="btn-sm" onclick="toggleVedette('${r.id}', ${!!r.vedette})" title="${r.vedette ? 'Vedette pos. ' + r.vedette_ordre + ' — cliquer pour retirer' : 'Mettre en vedette'}">
+            <span class="ms" style="font-size:14px;color:${r.vedette ? '#C49A5A' : '#8B7A5A'};">${r.vedette ? 'star' : 'star_border'}</span>
+          </button>
           <a href="${r.type_produit === 'physique' ? 'produit-physique' : 'ressource'}.html?slug=${esc(r.slug)}" target="_blank" class="btn-sm" title="Voir la fiche">
             <span class="ms" style="font-size:14px;">open_in_new</span>
           </a>
@@ -890,6 +893,26 @@ async function duplicateResource(id) {
   if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
   showToast('Fiche dupliquée (inactive) ✓', 'success');
   await loadResources();
+}
+
+async function toggleVedette(id, current) {
+  let ordre = 0;
+  if (!current) {
+    const starred = allResources.filter(r => r.vedette);
+    if (starred.length >= 3) {
+      showToast('3 produits en vedette max — retirez-en un d\'abord.', 'error');
+      return;
+    }
+    const used = starred.map(r => r.vedette_ordre);
+    ordre = [1, 2, 3].find(n => !used.includes(n)) || 1;
+  }
+  const { error } = await _supabase.from('resources')
+    .update({ vedette: !current, vedette_ordre: ordre }).eq('id', id);
+  if (error) { showToast('Erreur', 'error'); return; }
+  const r = allResources.find(r => r.id === id);
+  if (r) { r.vedette = !current; r.vedette_ordre = ordre; }
+  showToast(current ? 'Retiré de la vedette' : `Mis en vedette · position ${ordre} ✓`, 'info');
+  renderList();
 }
 
 async function toggleActive(id, current) {

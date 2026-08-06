@@ -208,7 +208,12 @@ function renderGrid() {
         </div>
         <div class="flex items-center gap-2">
           ${badge}
-          <span class="ms" style="font-size:16px;color:#C96B8A;margin-left:auto;">edit</span>
+          <button onclick="event.stopPropagation();toggleVedettePerso('${p.id}', ${!!p.vedette})"
+            style="margin-left:auto;background:none;border:none;cursor:pointer;padding:2px;"
+            title="${p.vedette ? 'Vedette pos. ' + p.vedette_ordre + ' — cliquer pour retirer' : 'Mettre en vedette'}">
+            <span class="ms" style="font-size:20px;color:${p.vedette ? '#C49A5A' : '#D4C4A8'};">${p.vedette ? 'star' : 'star_border'}</span>
+          </button>
+          <span class="ms" style="font-size:16px;color:#C96B8A;">edit</span>
         </div>
       </div>
     </div>`;
@@ -446,6 +451,27 @@ async function persistFonds(fonds) {
   if (idx !== -1) allProduits[idx].options = opts;
   const grid = document.getElementById('fonds-grid');
   if (grid) grid.innerHTML = renderFondsGrid(fonds);
+}
+
+// ── Vedette ──
+async function toggleVedettePerso(id, current) {
+  let ordre = 0;
+  if (!current) {
+    const starred = allProduits.filter(p => p.vedette);
+    if (starred.length >= 3) {
+      showToast('3 produits en vedette max — retirez-en un d\'abord.', 'error');
+      return;
+    }
+    const used = starred.map(p => p.vedette_ordre);
+    ordre = [1, 2, 3].find(n => !used.includes(n)) || 1;
+  }
+  const { error } = await _supabase.from('produits_perso')
+    .update({ vedette: !current, vedette_ordre: ordre }).eq('id', id);
+  if (error) { showToast('Erreur', 'error'); return; }
+  const p = allProduits.find(p => p.id === id);
+  if (p) { p.vedette = !current; p.vedette_ordre = ordre; }
+  showToast(current ? 'Retiré de la vedette' : `Mis en vedette · position ${ordre} ✓`, 'info');
+  renderGrid();
 }
 
 // ── Enregistrer ──
