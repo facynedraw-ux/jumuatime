@@ -129,6 +129,13 @@ p {
   @media (prefers-reduced-motion: reduce) {
     .fade-up { animation:none !important;opacity:1 !important; }
   }
+
+  /* Galerie de fonds — calligraphie arabe */
+  .fond-card { cursor:pointer; }
+  .fond-card .fond-border { border:2px solid #E2D4BC;border-radius:12px;overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s; }
+  .fond-card:hover .fond-border { border-color:#5B9EAD; }
+  .fond-card.selected .fond-border { border-color:#5B9EAD;box-shadow:0 0 0 3px rgba(91,158,173,0.18); }
+  .fond-placeholder { width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif; }
 </style>
 </head>
 <body class="bg-bg font-body text-dark">
@@ -191,7 +198,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="grid md:grid-cols-2 gap-5">
 
       <!-- Pochon lin -->
-      <div class="product-card cursor-pointer" id="card-pochon" onclick="selectProduct('pochon')">
+      <div class="product-card cursor-pointer" id="card-pochon" onclick="selectProduct('pochon')" role="button" aria-pressed="false">
         <div class="aspect-square bg-teal-light flex items-center justify-center" style="background:#EBF5F7;">
           <div class="text-center p-6">
             <span class="ms text-5xl" style="color:#5B9EAD;font-size:48px;">shopping_bag</span>
@@ -201,7 +208,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="p-5">
           <div class="flex items-start justify-between gap-3 mb-2">
             <h3 class="font-display text-lg font-bold" style="color:#1A1208;">Pochon lin — Eid Mubarak</h3>
-            <span class="text-lg font-bold flex-shrink-0" style="color:#5B9EAD;">PRIX_POCHON €</span>
+            <span class="text-lg font-bold flex-shrink-0" style="color:#5B9EAD;">6 €</span>
           </div>
           <p class="text-sm leading-relaxed mb-3" style="color:#8B7A5A;">
             Pochon en lin naturel avec calligraphie Eid Mubarak. Personnalisable avec le prénom de l'enfant en arabe ou en français.
@@ -218,31 +225,90 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <!-- Totebag -->
-      <div class="product-card cursor-pointer" id="card-totebag" onclick="selectProduct('totebag')">
+      <!-- Calligraphie · Prénom latin -->
+      <div class="product-card cursor-pointer" id="card-calligraphie-latine" onclick="selectProduct('calligraphie-latine')" role="button" aria-pressed="false">
         <div class="aspect-square flex items-center justify-center" style="background:#F5EDE0;">
+          <!-- Remplace ce bloc par une <img> quand la photo est prête -->
           <div class="text-center p-6">
-            <span class="ms text-5xl" style="color:#C49A5A;font-size:48px;">local_mall</span>
-            <p class="text-xs text-muted mt-2">Photo bientôt disponible</p>
+            <span class="ms" style="color:#C49A5A;font-size:48px;">draw</span>
+            <p class="text-xs text-muted mt-2">Photo à venir</p>
           </div>
         </div>
         <div class="p-5">
           <div class="flex items-start justify-between gap-3 mb-2">
-            <h3 class="font-display text-lg font-bold" style="color:#1A1208;">Totebag Jumua &amp; Kids</h3>
-            <span class="text-lg font-bold flex-shrink-0" style="color:#5B9EAD;">PRIX_TOTEBAG €</span>
+            <h3 class="font-display text-lg font-bold" style="color:#1A1208;">Calligraphie · Prénom latin</h3>
+            <span class="text-sm font-semibold flex-shrink-0 px-2 py-0.5 rounded-full" style="color:#C49A5A;background:#F5EDE0;">Bientôt</span>
           </div>
           <p class="text-sm leading-relaxed mb-3" style="color:#8B7A5A;">
-            Totebag en coton avec motif islamique. Personnalisable avec le prénom ou un message.
+            Prénom en cursive dorée mêlé à une lettre stylisée. Composition calligraphique réalisée à la main, format numérique.
           </p>
           <div class="flex flex-wrap gap-2">
-            <span class="text-xs px-3 py-1 rounded-full" style="background:#EBF5F7;color:#3D7A8A;">Sac : Naturel / Noir / Teal</span>
-            <span class="text-xs px-3 py-1 rounded-full" style="background:#F5EDE0;color:#8B6230;">Prénom inclus</span>
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#F5EDE0;color:#8B6230;">Fait main · Digital</span>
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#EBF5F7;color:#3D7A8A;">Fichier numérique</span>
           </div>
-          <p class="text-xs mt-3" style="color:#8B7A5A;">⏱ 3 à 5 jours ouvrés · Fabriqué à la main en France</p>
+          <p class="text-xs mt-3" style="color:#8B7A5A;">⏱ Aperçu envoyé avant livraison</p>
         </div>
         <div class="border-t border-border px-5 py-3 flex items-center justify-between" style="background:#FAFAFA;">
-          <span id="select-totebag" class="text-sm font-semibold" style="color:#5B9EAD;">Sélectionner →</span>
-          <span id="check-totebag" class="ms hidden" style="color:#5B9EAD;font-size:22px;">check_circle</span>
+          <span id="select-calligraphie-latine" class="text-sm font-semibold" style="color:#5B9EAD;">Sélectionner →</span>
+          <span id="check-calligraphie-latine" class="ms hidden" style="color:#5B9EAD;font-size:22px;">check_circle</span>
+        </div>
+      </div>
+
+      <!-- Calligraphie arabe sur-mesure -->
+      <div class="product-card cursor-pointer" id="card-calligraphie-arabe" onclick="selectProduct('calligraphie-arabe')" role="button" aria-pressed="false">
+        <div class="aspect-square flex items-center justify-center" style="background:#EBF5F7;">
+          <!-- Remplace ce bloc par une <img> quand la photo est prête -->
+          <div class="text-center p-6">
+            <span class="ms" style="color:#5B9EAD;font-size:48px;">brush</span>
+            <p class="text-xs text-muted mt-2">Photo à venir</p>
+          </div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <h3 class="font-display text-lg font-bold" style="color:#1A1208;">Calligraphie arabe sur-mesure</h3>
+            <span class="text-sm font-semibold flex-shrink-0 px-2 py-0.5 rounded-full" style="color:#C49A5A;background:#F5EDE0;">Bientôt</span>
+          </div>
+          <p class="text-sm leading-relaxed mb-3" style="color:#8B7A5A;">
+            Un mot ou prénom calligraphié en arabe, posé sur le fond de votre choix parmi une galerie de compositions.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#EBF5F7;color:#3D7A8A;">Fond au choix</span>
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#F5EDE0;color:#8B6230;">Mot ou prénom</span>
+          </div>
+          <p class="text-xs mt-3" style="color:#8B7A5A;">⏱ Aperçu envoyé avant livraison</p>
+        </div>
+        <div class="border-t border-border px-5 py-3 flex items-center justify-between" style="background:#FAFAFA;">
+          <span id="select-calligraphie-arabe" class="text-sm font-semibold" style="color:#5B9EAD;">Sélectionner →</span>
+          <span id="check-calligraphie-arabe" class="ms hidden" style="color:#5B9EAD;font-size:22px;">check_circle</span>
+        </div>
+      </div>
+
+      <!-- Cadre argile -->
+      <div class="product-card cursor-pointer" id="card-cadre-argile" onclick="selectProduct('cadre-argile')" role="button" aria-pressed="false">
+        <div class="aspect-square flex items-center justify-center" style="background:#F7EDE8;">
+          <!-- Remplace ce bloc par une <img> quand la photo est prête -->
+          <div class="text-center p-6">
+            <span class="ms" style="color:#C96B8A;font-size:48px;">texture</span>
+            <p class="text-xs text-muted mt-2">Photo à venir</p>
+          </div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <h3 class="font-display text-lg font-bold" style="color:#1A1208;">Cadre argile — Lettres prénom</h3>
+            <span class="text-sm font-semibold flex-shrink-0 px-2 py-0.5 rounded-full" style="color:#C49A5A;background:#F5EDE0;">Bientôt</span>
+          </div>
+          <p class="text-sm leading-relaxed mb-3" style="color:#8B7A5A;">
+            Lettres du prénom modelées à la main en argile, alphabet latin. Version standard ou premium avec appui à rabat.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#F7EDE8;color:#C96B8A;">Argile fait main</span>
+            <span class="text-xs px-3 py-1 rounded-full" style="background:#EBF5F7;color:#3D7A8A;">30×20 · 40×30 cm</span>
+          </div>
+          <p class="text-xs mt-3" style="color:#8B7A5A;">⏱ 5 à 7 jours ouvrés · Livraison soignée</p>
+        </div>
+        <div class="border-t border-border px-5 py-3 flex items-center justify-between" style="background:#FAFAFA;">
+          <span id="select-cadre-argile" class="text-sm font-semibold" style="color:#5B9EAD;">Sélectionner →</span>
+          <span id="check-cadre-argile" class="ms hidden" style="color:#5B9EAD;font-size:22px;">check_circle</span>
         </div>
       </div>
 
@@ -271,54 +337,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="step-label">2</span>
         <h3 class="font-semibold text-base">Personnalisation</h3>
       </div>
-      <div class="grid md:grid-cols-2 gap-4">
-
-        <!-- Couleur (se met à jour selon le produit) -->
-        <div>
-          <label for="couleur" class="field-label">Couleur du motif</label>
-          <select id="couleur" class="field-input field-select">
-            <option value="">— Choisir —</option>
-            <option value="noir">Noir</option>
-            <option value="or">Or</option>
-            <option value="blanc">Blanc</option>
-          </select>
-        </div>
-
-        <!-- Quantité -->
-        <div>
-          <label for="quantite" class="field-label">Quantité</label>
-          <input type="number" id="quantite" class="field-input" min="1" max="10" value="1" aria-label="Quantité">
-        </div>
-
-        <!-- Prénom -->
-        <div class="md:col-span-2">
-          <label for="prenom-input" class="field-label">Prénom à inscrire <span style="color:#8B7A5A;font-weight:400;">(max 15 caractères)</span></label>
-          <input type="text" id="prenom-input" class="field-input" maxlength="15" placeholder="Ex : Safya" autocomplete="off" aria-label="Prénom à inscrire">
-        </div>
-
-        <!-- Langue prénom -->
-        <div class="md:col-span-2">
-          <p class="field-label mb-2">Langue du prénom</p>
-          <div class="flex gap-3 flex-wrap">
-            <div>
-              <input type="radio" name="langue_prenom" id="lang-fr" value="fr" class="radio-lang" checked>
-              <label for="lang-fr">🇫🇷 Français</label>
-            </div>
-            <div>
-              <input type="radio" name="langue_prenom" id="lang-ar" value="ar" class="radio-lang">
-              <label for="lang-ar">🇸🇦 Arabe</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Aperçu prénom -->
-        <div class="md:col-span-2">
-          <p class="field-label mb-2">Aperçu du prénom</p>
-          <div class="preview-box">
-            <span id="preview-text" class="preview-name-fr" style="color:#C49A5A;font-style:italic;opacity:0.5;">Votre prénom apparaîtra ici…</span>
-          </div>
-        </div>
-
+      <div id="form-fields-container">
+        <p class="text-sm italic" style="color:#8B7A5A;">← Sélectionnez un produit ci-dessus pour voir les options.</p>
       </div>
     </div>
 
@@ -475,104 +495,266 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="supabase-client.js?v=2"></script>
 
 <script>
-// ── État formulaire ──
+// ── État ──
 let selectedProduct = null;
+let selectedFond    = null;
+
+const PRODUCT_KEYS = ['pochon', 'calligraphie-latine', 'calligraphie-arabe', 'cadre-argile'];
 
 const PRODUCTS = {
   pochon: {
     name: 'Pochon lin — Eid Mubarak',
-    price: 'PRIX_POCHON',
-    price_cents: 0, // à définir par Facyne
-    colors: ['Noir', 'Or', 'Blanc'],
+    price_cents: 600,
   },
-  totebag: {
-    name: 'Totebag Jumua & Kids',
-    price: 'PRIX_TOTEBAG',
-    price_cents: 0, // à définir par Facyne
-    colors: ['Naturel', 'Noir', 'Teal'],
+  'calligraphie-latine': {
+    name: 'Calligraphie · Prénom latin',
+    price_cents: 0, // prix à définir avant ouverture
+  },
+  'calligraphie-arabe': {
+    name: 'Calligraphie arabe sur-mesure',
+    price_cents: 0,
+  },
+  'cadre-argile': {
+    name: 'Cadre argile — Lettres prénom',
+    price_cents: 0,
   },
 };
 
+// ── Champs dynamiques par type ──
+function getFormFields(key) {
+  const infoApercu = `
+    <div class="md:col-span-2">
+      <div class="flex items-start gap-3 p-4 rounded-xl" style="background:#F5EDE0;">
+        <span class="ms flex-shrink-0" style="color:#C49A5A;font-size:20px;">auto_awesome</span>
+        <p class="text-sm" style="color:#8B6230;">Votre création sera réalisée à la main par Facyne. Un aperçu vous sera envoyé par email avant fabrication.</p>
+      </div>
+    </div>`;
+
+  if (key === 'pochon') return `
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <label for="couleur" class="field-label">Couleur du motif</label>
+        <select id="couleur" class="field-input field-select">
+          <option value="">— Choisir —</option>
+          <option value="noir">Noir</option>
+          <option value="or">Or</option>
+          <option value="blanc">Blanc</option>
+        </select>
+      </div>
+      <div>
+        <label for="quantite" class="field-label">Quantité</label>
+        <input type="number" id="quantite" class="field-input" min="1" max="10" value="1">
+      </div>
+      <div class="md:col-span-2">
+        <label for="prenom-input" class="field-label">Prénom à inscrire <span style="color:#8B7A5A;font-weight:400;">(max 15 caractères)</span></label>
+        <input type="text" id="prenom-input" class="field-input" maxlength="15" placeholder="Ex : Safya" autocomplete="off">
+      </div>
+      <div class="md:col-span-2">
+        <p class="field-label mb-2">Langue du prénom</p>
+        <div class="flex gap-3 flex-wrap">
+          <div><input type="radio" name="langue_prenom" id="lang-fr" value="fr" class="radio-lang" checked><label for="lang-fr">🇫🇷 Français</label></div>
+          <div><input type="radio" name="langue_prenom" id="lang-ar" value="ar" class="radio-lang"><label for="lang-ar">🇸🇦 Arabe</label></div>
+        </div>
+      </div>
+      ${infoApercu}
+    </div>`;
+
+  if (key === 'calligraphie-latine') return `
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="md:col-span-2">
+        <label for="prenom-input" class="field-label">Prénom à calligraphier <span style="color:#8B7A5A;font-weight:400;">(max 20 caractères)</span></label>
+        <input type="text" id="prenom-input" class="field-input" maxlength="20" placeholder="Ex : Safya" autocomplete="off">
+      </div>
+      <div>
+        <label for="quantite" class="field-label">Quantité</label>
+        <input type="number" id="quantite" class="field-input" min="1" max="10" value="1">
+      </div>
+      ${infoApercu}
+    </div>`;
+
+  if (key === 'calligraphie-arabe') return `
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="md:col-span-2">
+        <label for="prenom-input" class="field-label">Mot ou prénom à calligraphier</label>
+        <input type="text" id="prenom-input" class="field-input" dir="rtl" lang="ar"
+          placeholder="صفية" autocomplete="off" style="font-size:1.1rem;font-family:'Amiri',serif;">
+        <p class="text-xs mt-1.5" style="color:#8B7A5A;">Si vous ne savez pas l'écrire en arabe, écrivez-le en français dans le message ci-dessous — Facyne s'en occupera.</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="field-label mb-3">Choix du fond</p>
+        <div class="grid grid-cols-3 gap-3" id="fond-gallery">
+          ${[1,2,3,4,5,6].map(n => `
+          <div class="fond-card" data-fond="fond-${n}" onclick="selectFond('fond-${n}')">
+            <div class="fond-border aspect-square">
+              <img src="Images/fonds/fond-${n}.jpg" alt="Fond ${n}" class="w-full h-full object-cover"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="fond-placeholder" style="display:none;background:${['#EBF5F7','#F5EDE0','#F7EDE8','#EBF5F7','#F5EDE0','#F7EDE8'][n-1]};color:${['#3D7A8A','#8B6230','#C96B8A','#3D7A8A','#8B6230','#C96B8A'][n-1]};">Fond ${n}</div>
+            </div>
+            <p class="text-xs text-center mt-1.5 font-medium" style="color:#8B7A5A;">Fond ${n}</p>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <label for="quantite" class="field-label">Quantité</label>
+        <input type="number" id="quantite" class="field-input" min="1" max="10" value="1">
+      </div>
+      ${infoApercu}
+    </div>`;
+
+  if (key === 'cadre-argile') return `
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="md:col-span-2">
+        <label for="prenom-input" class="field-label">Prénom à modeler <span style="color:#8B7A5A;font-weight:400;">(alphabet latin, max 12 lettres)</span></label>
+        <input type="text" id="prenom-input" class="field-input" maxlength="12" placeholder="Ex : Safya" autocomplete="off">
+      </div>
+      <div>
+        <label for="taille" class="field-label">Taille du cadre</label>
+        <select id="taille" class="field-input field-select">
+          <option value="">— Choisir —</option>
+          <option value="30x20">30 × 20 cm</option>
+          <option value="40x30">40 × 30 cm</option>
+        </select>
+      </div>
+      <div>
+        <label for="couleur" class="field-label">Couleur du cadre</label>
+        <select id="couleur" class="field-input field-select">
+          <option value="">— Choisir —</option>
+          <option value="blanc">Blanc</option>
+          <option value="noir">Noir</option>
+        </select>
+      </div>
+      <div class="md:col-span-2">
+        <p class="field-label mb-2">Version</p>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <label class="version-card" id="version-standard">
+            <input type="radio" name="version_cadre" value="standard" class="sr-only" checked>
+            <div class="p-4 rounded-xl border-2 cursor-pointer transition-all" style="border-color:#5B9EAD;background:#EBF5F7;">
+              <p class="font-semibold text-sm" style="color:#3D7A8A;">Standard</p>
+              <p class="text-xs mt-1" style="color:#8B7A5A;">Sans appui derrière</p>
+            </div>
+          </label>
+          <label class="version-card" id="version-premium">
+            <input type="radio" name="version_cadre" value="premium" class="sr-only">
+            <div class="p-4 rounded-xl border-2 cursor-pointer transition-all" style="border-color:#E2D4BC;background:white;">
+              <p class="font-semibold text-sm" style="color:#1A1208;">Premium ✦</p>
+              <p class="text-xs mt-1" style="color:#8B7A5A;">Avec appui à rabat</p>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div>
+        <label for="quantite" class="field-label">Quantité</label>
+        <input type="number" id="quantite" class="field-input" min="1" max="5" value="1">
+      </div>
+      ${infoApercu}
+    </div>`;
+
+  return '';
+}
+
+// ── Sélection produit ──
 function selectProduct(key) {
   selectedProduct = key;
+  selectedFond    = null;
 
-  // Visuels cartes
-  ['pochon','totebag'].forEach(k => {
-    document.getElementById('card-' + k).classList.toggle('selected', k === key);
-    document.getElementById('select-' + k).classList.toggle('hidden', k === key);
-    document.getElementById('check-' + k).classList.toggle('hidden', k !== key);
+  PRODUCT_KEYS.forEach(k => {
+    const card = document.getElementById('card-' + k);
+    const sel  = document.getElementById('select-' + k);
+    const chk  = document.getElementById('check-' + k);
+    if (card) { card.classList.toggle('selected', k === key); card.setAttribute('aria-pressed', k === key ? 'true' : 'false'); }
+    if (sel)  sel.classList.toggle('hidden', k === key);
+    if (chk)  chk.classList.toggle('hidden', k !== key);
   });
 
-  // Mise à jour affichage produit dans le form
   document.getElementById('product-display').textContent = PRODUCTS[key].name;
   document.getElementById('product-display').style.color = '#1A1208';
 
-  // Mise à jour options couleur
-  const couleurSel = document.getElementById('couleur');
-  couleurSel.innerHTML = '<option value="">— Choisir —</option>';
-  PRODUCTS[key].colors.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.toLowerCase();
-    opt.textContent = c;
-    couleurSel.appendChild(opt);
-  });
+  document.getElementById('form-fields-container').innerHTML = getFormFields(key);
 
-  // Scroll vers le form
+  // Radios version cadre
+  if (key === 'cadre-argile') {
+    document.querySelectorAll('input[name="version_cadre"]').forEach(r => {
+      r.addEventListener('change', () => {
+        document.querySelectorAll('.version-card > div').forEach(d => {
+          d.style.borderColor = '#E2D4BC'; d.style.background = 'white';
+        });
+        const checked = document.querySelector('input[name="version_cadre"]:checked');
+        if (checked) {
+          const box = checked.closest('.version-card').querySelector('div');
+          box.style.borderColor = '#5B9EAD'; box.style.background = '#EBF5F7';
+        }
+      });
+    });
+  }
+
   document.getElementById('order-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ── Aperçu prénom en live ──
-const prenomInput = document.getElementById('prenom-input');
-const previewText = document.getElementById('preview-text');
-
-function updatePreview() {
-  const val = prenomInput.value.trim();
-  const lang = document.querySelector('input[name="langue_prenom"]:checked').value;
-  if (!val) {
-    previewText.textContent = 'Votre prénom apparaîtra ici…';
-    previewText.className = 'preview-name-fr';
-    previewText.style.opacity = '0.5';
-    previewText.style.fontStyle = 'italic';
-    previewText.style.color = '#C49A5A';
-    return;
-  }
-  previewText.textContent = val;
-  previewText.style.opacity = '1';
-  previewText.style.fontStyle = '';
-  previewText.style.color = '#3D7A8A';
-  if (lang === 'ar') {
-    previewText.className = 'preview-name-ar';
-    previewText.setAttribute('dir', 'rtl');
-  } else {
-    previewText.className = 'preview-name-fr';
-    previewText.removeAttribute('dir');
-  }
+// ── Sélection fond (calligraphie arabe) ──
+function selectFond(fond) {
+  selectedFond = fond;
+  document.querySelectorAll('.fond-card').forEach(c => c.classList.remove('selected'));
+  const card = document.querySelector(`.fond-card[data-fond="${fond}"]`);
+  if (card) card.classList.add('selected');
 }
-
-prenomInput.addEventListener('input', updatePreview);
-document.querySelectorAll('input[name="langue_prenom"]').forEach(r => r.addEventListener('change', updatePreview));
-
 
 // ── Validation ──
 function validateForm() {
   if (!selectedProduct) { showToast('Veuillez sélectionner un produit.', 'error'); return false; }
-  const couleur = document.getElementById('couleur').value;
-  if (!couleur) { showToast('Veuillez choisir une couleur.', 'error'); return false; }
-  const prenom = prenomInput.value.trim();
-  if (!prenom) { showToast('Veuillez renseigner le prénom à inscrire.', 'error'); return false; }
-  const nom = document.getElementById('nom-client').value.trim();
-  if (!nom) { showToast('Veuillez renseigner votre nom.', 'error'); return false; }
+
+  if (PRODUCTS[selectedProduct].price_cents === 0) {
+    showToast('Ce produit n\'est pas encore ouvert à la commande. Revenez bientôt !', 'error');
+    return false;
+  }
+
+  const prenom = document.getElementById('prenom-input')?.value.trim();
+  if (!prenom) { showToast('Veuillez renseigner le prénom.', 'error'); return false; }
+
+  if (selectedProduct === 'pochon') {
+    if (!document.getElementById('couleur')?.value) { showToast('Veuillez choisir une couleur.', 'error'); return false; }
+  } else if (selectedProduct === 'calligraphie-arabe') {
+    if (!selectedFond) { showToast('Veuillez choisir un fond.', 'error'); return false; }
+  } else if (selectedProduct === 'cadre-argile') {
+    if (!document.getElementById('taille')?.value)  { showToast('Veuillez choisir une taille.', 'error'); return false; }
+    if (!document.getElementById('couleur')?.value) { showToast('Veuillez choisir une couleur.', 'error'); return false; }
+  }
+
+  if (!document.getElementById('nom-client').value.trim())   { showToast('Veuillez renseigner votre nom.', 'error'); return false; }
   const email = document.getElementById('email-client').value.trim();
   if (!email || !email.includes('@')) { showToast('Email invalide.', 'error'); return false; }
-  const adresse = document.getElementById('adresse').value.trim();
-  if (!adresse) { showToast('Veuillez renseigner votre adresse.', 'error'); return false; }
-  const cp = document.getElementById('code-postal').value.trim();
-  if (!cp) { showToast('Veuillez renseigner votre code postal.', 'error'); return false; }
-  const ville = document.getElementById('ville').value.trim();
-  if (!ville) { showToast('Veuillez renseigner votre ville.', 'error'); return false; }
+  if (!document.getElementById('adresse').value.trim())      { showToast('Veuillez renseigner votre adresse.', 'error'); return false; }
+  if (!document.getElementById('code-postal').value.trim())  { showToast('Veuillez renseigner votre code postal.', 'error'); return false; }
+  if (!document.getElementById('ville').value.trim())        { showToast('Veuillez renseigner votre ville.', 'error'); return false; }
   return true;
 }
 
+// ── Personnalisation selon le type ──
+function buildCustomization() {
+  const prenom = document.getElementById('prenom-input')?.value.trim() || '';
+
+  if (selectedProduct === 'pochon') {
+    const couleur = document.getElementById('couleur')?.value || '';
+    const langue  = document.querySelector('input[name="langue_prenom"]:checked')?.value || 'fr';
+    return { type: 'pochon', prenom, couleur, langue_prenom: langue,
+      customization: `Couleur : ${couleur} | Prénom : ${prenom} (${langue === 'ar' ? 'Arabe' : 'Français'})` };
+  }
+  if (selectedProduct === 'calligraphie-latine') {
+    return { type: 'calligraphie-latine', prenom,
+      customization: `Prénom : ${prenom}` };
+  }
+  if (selectedProduct === 'calligraphie-arabe') {
+    return { type: 'calligraphie-arabe', mot_arabe: prenom, fond: selectedFond || '',
+      customization: `Mot/prénom : ${prenom} | Fond : ${selectedFond || ''}` };
+  }
+  if (selectedProduct === 'cadre-argile') {
+    const taille   = document.getElementById('taille')?.value || '';
+    const couleur  = document.getElementById('couleur')?.value || '';
+    const version  = document.querySelector('input[name="version_cadre"]:checked')?.value || 'standard';
+    return { type: 'cadre-argile', prenom, taille_cadre: taille, couleur_cadre: couleur, version,
+      customization: `Prénom : ${prenom} | Taille : ${taille} | Couleur : ${couleur} | Version : ${version}` };
+  }
+  return {};
+}
 
 // ── Checkout Stripe ──
 async function startCheckout() {
@@ -584,17 +766,16 @@ async function startCheckout() {
 
   const product = PRODUCTS[selectedProduct];
   const quantite = parseInt(document.getElementById('quantite').value) || 1;
-  const langue = document.querySelector('input[name="langue_prenom"]:checked').value;
+  const perso = buildCustomization();
 
   const orderData = {
     type:          'physical_product',
     product_name:  product.name,
+    product_type:  selectedProduct,
     price_cents:   product.price_cents,
     quantity:      quantite,
-    customization: `Couleur: ${document.getElementById('couleur').value} | Prénom: ${prenomInput.value.trim()} (${langue})`,
-    prenom:        prenomInput.value.trim(),
-    langue_prenom: langue,
-    couleur:       document.getElementById('couleur').value,
+    personnalisation: perso,
+    ...perso,
     nom_client:    document.getElementById('nom-client').value.trim(),
     adresse:       `${document.getElementById('adresse').value.trim()}, ${document.getElementById('code-postal').value.trim()} ${document.getElementById('ville').value.trim()}, ${document.getElementById('pays').value}`,
     email_client:  document.getElementById('email-client').value.trim(),
@@ -619,7 +800,6 @@ async function startCheckout() {
   }
 }
 
-
 // ── Toast ──
 let toastTimer;
 function showToast(msg, type = 'default') {
@@ -630,7 +810,6 @@ function showToast(msg, type = 'default') {
   toastTimer = setTimeout(() => { t.className = ''; }, 3500);
 }
 
-
 // ── Menu mobile ──
 function toggleMenu() {
   const menu = document.getElementById('mobile-menu');
@@ -640,7 +819,6 @@ function toggleMenu() {
   btn.setAttribute('aria-expanded', String(!open));
 }
 
-
 // ── Compte header ──
 (async () => {
   try {
@@ -648,7 +826,7 @@ function toggleMenu() {
     if (session) {
       ['header-account-link','mobile-account-link'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) { el.href = 'compte.html'; el.innerHTML = el.innerHTML.replace('Mon compte', 'Mon compte'); }
+        if (el) el.href = 'compte.html';
       });
     }
   } catch {}
