@@ -621,9 +621,11 @@ function renderFaq() {
   const faqEl = document.getElementById('faq-list');
   if (!faqEl) return;
 
-  const isGelato = !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
-  const delai    = produit.delai_livraison || (isGelato ? '5 à 7 jours ouvrés' : '2 à 4 jours ouvrés');
-  const modeLivr = produit.mode_livraison === 'lettre' ? 'lettre suivie' : 'colis';
+  const isGelato  = !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
+  const isLettre  = produit.mode_livraison === 'lettre';
+  const delaiDef  = isGelato ? '5 à 7 jours ouvrés' : (isLettre ? '3 jours ouvrés' : '3 à 5 jours ouvrés');
+  const delai     = produit.delai_livraison || delaiDef;
+  const modeLivr  = isLettre ? 'lettre suivie' : 'colis';
 
   const faqs = isGelato ? [
     {
@@ -691,11 +693,16 @@ function updatePrix(prixProduit) {
     const hint = document.getElementById('checkout-hint');
     if (hint) hint.textContent = 'Paiement sécurisé par Stripe · Adresse saisie sur le panier';
   } else {
-    document.getElementById('recap-livraison').innerHTML = '🎁 <strong>Offerte</strong>';
-    document.getElementById('recap-total').textContent = `${(prixProduit / 100).toFixed(2)} €`;
-    infoEl.textContent = '✓ Livraison offerte';
+    const modeLivr  = (produit.variantes || []).find(v => v.id === varianteChoisie)?.mode_livraison
+                    || produit.mode_livraison || 'colis';
+    const shipCents = modeLivr === 'lettre' ? 200 : 490;
+    const shipFmt   = (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+    document.getElementById('recap-livraison').textContent = shipFmt;
+    document.getElementById('recap-total').textContent =
+      ((prixProduit + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+    infoEl.textContent = 'Livraison offerte à partir de 45 € d\'achat';
     const hint = document.getElementById('checkout-hint');
-    if (hint) hint.textContent = 'Paiement sécurisé par Stripe · Livraison offerte';
+    if (hint) hint.textContent = 'Paiement sécurisé par Stripe';
   }
 }
 
