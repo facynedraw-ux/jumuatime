@@ -240,6 +240,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label class="f-label" for="f-type-objet">Type d'objet</label>
+        <select id="f-type-objet" class="f-select">
+          <option value="">— Aucun —</option>
+          <option value="affiche">Affiche</option>
+          <option value="carte">Carte</option>
+          <option value="marque_page">Marque-page</option>
+          <option value="mug">Mug</option>
+        </select>
+      </div>
+      <div>
+        <label class="f-label" for="f-collection">Collection</label>
+        <select id="f-collection" class="f-select">
+          <option value="">— Aucune —</option>
+          <option value="automne">Automne</option>
+          <option value="ete">Été</option>
+          <option value="printemps">Printemps</option>
+          <option value="hiver">Hiver</option>
+        </select>
+      </div>
+    </div>
+
     <div class="mb-3">
       <label class="f-label" for="f-price">Prix (€) *</label>
       <input type="number" id="f-price" class="f-input" step="0.01" min="0" placeholder="3.90">
