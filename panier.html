@@ -553,8 +553,8 @@ async function getQuote() {
     quotedAddress = { firstName: prenom, lastName: nom, line1: ligne1, postalCode: cp, city: ville, country: pays };
 
     const fmtShip = data.shipping_cents === 0
-      ? 'Livraison offerte ✓'
-      : `Livraison : ${fmt(data.shipping_cents)}`;
+      ? 'Impression & livraison Gelato incluses ✓'
+      : `Livraison Gelato : ${fmt(data.shipping_cents)}`;
     let hint = data.carrier || 'Standard';
     if (data.min_days && data.max_days) hint += ` · ${data.min_days}–${data.max_days} jours ouvrés`;
 
