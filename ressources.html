@@ -91,9 +91,15 @@ p {
   .btn-teal { background:#5B9EAD;color:white;border:none;border-radius:20px;padding:10px 22px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:background 0.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none; }
   .btn-teal:hover { background:#3D7A8A; }
 
-  .filter-pill { padding:6px 14px;border-radius:20px;border:1.5px solid #E2D4BC;background:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#8B7A5A;cursor:pointer;transition:all 0.15s;white-space:nowrap; }
+  .filter-pill { padding:6px 14px;border-radius:20px;border:1.5px solid #E2D4BC;background:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#8B7A5A;cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0; }
   .filter-pill.active { background:#5B9EAD;color:white;border-color:#5B9EAD; }
   .filter-pill:hover:not(.active) { border-color:#5B9EAD;color:#5B9EAD; }
+  .filter-pill-sm { font-size:12px;padding:4px 11px; }
+  .filters-row { display:flex;flex-wrap:wrap;gap:8px; }
+  @media (max-width:639px) {
+    .filters-row { flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch; }
+    .filters-row::-webkit-scrollbar { display:none; }
+  }
 
   .resource-card { background:white;border:1px solid #E2D4BC;border-radius:20px;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:block;color:#1A1208; }
   .resource-card:hover { transform:translateY(-3px);box-shadow:0 10px 28px rgba(91,158,173,0.14); }
@@ -171,16 +177,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </p>
   </div>
 
-  <!-- FILTRES CATÉGORIES -->
-  <div class="mb-6 fade-up">
-    <div class="flex flex-wrap gap-2">
-      <button class="filter-pill active cat-btn" onclick="setFilter(null, this)">Tout</button>
-      <button class="filter-pill cat-btn" onclick="setFilter('enfants', this)">Pour les enfants</button>
-      <button class="filter-pill cat-btn" onclick="setFilter('spiritualite', this)">Spiritualité</button>
-      <button class="filter-pill cat-btn" onclick="setFilter('decoration', this)">Décoration</button>
-      <button class="filter-pill cat-btn" onclick="setFilter('cadeaux', this)">Cadeaux</button>
-      <button class="filter-pill cat-btn" onclick="setFilter('__numerique__', this)"><span class="ms" style="font-size:14px;vertical-align:-2px;">download</span> Numérique</button>
-      <button class="filter-pill cat-btn" onclick="setFilter('__physique__', this)"><span class="ms" style="font-size:14px;vertical-align:-2px;">local_shipping</span> Physique</button>
+  <!-- FILTRES -->
+  <div class="mb-7 fade-up">
+    <!-- Ligne 1 : Type d'objet -->
+    <div class="filters-row mb-3">
+      <button class="filter-pill active type-btn" data-type="" onclick="setTypeFilter(null,this)">Tout</button>
+      <button class="filter-pill type-btn" data-type="affiche" onclick="setTypeFilter('affiche',this)">Affiche</button>
+      <button class="filter-pill type-btn" data-type="carte" onclick="setTypeFilter('carte',this)">Carte</button>
+      <button class="filter-pill type-btn" data-type="marque_page" onclick="setTypeFilter('marque_page',this)">Marque-page</button>
+      <button class="filter-pill type-btn" data-type="mug" onclick="setTypeFilter('mug',this)">Mug</button>
+    </div>
+    <!-- Ligne 2 : Catégorie + format (sous-filtre) -->
+    <div class="filters-row">
+      <button class="filter-pill filter-pill-sm active cat-btn" data-cat="" onclick="setCatFilter(null,this)">Toutes catégories</button>
+      <button class="filter-pill filter-pill-sm cat-btn" data-cat="enfants" onclick="setCatFilter('enfants',this)">Enfants</button>
+      <button class="filter-pill filter-pill-sm cat-btn" data-cat="spiritualite" onclick="setCatFilter('spiritualite',this)">Spiritualité</button>
+      <button class="filter-pill filter-pill-sm cat-btn" data-cat="decoration" onclick="setCatFilter('decoration',this)">Décoration</button>
+      <button class="filter-pill filter-pill-sm cat-btn" data-cat="cadeaux" onclick="setCatFilter('cadeaux',this)">Cadeaux</button>
+      <button class="filter-pill filter-pill-sm cat-btn" data-cat="__numerique__" onclick="setCatFilter('__numerique__',this)"><span class="ms" style="font-size:13px;vertical-align:-2px;">download</span> Numérique</button>
+      <button class="filter-pill filter-pill-sm cat-btn" data-cat="__physique__" onclick="setCatFilter('__physique__',this)"><span class="ms" style="font-size:13px;vertical-align:-2px;">local_shipping</span> Physique</button>
     </div>
   </div>
 
@@ -319,9 +334,10 @@ const CAT_STYLES = {
   cadeaux:      { bg:'#F7EDE8', color:'#C96B8A', label:'Cadeaux' },
 };
 
-let allResources = [];
-let allPerso     = [];
-let activeCategory = null;
+let allResources    = [];
+let allPerso        = [];
+let activeCategory  = null;
+let activeTypeObjet = null;
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
@@ -361,7 +377,7 @@ async function init() {
   const [{ data: resources }, { data: perso }] = await Promise.all([
     _supabase
       .from('resources')
-      .select('id, slug, title, preview_url, price, category, type_produit, stock, variantes')
+      .select('id, slug, title, preview_url, price, category, type_produit, stock, variantes, type_objet')
       .eq('is_active', true)
       .order('created_at', { ascending: false }),
     _supabase
@@ -377,11 +393,8 @@ async function init() {
 
   if (catParam && CAT_STYLES[catParam]) {
     activeCategory = catParam;
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.cat-btn').forEach(b => {
-      if (b.textContent.trim().toLowerCase().includes(CAT_STYLES[catParam].label.toLowerCase())) {
-        b.classList.add('active');
-      }
+      b.classList.toggle('active', (b.dataset.cat || '') === catParam);
     });
   }
 
@@ -430,18 +443,22 @@ function renderPersoCard(p) {
 }
 
 function renderGrid() {
-  let list;
+  // Filtre type d'objet (ligne 1) — exclut les produits perso qui n'ont pas de type_objet
+  let list = activeTypeObjet
+    ? allResources.filter(r => r.type_objet === activeTypeObjet)
+    : [...allResources, ...allPerso];
+
+  // Filtre catégorie / format (ligne 2) — combiné en AND
   if (activeCategory === '__physique__') {
-    list = [...allResources.filter(r => r.type_produit === 'physique'), ...allPerso];
+    list = list.filter(r => r._perso || r.type_produit === 'physique');
   } else if (activeCategory === '__numerique__') {
-    list = allResources.filter(r => r.type_produit === 'numerique');
+    list = list.filter(r => !r._perso && r.type_produit === 'numerique');
   } else if (activeCategory) {
-    list = [
-      ...allResources.filter(r => r.category === activeCategory),
-      ...allPerso.filter(p => (p.categories || []).includes(activeCategory)),
-    ];
-  } else {
-    list = [...allResources, ...allPerso];
+    list = list.filter(r =>
+      r._perso
+        ? (r.categories || []).includes(activeCategory)
+        : r.category === activeCategory
+    );
   }
   document.getElementById('results-count').textContent = list.length;
   const grid = document.getElementById('resource-grid');
@@ -500,9 +517,16 @@ function renderGrid() {
   }).join('');
 }
 
-function setFilter(cat, btn) {
+function setCatFilter(cat, btn) {
   activeCategory = cat;
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function setTypeFilter(type, btn) {
+  activeTypeObjet = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderGrid();
 }
