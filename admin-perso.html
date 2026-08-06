@@ -209,9 +209,10 @@ function renderGrid() {
         <div class="flex items-center gap-2">
           ${badge}
           <button onclick="event.stopPropagation();toggleVedettePerso('${p.id}', ${!!p.vedette})"
-            style="margin-left:auto;background:none;border:none;cursor:pointer;padding:2px;"
+            style="margin-left:auto;background:${p.vedette ? '#FEF3C7' : 'none'};border:${p.vedette ? '1px solid #C49A5A' : 'none'};border-radius:8px;cursor:pointer;padding:${p.vedette ? '2px 6px' : '2px'};display:flex;align-items:center;gap:3px;"
             title="${p.vedette ? 'Vedette pos. ' + p.vedette_ordre + ' — cliquer pour retirer' : 'Mettre en vedette'}">
-            <span class="ms" style="font-size:20px;color:${p.vedette ? '#C49A5A' : '#D4C4A8'};">${p.vedette ? 'star' : 'star_border'}</span>
+            <span class="ms" style="font-size:18px;color:${p.vedette ? '#C49A5A' : '#D4C4A8'};">${p.vedette ? 'star' : 'star_border'}</span>
+            ${p.vedette ? `<span style="font-size:11px;font-weight:700;color:#C49A5A;">${p.vedette_ordre}</span>` : ''}
           </button>
           <span class="ms" style="font-size:16px;color:#C96B8A;">edit</span>
         </div>

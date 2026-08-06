@@ -545,8 +545,9 @@ async function loadResources() {
           ${r.is_active ? 'Actif' : 'Inactif'}
         </button>
         <div class="flex gap-2 flex-shrink-0">
-          <button class="btn-sm" onclick="toggleVedette('${r.id}', ${!!r.vedette})" title="${r.vedette ? 'Vedette pos. ' + r.vedette_ordre + ' — cliquer pour retirer' : 'Mettre en vedette'}">
+          <button class="btn-sm" onclick="toggleVedette('${r.id}', ${!!r.vedette})" title="${r.vedette ? 'Vedette pos. ' + r.vedette_ordre + ' — cliquer pour retirer' : 'Mettre en vedette'}" style="${r.vedette ? 'background:#FEF3C7;border-color:#C49A5A;gap:3px;' : ''}">
             <span class="ms" style="font-size:14px;color:${r.vedette ? '#C49A5A' : '#8B7A5A'};">${r.vedette ? 'star' : 'star_border'}</span>
+            ${r.vedette ? `<span style="font-size:11px;font-weight:700;color:#C49A5A;">${r.vedette_ordre}</span>` : ''}
           </button>
           <a href="${r.type_produit === 'physique' ? 'produit-physique' : 'ressource'}.html?slug=${esc(r.slug)}" target="_blank" class="btn-sm" title="Voir la fiche">
             <span class="ms" style="font-size:14px;">open_in_new</span>
