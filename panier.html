@@ -369,6 +369,28 @@ async function startCheckout() {
   const items = Cart.get();
   if (!items.length) return;
 
+  window.dataLayer = window.dataLayer || [];
+  const _checkoutTotal = Cart.total();
+  window.dataLayer.push({
+    event: 'begin_checkout',
+    ecommerce: {
+      currency: 'EUR',
+      value: _checkoutTotal / 100,
+      items: items.map((item, idx) => ({
+        item_id: item.produit_id,
+        item_name: item.title,
+        item_category: item.category || '',
+        price: (item.price_cents || 0) / 100,
+        quantity: item.quantity || 1,
+        index: idx,
+      })),
+    },
+  });
+  localStorage.setItem('jt_pending_purchase', JSON.stringify({
+    value: _checkoutTotal / 100,
+    items: items,
+  }));
+
   const btn = document.getElementById('checkout-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="ms" style="font-size:18px;">progress_activity</span> Chargement…';
@@ -451,6 +473,25 @@ async function syncCartPrices() {
   }
 
   renderCart();
+  const _cartItems = Cart.get();
+  if (_cartItems.length) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'view_cart',
+      ecommerce: {
+        currency: 'EUR',
+        value: Cart.total() / 100,
+        items: _cartItems.map((item, idx) => ({
+          item_id: item.produit_id,
+          item_name: item.title,
+          item_category: item.category || '',
+          price: (item.price_cents || 0) / 100,
+          quantity: item.quantity || 1,
+          index: idx,
+        })),
+      },
+    });
+  }
 }
 
 syncCartPrices();

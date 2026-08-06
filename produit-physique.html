@@ -385,6 +385,24 @@ let currentGalleryIdx = 0;
   if (error || !data) { showError(); return; }
   produit = data;
   renderProduit();
+  const _basePrice = (produit.variantes && produit.variantes.length > 0)
+    ? Math.min(...produit.variantes.map(v => Number(v.prix) / 100))
+    : (Number(produit.price) || 0);
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'view_item',
+    ecommerce: {
+      currency: 'EUR',
+      value: _basePrice,
+      items: [{
+        item_id: produit.id,
+        item_name: produit.title,
+        item_category: produit.category || '',
+        price: _basePrice,
+        quantity: 1,
+      }],
+    },
+  });
   showAdminBar(data.id);
 })();
 

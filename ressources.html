@@ -327,6 +327,23 @@ async function init() {
   }
 
   renderGrid();
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'view_item_list',
+    ecommerce: {
+      item_list_id: 'boutique',
+      item_list_name: 'Boutique',
+      items: allResources.slice(0, 20).map((r, idx) => ({
+        item_id: r.id,
+        item_name: r.title,
+        item_category: r.category || '',
+        item_list_id: 'boutique',
+        item_list_name: 'Boutique',
+        price: Number(r.price) || 0,
+        index: idx,
+      })),
+    },
+  });
 }
 
 function renderGrid() {

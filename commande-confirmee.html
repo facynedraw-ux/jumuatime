@@ -141,6 +141,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
     })();
 
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'purchase',
+      ecommerce: {
+        transaction_id: sessionId,
+        currency: 'EUR',
+        value: data.amount ? data.amount / 100 : 0,
+        items: [{
+          item_id: sessionId,
+          item_name: data.product_name,
+          price: data.amount ? data.amount / 100 : 0,
+          quantity: data.quantity || 1,
+        }],
+      },
+    });
+
     container.innerHTML = `
       <div class="detail-row">
         <span class="text-sm text-muted w-32 flex-shrink-0">Produit</span>

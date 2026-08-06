@@ -324,6 +324,21 @@ async function init() {
   }
 
   renderResource(resource);
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'view_item',
+    ecommerce: {
+      currency: 'EUR',
+      value: Number(resource.price) || 0,
+      items: [{
+        item_id: resource.id,
+        item_name: resource.title,
+        item_category: resource.category || '',
+        price: Number(resource.price) || 0,
+        quantity: 1,
+      }],
+    },
+  });
   loadSimilar(resource);
   showAdminBar(resource.id);
 }
@@ -506,6 +521,16 @@ async function handleBuy() {
     const { url, error } = await res.json();
     if (error) throw new Error(error);
     if (!url)  throw new Error('Impossible de créer la session de paiement. Réessayez.');
+    localStorage.setItem('jt_pending_purchase', JSON.stringify({
+      value: Number(currentResource.price) || 0,
+      items: [{
+        produit_id: currentResource.id,
+        title: currentResource.title,
+        category: currentResource.category || '',
+        price_cents: Math.round(Number(currentResource.price) * 100),
+        quantity: 1,
+      }],
+    }));
     window.location.href = url;
   } catch (err) {
     showToast('Erreur : ' + (err.message || 'Réessayez.'), 'error');

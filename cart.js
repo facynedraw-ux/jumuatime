@@ -29,6 +29,21 @@
       if (ex) ex.quantity = (ex.quantity || 1) + 1;
       else cart.push({ ...item, quantity: 1 });
       this._save(cart);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'add_to_cart',
+        ecommerce: {
+          currency: 'EUR',
+          value: (item.price_cents || 0) / 100,
+          items: [{
+            item_id: item.produit_id,
+            item_name: item.title,
+            item_category: item.category || '',
+            price: (item.price_cents || 0) / 100,
+            quantity: 1,
+          }],
+        },
+      });
     },
 
     remove(key) {
