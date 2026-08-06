@@ -458,7 +458,7 @@ function renderCart() {
     document.getElementById('recap-shipping-hint').textContent = 'Produits numériques : livraison immédiate par email';
   } else if (hasGelato && quotedShippingCents === null) {
     document.getElementById('recap-shipping').textContent = 'À calculer';
-    document.getElementById('recap-shipping-hint').textContent = '↓ Renseignez votre adresse ci-dessous';
+    document.getElementById('recap-shipping-hint').textContent = 'Renseignez votre adresse de livraison';
   } else {
     const totalShip = manualShip + gelatoShip;
     if (totalShip === 0) {
