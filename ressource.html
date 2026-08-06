@@ -122,6 +122,10 @@ p {
   .resource-card { background:white; border:1px solid #E2D4BC; border-radius:20px; overflow:hidden; text-decoration:none; display:block; color:#1A1208; transition:transform 0.2s, box-shadow 0.2s; }
   .resource-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(91,158,173,0.12); }
 
+  .field-label { display:block;font-size:13px;font-weight:600;color:#1A1208;margin-bottom:6px; }
+  .field-input { width:100%;border:1.5px solid #E2D4BC;border-radius:12px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1A1208;background:white;transition:border-color 0.2s;outline:none; }
+  .field-input:focus { border-color:#5B9EAD;box-shadow:0 0 0 3px rgba(91,158,173,0.12); }
+
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .fade-up { animation:fadeUp 0.5s ease both; }
   .delay-1 { animation-delay:0.1s; }
@@ -286,6 +290,67 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2 class="font-display text-xl font-bold">Vous aimerez aussi</h2>
       </div>
       <div id="similar-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- CONTACT / SAV -->
+    <section class="mt-10">
+      <div class="bg-white border border-border rounded-2xl p-6 md:p-8">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:#EBF5F7;">
+            <span class="ms" style="font-size:20px;color:#5B9EAD;">support_agent</span>
+          </div>
+          <div>
+            <h2 class="font-display text-lg font-bold" style="color:#1A1208;">Une question ou un problème ?</h2>
+            <p class="text-xs" style="color:#8B7A5A;">Réponse sous 24 à 48h</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 mb-6">
+          <a href="mailto:contact@jumuatime.com" class="btn-teal" style="font-size:13px;padding:9px 18px;text-decoration:none;">
+            <span class="ms" style="font-size:16px;">mail</span>
+            contact@jumuatime.com
+          </a>
+          <a href="https://www.instagram.com/jumua_time" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 rounded-full font-semibold text-sm"
+             style="background:#F0EBF5;color:#7A5F9A;font-family:'DM Sans',sans-serif;text-decoration:none;padding:9px 18px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            @jumua_time
+          </a>
+        </div>
+
+        <form id="contact-form" class="space-y-4" onsubmit="submitContact(event)">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="field-label" for="c-nom">Nom</label>
+              <input class="field-input" id="c-nom" type="text" placeholder="Votre nom" required>
+            </div>
+            <div>
+              <label class="field-label" for="c-email">Email</label>
+              <input class="field-input" id="c-email" type="email" placeholder="votre@email.com" required>
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="c-sujet">Sujet</label>
+            <select class="field-input" id="c-sujet">
+              <option value="question">Question sur un produit</option>
+              <option value="commande">Ma commande</option>
+              <option value="sav">SAV / Retour</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="c-message">Message</label>
+            <textarea class="field-input" id="c-message" rows="4" placeholder="Écrivez votre message ici…" required style="resize:vertical;min-height:100px;"></textarea>
+          </div>
+          <button type="submit" id="c-submit" class="btn-teal" style="width:100%;justify-content:center;">
+            <span class="ms" style="font-size:18px;">send</span>
+            Envoyer
+          </button>
+          <p id="c-result" class="text-sm text-center hidden" role="alert"></p>
+        </form>
+      </div>
     </section>
 
   </div>
@@ -675,6 +740,38 @@ async function loadPdfPreview(url, totalPages) {
     locked.classList.remove('hidden');
   } catch(e) {
     document.getElementById('preview-pdf-section').classList.add('hidden');
+  }
+}
+
+async function submitContact(e) {
+  e.preventDefault();
+  const btn      = document.getElementById('c-submit');
+  const result   = document.getElementById('c-result');
+  const origHTML = btn.innerHTML;
+  btn.disabled   = true;
+  btn.innerHTML  = '<span class="ms" style="font-size:18px;">hourglass_empty</span> Envoi…';
+
+  const { error } = await _supabase.from('contact_messages').insert({
+    nom:      document.getElementById('c-nom').value.trim(),
+    email:    document.getElementById('c-email').value.trim(),
+    sujet:    document.getElementById('c-sujet').value,
+    message:  document.getElementById('c-message').value.trim(),
+    page_url: window.location.href,
+  });
+
+  if (error) {
+    result.classList.remove('hidden');
+    result.style.color   = '#C0392B';
+    result.textContent   = 'Erreur d\'envoi — écrivez-nous directement à contact@jumuatime.com';
+    btn.disabled  = false;
+    btn.innerHTML = origHTML;
+  } else {
+    document.getElementById('contact-form').innerHTML = `
+      <div class="text-center py-6">
+        <span class="ms" style="font-size:48px;color:#5B9EAD;display:block;margin-bottom:12px;">check_circle</span>
+        <p class="font-semibold" style="color:#1A1208;">Message envoyé !</p>
+        <p class="text-sm mt-1" style="color:#8B7A5A;">Nous vous répondrons sous 24 à 48h.</p>
+      </div>`;
   }
 }
 
