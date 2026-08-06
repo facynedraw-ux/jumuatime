@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Fix images — Jumua Time</title>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 60px auto; padding: 0 20px; }
+  button { background: #5B9EAD; color: white; border: none; padding: 14px 28px; font-size: 16px; border-radius: 10px; cursor: pointer; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  #log { margin-top: 24px; font-size: 14px; line-height: 1.8; white-space: pre-wrap; }
+  .ok { color: green; }
+  .err { color: red; }
+</style>
+</head>
+<body>
+<h2>Réparation des images</h2>
+<p>Clique sur le bouton pour corriger les URLs des images en base de données.</p>
+<button id="btn" onclick="run()">Réparer les images</button>
+<div id="log"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script>
+const log = document.getElementById('log');
+const btn = document.getElementById('btn');
+
+function fix(url) {
+  if (!url) return url;
+  return url
+    .replace('/storage/v1/render/image/public/', '/storage/v1/object/public/')
+    .replace(/\?width=\d+&quality=\d+/, '');
+}
+
+async function run() {
+  btn.disabled = true;
+  log.innerHTML = 'Chargement des produits…\n';
+
+  const { data, error } = await _supabase.from('resources').select('id, title, preview_url, gallery_urls');
+  if (error) { log.innerHTML += `<span class="err">Erreur : ${error.message}</span>`; btn.disabled = false; return; }
+
+  log.innerHTML += `${data.length} produits trouvés.\n\n`;
+  let fixed = 0;
+
+  for (const r of data) {
+    const newPreview = fix(r.preview_url);
+    const oldGallery = r.gallery_urls || [];
+    const newGallery = oldGallery.map(fix);
+    const changed = newPreview !== r.preview_url || JSON.stringify(newGallery) !== JSON.stringify(oldGallery);
+    if (!changed) continue;
+
+    const { error: err } = await _supabase.from('resources')
+      .update({ preview_url: newPreview, gallery_urls: newGallery })
+      .eq('id', r.id);
+
+    if (err) {
+      log.innerHTML += `<span class="err">✗ ${r.title} — ${err.message}</span>\n`;
+    } else {
+      log.innerHTML += `<span class="ok">✓ ${r.title}</span>\n`;
+      fixed++;
+    }
+  }
+
+  log.innerHTML += `\n<strong>${fixed} produit(s) corrigé(s).</strong>`;
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
