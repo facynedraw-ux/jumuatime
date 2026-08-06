@@ -256,7 +256,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="ms" style="font-size:18px;">bolt</span>
         Commander maintenant
       </button>
-      <p class="text-xs text-center text-muted">Paiement sécurisé par Stripe · Adresse de livraison collectée au paiement</p>
+      <p class="text-xs text-center text-muted" id="checkout-hint">Paiement sécurisé par Stripe</p>
 
       <!-- Caractéristiques -->
       <div id="product-details" class="space-y-2 text-sm text-muted pt-2 border-t border-border"></div>
@@ -667,29 +667,29 @@ function renderFaq() {
 }
 
 function updatePrix(prixProduit) {
-  const seuilGratuit  = produit.livraison_offerte_a_partir || 4500;
-  const variante      = (produit.variantes || []).find(v => v.id === varianteChoisie);
-  const effectiveGel  = variante?.gelato_product_id || produit.gelato_product_id || '';
-  const prixLivraison = effectiveGel
-    ? 0
-    : (produit.mode_livraison === 'lettre' ? 200 : 490);
-  const livraison     = prixProduit >= seuilGratuit ? 0 : prixLivraison;
+  const variante    = (produit.variantes || []).find(v => v.id === varianteChoisie);
+  const effectiveGel = variante?.gelato_product_id || produit.gelato_product_id || '';
+  const isGelato    = !!effectiveGel;
 
   document.getElementById('product-price-display').textContent =
     `À partir de ${(prixProduit / 100).toFixed(2)} €`;
   document.getElementById('recap-produit').textContent =
     `${(prixProduit / 100).toFixed(2)} €`;
-  document.getElementById('recap-livraison').textContent =
-    livraison === 0 ? '🎁 Offerte' : `${(livraison / 100).toFixed(2)} €`;
-  document.getElementById('recap-total').textContent =
-    `${((prixProduit + livraison) / 100).toFixed(2)} €`;
 
   const infoEl = document.getElementById('recap-livraison-info');
-  if (livraison > 0) {
-    const manquant = (seuilGratuit - prixProduit) / 100;
-    infoEl.textContent = `Livraison offerte dès ${(seuilGratuit / 100).toFixed(2)} € d'achats (il manque ${manquant.toFixed(2)} €)`;
+
+  if (isGelato) {
+    document.getElementById('recap-livraison').textContent = '—';
+    document.getElementById('recap-total').textContent = `${(prixProduit / 100).toFixed(2)} €`;
+    infoEl.textContent = 'Frais de livraison calculés à l\'étape suivante';
+    const hint = document.getElementById('checkout-hint');
+    if (hint) hint.textContent = 'Paiement sécurisé par Stripe · Adresse saisie sur le panier';
   } else {
+    document.getElementById('recap-livraison').innerHTML = '🎁 <strong>Offerte</strong>';
+    document.getElementById('recap-total').textContent = `${(prixProduit / 100).toFixed(2)} €`;
     infoEl.textContent = '✓ Livraison offerte';
+    const hint = document.getElementById('checkout-hint');
+    if (hint) hint.textContent = 'Paiement sécurisé par Stripe · Livraison offerte';
   }
 }
 
