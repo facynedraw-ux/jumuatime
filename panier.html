@@ -90,6 +90,9 @@ p {
   .skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
   @keyframes shimmer { to{transform:translateX(100%)} }
   @media (prefers-reduced-motion:reduce) { .resource-card { transition:none !important; } .skeleton::after { animation:none !important; } }
+  .jt-input { width:100%;border:1.5px solid #E2D4BC;border-radius:10px;padding:9px 12px;font-size:14px;font-family:'DM Sans',sans-serif;background:white;color:#1A1208;outline:none;box-sizing:border-box;transition:border-color 0.15s;-webkit-appearance:none;appearance:none; }
+  .jt-input:focus { border-color:#5B9EAD; }
+  .jt-label { font-size:12px;font-weight:500;color:#8B7A5A;margin-bottom:4px;display:block; }
 </style>
 </head>
 <body class="bg-bg font-body text-dark">
@@ -136,8 +139,102 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div id="cart-content" class="hidden fade-up">
     <div class="md:flex md:gap-8 md:items-start">
 
-      <!-- Articles -->
-      <div class="flex-1 space-y-3 mb-6 md:mb-0" id="items-list"></div>
+      <!-- Articles + Adresse -->
+      <div class="flex-1 min-w-0">
+        <div class="space-y-3 mb-4" id="items-list"></div>
+
+        <!-- Formulaire adresse Gelato — visible si articles imprimés Gelato dans le panier -->
+        <div id="gelato-address-section" class="hidden bg-white border border-border rounded-2xl p-5 mb-6">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="ms" style="font-size:18px;color:#5B9EAD;">local_shipping</span>
+            <h2 class="font-semibold text-sm" style="color:#1A1208;margin:0;">Adresse de livraison</h2>
+          </div>
+          <p class="text-xs" style="color:#8B7A5A;margin:0 0 14px;">Nous calculons vos frais de livraison en temps réel.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label class="jt-label" for="addr-prenom">Prénom</label>
+              <input id="addr-prenom" type="text" class="jt-input" placeholder="Safya" autocomplete="given-name">
+            </div>
+            <div>
+              <label class="jt-label" for="addr-nom">Nom</label>
+              <input id="addr-nom" type="text" class="jt-input" placeholder="Dupont" autocomplete="family-name">
+            </div>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label class="jt-label" for="addr-ligne1">Adresse</label>
+            <input id="addr-ligne1" type="text" class="jt-input" placeholder="12 rue des Lilas" autocomplete="street-address">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label class="jt-label" for="addr-cp">Code postal</label>
+              <input id="addr-cp" type="text" class="jt-input" placeholder="75001" autocomplete="postal-code">
+            </div>
+            <div>
+              <label class="jt-label" for="addr-ville">Ville</label>
+              <input id="addr-ville" type="text" class="jt-input" placeholder="Paris" autocomplete="address-level2">
+            </div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="jt-label" for="addr-pays">Pays</label>
+            <select id="addr-pays" class="jt-input" autocomplete="country">
+              <option value="">— Choisir —</option>
+              <option value="FR" selected>France</option>
+              <option value="BE">Belgique</option>
+              <option value="CH">Suisse</option>
+              <option value="CA">Canada</option>
+              <option value="GB">Royaume-Uni</option>
+              <option value="DE">Allemagne</option>
+              <option value="ES">Espagne</option>
+              <option value="IT">Italie</option>
+              <option value="NL">Pays-Bas</option>
+              <option value="US">États-Unis</option>
+              <option value="AU">Australie</option>
+              <option value="MA">Maroc</option>
+              <option value="DZ">Algérie</option>
+              <option value="TN">Tunisie</option>
+              <option value="AE">Émirats arabes unis</option>
+              <option value="QA">Qatar</option>
+              <option value="SA">Arabie saoudite</option>
+              <option value="SE">Suède</option>
+              <option value="NO">Norvège</option>
+              <option value="DK">Danemark</option>
+              <option value="PT">Portugal</option>
+              <option value="AT">Autriche</option>
+              <option value="LU">Luxembourg</option>
+              <option value="IE">Irlande</option>
+              <option value="FI">Finlande</option>
+              <option value="PL">Pologne</option>
+              <option value="TR">Turquie</option>
+              <option value="LB">Liban</option>
+              <option value="SG">Singapour</option>
+              <option value="NZ">Nouvelle-Zélande</option>
+              <option value="ZA">Afrique du Sud</option>
+              <option value="NG">Nigéria</option>
+              <option value="EG">Égypte</option>
+              <option value="PK">Pakistan</option>
+              <option value="IN">Inde</option>
+              <option value="ID">Indonésie</option>
+              <option value="MY">Malaisie</option>
+            </select>
+          </div>
+          <button id="quote-btn" onclick="getQuote()" class="btn-teal" style="width:100%;justify-content:center;">
+            <span class="ms" style="font-size:18px;">calculate</span>
+            Calculer les frais de livraison
+          </button>
+          <div id="quote-result" class="hidden" style="margin-top:12px;padding:12px;border-radius:12px;background:#EBF5F7;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="ms" style="font-size:20px;color:#3D7A8A;">check_circle</span>
+              <div>
+                <p id="quote-text" style="font-size:14px;font-weight:600;color:#1A1208;margin:0;"></p>
+                <p id="quote-hint" style="font-size:12px;color:#5B9EAD;margin:0;"></p>
+              </div>
+            </div>
+          </div>
+          <div id="quote-error" class="hidden" style="margin-top:12px;padding:12px;border-radius:12px;background:#FEE2E2;">
+            <p id="quote-error-text" style="font-size:13px;color:#B91C1C;margin:0;"></p>
+          </div>
+        </div>
+      </div>
 
       <!-- Récapitulatif -->
       <div class="md:w-72 flex-shrink-0">
@@ -272,6 +369,26 @@ function fmt(cents) {
   return (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
 
+// État devis livraison Gelato
+let quotedShippingCents = null;
+let quotedAddress = null;
+
+function hasGelatoItems() {
+  return Cart.get().some(i => i.type_produit === 'physique' && i.gelato_product_id);
+}
+
+function resetQuote() {
+  quotedShippingCents = null;
+  quotedAddress = null;
+  document.getElementById('quote-result')?.classList.add('hidden');
+  document.getElementById('quote-error')?.classList.add('hidden');
+  const btn = document.getElementById('quote-btn');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="ms" style="font-size:18px;">calculate</span> Calculer les frais de livraison';
+  }
+}
+
 function renderCart() {
   const items = Cart.get();
   if (!items.length) {
@@ -322,37 +439,135 @@ function renderCart() {
   }).join('');
 
   // Récap
-  const subtotal = Cart.subtotal();
-  const shipping = Cart.shipping();
-  const total    = Cart.total();
+  const subtotal    = Cart.subtotal();
+  const hasGelato   = hasGelatoItems();
+  const manualShip  = Cart.shipping(); // livraison articles physiques NON-Gelato
+  const gelatoShip  = hasGelato && quotedShippingCents !== null ? quotedShippingCents : 0;
   const hasPhysical = Cart.get().some(i => i.type_produit === 'physique');
+  const quoteReady  = !hasGelato || quotedShippingCents !== null;
+  const displayTotal = subtotal + manualShip + gelatoShip;
 
   document.getElementById('recap-subtotal').textContent = fmt(subtotal);
 
   if (!hasPhysical) {
     document.getElementById('recap-shipping').textContent = '—';
     document.getElementById('recap-shipping-hint').textContent = 'Produits numériques : livraison immédiate par email';
-  } else if (shipping === 0) {
-    document.getElementById('recap-shipping').innerHTML = '🎁 <strong>Offerte</strong>';
-    document.getElementById('recap-shipping-hint').textContent = '✓ Livraison offerte';
+  } else if (hasGelato && quotedShippingCents === null) {
+    document.getElementById('recap-shipping').textContent = 'À calculer';
+    document.getElementById('recap-shipping-hint').textContent = '↓ Renseignez votre adresse ci-dessous';
   } else {
-    document.getElementById('recap-shipping').textContent = fmt(shipping);
-    const manquant = (4500 - Cart._physicalSubtotal()) / 100;
-    document.getElementById('recap-shipping-hint').textContent =
-      `Livraison offerte dès 45 € de produits physiques (il manque ${manquant.toFixed(2)} €)`;
+    const totalShip = manualShip + gelatoShip;
+    if (totalShip === 0) {
+      document.getElementById('recap-shipping').innerHTML = '🎁 <strong>Offerte</strong>';
+      document.getElementById('recap-shipping-hint').textContent = '✓ Livraison offerte';
+    } else {
+      document.getElementById('recap-shipping').textContent = fmt(totalShip);
+      if (!hasGelato && manualShip > 0) {
+        const manquant = (4500 - Cart._physicalSubtotal()) / 100;
+        document.getElementById('recap-shipping-hint').textContent =
+          `Livraison offerte dès 45 € de produits physiques (il manque ${manquant.toFixed(2)} €)`;
+      } else {
+        document.getElementById('recap-shipping-hint').textContent = '';
+      }
+    }
   }
 
-  document.getElementById('recap-total').textContent = fmt(total);
+  document.getElementById('recap-total').textContent = quoteReady ? fmt(displayTotal) : '—';
+
+  // Bloquer le bouton Commander jusqu'à obtention du devis Gelato
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn && !checkoutBtn.disabled) {
+    checkoutBtn.style.opacity = quoteReady ? '1' : '0.45';
+    checkoutBtn.style.cursor  = quoteReady ? 'pointer' : 'not-allowed';
+  }
+
+  // Afficher/masquer le formulaire adresse
+  const addrSection = document.getElementById('gelato-address-section');
+  if (addrSection) {
+    if (hasGelato) addrSection.classList.remove('hidden');
+    else addrSection.classList.add('hidden');
+  }
 }
 
 function changeQty(key, qty) {
   Cart.setQty(key, qty);
+  resetQuote();
   renderCart();
 }
 
 function removeItem(key) {
   Cart.remove(key);
+  resetQuote();
   renderCart();
+}
+
+async function getQuote() {
+  const gelatoItems = Cart.get().filter(i => i.type_produit === 'physique' && i.gelato_product_id);
+  if (!gelatoItems.length) return;
+
+  const prenom = (document.getElementById('addr-prenom')?.value || '').trim();
+  const nom    = (document.getElementById('addr-nom')?.value || '').trim();
+  const ligne1 = (document.getElementById('addr-ligne1')?.value || '').trim();
+  const cp     = (document.getElementById('addr-cp')?.value || '').trim();
+  const ville  = (document.getElementById('addr-ville')?.value || '').trim();
+  const pays   = document.getElementById('addr-pays')?.value || '';
+
+  if (!prenom || !nom || !ligne1 || !cp || !ville || !pays) {
+    showToast('Veuillez remplir tous les champs d\'adresse.', 'error');
+    return;
+  }
+
+  const quoteResult = document.getElementById('quote-result');
+  const quoteError  = document.getElementById('quote-error');
+  const quoteBtn    = document.getElementById('quote-btn');
+  quoteResult.classList.add('hidden');
+  quoteError.classList.add('hidden');
+  quoteBtn.disabled = true;
+  quoteBtn.innerHTML = '<span class="ms" style="font-size:18px;">progress_activity</span> Calcul en cours…';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/gelato-quote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        items: gelatoItems.map(i => ({
+          gelato_product_id: i.gelato_product_id,
+          quantity: i.quantity || 1,
+        })),
+        address: { firstName: prenom, lastName: nom, line1: ligne1, postalCode: cp, city: ville, country: pays },
+      }),
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    quotedShippingCents = data.shipping_cents;
+    quotedAddress = { firstName: prenom, lastName: nom, line1: ligne1, postalCode: cp, city: ville, country: pays };
+
+    const fmtShip = data.shipping_cents === 0
+      ? 'Livraison offerte ✓'
+      : `Livraison : ${fmt(data.shipping_cents)}`;
+    let hint = data.carrier || 'Standard';
+    if (data.min_days && data.max_days) hint += ` · ${data.min_days}–${data.max_days} jours ouvrés`;
+
+    document.getElementById('quote-text').textContent = fmtShip;
+    document.getElementById('quote-hint').textContent = hint;
+    quoteResult.classList.remove('hidden');
+    renderCart();
+  } catch (err) {
+    document.getElementById('quote-error-text').textContent = err.message || 'Erreur lors du calcul. Réessayez.';
+    quoteError.classList.remove('hidden');
+    quotedShippingCents = null;
+    quotedAddress = null;
+    renderCart();
+  } finally {
+    quoteBtn.disabled = false;
+    quoteBtn.innerHTML = '<span class="ms" style="font-size:18px;">calculate</span> Recalculer';
+  }
 }
 
 window.addEventListener('jt-cart-updated', renderCart);
@@ -416,6 +631,13 @@ async function startCheckout() {
   const items = Cart.get();
   if (!items.length) return;
 
+  // Devis Gelato obligatoire avant de payer
+  if (hasGelatoItems() && quotedShippingCents === null) {
+    showToast('Calculez d\'abord vos frais de livraison ci-dessous.', 'error');
+    document.getElementById('gelato-address-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
   window.dataLayer = window.dataLayer || [];
   const _checkoutTotal = Cart.total();
   window.dataLayer.push({
@@ -465,6 +687,10 @@ async function startCheckout() {
           personnalisation:  i.personnalisation || {},
           quantity:          i.quantity || 1,
         })),
+        ...(hasGelatoItems() && quotedShippingCents !== null ? {
+          shipping_cents:   quotedShippingCents,
+          shipping_address: quotedAddress,
+        } : {}),
         origin: window.location.origin,
       }),
     });

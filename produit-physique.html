@@ -816,51 +816,31 @@ function addToCartFromPage() {
   }, 1000);
 }
 
-// ── Commander maintenant (checkout direct, sans passer par le panier) ──
-async function startCheckout() {
+// ── Commander maintenant → ajoute au panier et redirige vers panier.html ──
+function startCheckout() {
   if (!produit) return;
   const btn = document.getElementById('order-btn');
-  btn.disabled = true;
-  btn.textContent = 'Chargement…';
 
-  try {
-    const variante   = (produit.variantes || []).find(v => v.id === varianteChoisie);
-    const priceCents = variante ? variante.prix : (produit.price || 0) * 100;
+  const variante   = (produit.variantes || []).find(v => v.id === varianteChoisie);
+  const priceCents = variante ? variante.prix : (produit.price || 0) * 100;
+  const title      = variante ? `${produit.title} — ${variante.label}` : produit.title;
 
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/stripe-checkout`, {
-      method:  'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'apikey':        SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-      body: JSON.stringify({
-        type: 'panier',
-        items: [{
-          produit_id:        produit.id,
-          slug:              produit.slug,
-          title:             variante ? `${produit.title} — ${variante.label}` : produit.title,
-          preview_url:       produit.preview_url || '',
-          price_cents:       priceCents,
-          type_produit:      'physique',
-          gelato_product_id: variante?.gelato_product_id || produit.gelato_product_id || '',
-          mode_livraison:    produit.mode_livraison || 'colis',
-          variante_id:       varianteChoisie || '',
-          personnalisation:  persoValues,
-          quantity:          1,
-        }],
-        origin: window.location.origin,
-      }),
-    });
-    const { url, error } = await res.json();
-    if (error) throw new Error(error);
-    if (!url)  throw new Error('Impossible de créer la session de paiement.');
-    window.location.href = url;
-  } catch (err) {
-    showToast('Erreur : ' + (err.message || 'Réessayez.'), 'error');
-    btn.disabled = false;
-    btn.textContent = 'Commander maintenant →';
-  }
+  Cart.add({
+    produit_id:        produit.id,
+    slug:              produit.slug,
+    title,
+    preview_url:       produit.preview_url || '',
+    price_cents:       priceCents,
+    type_produit:      'physique',
+    gelato_product_id: variante?.gelato_product_id || produit.gelato_product_id || '',
+    mode_livraison:    produit.mode_livraison || 'colis',
+    variante_id:       varianteChoisie || '',
+    personnalisation:  persoValues,
+    category:          produit.category || '',
+    quantity:          1,
+  });
+
+  window.location.href = 'panier.html';
 }
 
 function switchImage(idx, thumb) {
