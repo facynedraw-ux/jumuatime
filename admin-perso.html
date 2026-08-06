@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Personnalisation — Jumua Time Admin</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#C96B8A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap"></noscript>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/tailwind.css">
+<style>
+body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; margin:0; }
+.ms { font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased; }
+
+.admin-nav-link { display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;text-decoration:none;color:#7A5A6A;font-size:14px;font-weight:500;transition:all 0.15s; }
+.admin-nav-link:hover, .admin-nav-link.active { background:#F5E8F0;color:#C96B8A; }
+
+.btn-primary { background:#C96B8A;color:white;border:none;border-radius:12px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background 0.15s; }
+.btn-primary:hover { background:#b55a78; }
+.btn-primary:disabled { opacity:0.5;cursor:not-allowed; }
+.btn-sm { background:#F5E8F0;color:#C96B8A;border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:background 0.15s; }
+.btn-sm:hover { background:#FACDD8; }
+
+.panel-overlay { position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.4);display:flex;justify-content:flex-end; }
+.panel-overlay.hidden { display:none; }
+.panel-box { background:white;width:100%;max-width:520px;height:100%;overflow-y:auto;display:flex;flex-direction:column; }
+.panel-scroll { flex:1;overflow-y:auto;padding:24px; }
+
+.f-label { display:block;font-size:11px;font-weight:700;color:#7A5A6A;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px; }
+.f-input { width:100%;padding:9px 12px;border:1.5px solid #E8D5DC;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#3D1F2D;background:white;outline:none;transition:border-color 0.2s;box-sizing:border-box; }
+.f-input:focus { border-color:#C96B8A; }
+.f-textarea { width:100%;padding:9px 12px;border:1.5px solid #E8D5DC;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#3D1F2D;background:white;outline:none;resize:vertical;box-sizing:border-box; }
+.f-textarea:focus { border-color:#C96B8A; }
+.f-sep { height:1px;background:#E8D5DC;margin:16px 0; }
+
+/* Carte produit perso */
+.perso-card { background:white;border:1.5px solid #E8D5DC;border-radius:16px;overflow:hidden;cursor:pointer;transition:box-shadow 0.15s,border-color 0.15s; }
+.perso-card:hover { border-color:#C96B8A;box-shadow:0 4px 16px rgba(201,107,138,0.12); }
+.perso-card-img { height:160px;overflow:hidden;display:flex;align-items:center;justify-content:center; }
+
+/* Fonds */
+.fond-admin-card { position:relative; }
+.fond-admin-card img { width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block; }
+.fond-delete-btn { position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;padding:0; }
+.fond-add-card { border:2px dashed #E8D5DC;border-radius:10px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s;color:#7A5A6A;font-size:12px;gap:4px; }
+.fond-add-card:hover { border-color:#C96B8A;color:#C96B8A; }
+
+/* Toggle */
+.toggle { position:relative;display:inline-block;width:44px;height:24px; }
+.toggle input { opacity:0;width:0;height:0; }
+.toggle-slider { position:absolute;inset:0;background:#E8D5DC;border-radius:24px;transition:background 0.2s;cursor:pointer; }
+.toggle-slider:before { content:'';position:absolute;height:18px;width:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform 0.2s; }
+.toggle input:checked + .toggle-slider { background:#C96B8A; }
+.toggle input:checked + .toggle-slider:before { transform:translateX(20px); }
+
+/* Skeleton */
+.skeleton { position:relative;overflow:hidden;background:#F5E8F0;border-radius:8px; }
+.skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
+@keyframes shimmer { to { transform:translateX(100%); } }
+@media (prefers-reduced-motion:reduce) { .skeleton::after { animation:none !important; } }
+</style>
+</head>
+<body>
+<div class="flex min-h-screen">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="hidden md:flex flex-col w-56 bg-white border-r px-4 py-6 sticky top-0 h-screen flex-shrink-0" style="border-color:#E8D5DC;">
+    <a href="index.html" class="flex items-center gap-2 mb-8 no-underline">
+      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
+      <span class="font-display font-bold text-base" style="color:#3D1F2D;">Admin</span>
+    </a>
+    <nav class="space-y-1 flex-1">
+      <a href="admin.html"          class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html"class="admin-nav-link"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin-ressources.html"class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
+      <a href="admin-stock.html"    class="admin-nav-link"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
+      <a href="admin-perso.html"    class="admin-nav-link active"><span class="ms" style="font-size:18px;">brush</span> Personnalisation</a>
+    </nav>
+    <button onclick="signOut()" class="admin-nav-link mt-4 border-0 bg-transparent cursor-pointer text-left">
+      <span class="ms" style="font-size:18px;">logout</span> Déconnexion
+    </button>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Mobile header -->
+    <header class="md:hidden sticky top-0 z-40 bg-white border-b px-4 h-14 flex items-center justify-between" style="border-color:#E8D5DC;">
+      <span class="font-display font-bold text-base" style="color:#3D1F2D;">Personnalisation</span>
+      <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
+              class="w-9 h-9 flex items-center justify-center rounded-xl border" style="border-color:#E8D5DC;">
+        <span class="ms">menu</span>
+      </button>
+    </header>
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b px-4 py-3 flex flex-col gap-1 z-30" style="border-color:#E8D5DC;">
+      <a href="admin.html"           class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin-ressources.html"class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
+      <a href="admin-stock.html"     class="admin-nav-link"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
+      <a href="admin-perso.html"     class="admin-nav-link active"><span class="ms" style="font-size:18px;">brush</span> Personnalisation</a>
+    </div>
+
+    <!-- Page header -->
+    <div class="px-6 pt-6 pb-4 border-b bg-white flex items-center justify-between flex-wrap gap-3" style="border-color:#E8D5DC;">
+      <div>
+        <h1 class="font-display font-bold text-xl" style="color:#3D1F2D;">Fiches personnalisation</h1>
+        <p class="text-xs mt-0.5" style="color:#7A5A6A;">Photo, prix, options et visibilité de chaque type de création.</p>
+      </div>
+      <button onclick="loadAll()" class="btn-sm"><span class="ms" style="font-size:16px;">refresh</span> Actualiser</button>
+    </div>
+
+    <!-- Grid des fiches -->
+    <div id="cards-grid" class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div class="perso-card"><div class="skeleton" style="height:160px;"></div><div class="p-4 space-y-2"><div class="skeleton h-4 w-40"></div><div class="skeleton h-3 w-24"></div></div></div>
+      <div class="perso-card"><div class="skeleton" style="height:160px;"></div><div class="p-4 space-y-2"><div class="skeleton h-4 w-40"></div><div class="skeleton h-3 w-24"></div></div></div>
+      <div class="perso-card"><div class="skeleton" style="height:160px;"></div><div class="p-4 space-y-2"><div class="skeleton h-4 w-40"></div><div class="skeleton h-3 w-24"></div></div></div>
+      <div class="perso-card"><div class="skeleton" style="height:160px;"></div><div class="p-4 space-y-2"><div class="skeleton h-4 w-40"></div><div class="skeleton h-3 w-24"></div></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PANEL ═══ -->
+<div id="panel-overlay" class="panel-overlay hidden" onclick="maybeClosePanel(event)">
+  <div class="panel-box">
+    <div class="panel-scroll" id="panel-content"></div>
+    <div class="px-6 py-4 border-t bg-white" id="panel-actions" style="border-color:#E8D5DC;"></div>
+  </div>
+</div>
+
+<!-- Inputs fichier cachés -->
+<input type="file" id="img-main-input"  accept="image/*" class="hidden" onchange="handleMainImageUpload(event)">
+<input type="file" id="img-fond-input"  accept="image/*" class="hidden" onchange="handleFondUpload(event)">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js?v=2"></script>
+<script>
+
+let allProduits   = [];
+let currentProduit = null;
+
+const STORAGE_BUCKET = 'perso-covers';
+
+const TYPE_META = {
+  'pochon':              { icon:'shopping_bag', bg:'#EBF5F7', color:'#5B9EAD' },
+  'calligraphie-latine': { icon:'draw',         bg:'#F5EDE0', color:'#C49A5A' },
+  'calligraphie-arabe':  { icon:'brush',        bg:'#EBF5F7', color:'#5B9EAD' },
+  'cadre-argile':        { icon:'texture',      bg:'#F7EDE8', color:'#C96B8A' },
+};
+
+// ── Démarrage ──
+(async () => {
+  const ok = await isAdmin();
+  if (!ok) { window.location.href = 'login.html'; return; }
+  await loadAll();
+})();
+
+async function loadAll() {
+  const { data, error } = await _supabase
+    .from('produits_perso')
+    .select('*')
+    .order('ordre', { ascending: true });
+  if (error) { console.error(error); return; }
+  allProduits = data || [];
+  renderGrid();
+}
+
+// ── Grille ──
+function renderGrid() {
+  const grid = document.getElementById('cards-grid');
+  if (!allProduits.length) {
+    grid.innerHTML = `<div class="col-span-2 py-16 text-center" style="color:#7A5A6A;">
+      <span class="ms" style="font-size:40px;display:block;margin-bottom:12px;color:#E8D5DC;">category</span>
+      Aucune fiche. Avez-vous exécuté le SQL d'initialisation dans Supabase&nbsp;?
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = allProduits.map(p => {
+    const m = TYPE_META[p.type_key] || { icon:'category', bg:'#F5E8F0', color:'#C96B8A' };
+    const imgArea = p.image_url
+      ? `<img src="${escHtml(p.image_url)}" alt="${escHtml(p.name)}" class="w-full h-full object-cover" loading="lazy">`
+      : `<div class="w-full h-full flex flex-col items-center justify-center gap-2" style="background:${m.bg};">
+           <span class="ms" style="font-size:40px;color:${m.color};">${m.icon}</span>
+           <span class="text-xs font-medium" style="color:${m.color};">Ajouter une photo →</span>
+         </div>`;
+    const prix = p.price_cents > 0
+      ? `<span class="font-bold" style="color:#C96B8A;">${(p.price_cents/100).toFixed(2).replace('.',',')} €</span>`
+      : `<span style="color:#9B7FA6;font-size:12px;">Prix à définir</span>`;
+    const badge = p.actif
+      ? `<span style="background:#D4EBD4;color:#207040;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;">✓ Actif</span>`
+      : `<span style="background:#F5E8F0;color:#C96B8A;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;">⏸ Inactif</span>`;
+    return `
+    <div class="perso-card" onclick="openPanel('${p.id}')">
+      <div class="perso-card-img">${imgArea}</div>
+      <div class="p-4">
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <h3 class="font-display font-bold text-sm leading-snug" style="color:#3D1F2D;">${escHtml(p.name)}</h3>
+          ${prix}
+        </div>
+        <div class="flex items-center gap-2">
+          ${badge}
+          <span class="ms" style="font-size:16px;color:#C96B8A;margin-left:auto;">edit</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Panel ──
+function openPanel(id) {
+  currentProduit = allProduits.find(p => p.id === id);
+  if (!currentProduit) return;
+  renderPanel(currentProduit);
+  document.getElementById('panel-overlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function maybeClosePanel(e) {
+  if (e.target === document.getElementById('panel-overlay')) closePanel();
+}
+
+function closePanel() {
+  document.getElementById('panel-overlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function renderPanel(p) {
+  const prixVal = p.price_cents > 0 ? (p.price_cents / 100).toFixed(2).replace('.', ',') : '';
+  const opts    = p.options || {};
+
+  // Section options spécifiques par type
+  let optSection = '';
+
+  if (p.type_key === 'pochon') {
+    optSection = `
+    <div class="f-sep"></div>
+    <label class="f-label" for="opt-colors">Couleurs disponibles</label>
+    <input id="opt-colors" type="text" class="f-input" value="${escHtml((opts.colors||[]).join(', '))}" placeholder="Noir, Or, Blanc">
+    <p class="text-xs mt-1.5" style="color:#7A5A6A;">Séparées par virgule — apparaissent dans le menu de sélection.</p>`;
+  }
+
+  if (p.type_key === 'cadre-argile') {
+    optSection = `
+    <div class="f-sep"></div>
+    <label class="f-label" for="opt-tailles">Tailles du cadre</label>
+    <input id="opt-tailles" type="text" class="f-input mb-3" value="${escHtml((opts.tailles||[]).join(', '))}" placeholder="30x20, 40x30">
+    <label class="f-label" for="opt-couleurs">Couleurs du cadre</label>
+    <input id="opt-couleurs" type="text" class="f-input mb-3" value="${escHtml((opts.couleurs||[]).join(', '))}" placeholder="Blanc, Noir">
+    <label class="f-label" for="opt-versions">Versions</label>
+    <input id="opt-versions" type="text" class="f-input" value="${escHtml((opts.versions||[]).join(', '))}" placeholder="standard, premium">
+    <p class="text-xs mt-1.5" style="color:#7A5A6A;">Chaque champ : valeurs séparées par virgule.</p>`;
+  }
+
+  if (p.type_key === 'calligraphie-arabe') {
+    const fonds = opts.fonds || [];
+    optSection = `
+    <div class="f-sep"></div>
+    <p class="f-label">Galerie de fonds</p>
+    <p class="text-xs mb-3" style="color:#7A5A6A;">Ces images s'affichent dans le sélecteur de fond sur la page personnalisation.</p>
+    <div class="grid grid-cols-3 gap-3 mb-2" id="fonds-grid">
+      ${renderFondsGrid(fonds)}
+    </div>`;
+  }
+
+  document.getElementById('panel-content').innerHTML = `
+    <div class="flex items-start justify-between mb-5">
+      <h2 class="font-display font-bold text-lg" style="color:#3D1F2D;">${escHtml(p.name)}</h2>
+      <button onclick="closePanel()" style="background:none;border:none;cursor:pointer;padding:4px;color:#7A5A6A;">
+        <span class="ms" style="font-size:22px;">close</span>
+      </button>
+    </div>
+
+    <!-- Photo principale -->
+    <p class="f-label mb-2">Photo du produit</p>
+    <div class="relative mb-1 rounded-xl overflow-hidden" style="height:180px;background:#F5E8F0;">
+      ${p.image_url
+        ? `<img id="preview-main" src="${escHtml(p.image_url)}" class="w-full h-full object-cover">`
+        : `<div id="preview-main" class="w-full h-full flex flex-col items-center justify-center gap-2" style="color:#C96B8A;">
+             <span class="ms" style="font-size:40px;">image</span>
+             <span class="text-xs font-medium">Aucune photo</span>
+           </div>`}
+      <button onclick="document.getElementById('img-main-input').click()"
+        style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:white;border:none;border-radius:20px;padding:6px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+        <span class="ms" style="font-size:15px;">upload</span> Changer
+      </button>
+    </div>
+    <p id="upload-status" class="text-xs mb-4 hidden" style="color:#7A5A6A;"></p>
+
+    <!-- Prix -->
+    <div class="f-sep" style="margin-top:0;"></div>
+    <label class="f-label" for="pnl-prix">Prix (€)</label>
+    <input id="pnl-prix" type="text" class="f-input mb-1" placeholder="Ex : 6,00" value="${escHtml(prixVal)}" inputmode="decimal">
+    <p class="text-xs mb-4" style="color:#7A5A6A;">Vide = "Bientôt" affiché sur la carte, commande impossible.</p>
+
+    <!-- Description -->
+    <label class="f-label" for="pnl-desc">Description</label>
+    <textarea id="pnl-desc" class="f-textarea mb-4" rows="3">${escHtml(p.description || '')}</textarea>
+
+    <!-- Actif -->
+    <div class="flex items-center justify-between p-3 rounded-xl" style="background:#FFF5F7;border:1px solid #E8D5DC;">
+      <div>
+        <p class="text-sm font-semibold" style="color:#3D1F2D;">Visible sur la boutique</p>
+        <p class="text-xs mt-0.5" style="color:#7A5A6A;">Désactiver pour masquer sans supprimer.</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="pnl-actif" ${p.actif ? 'checked' : ''}>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    ${optSection}
+
+    <div id="pnl-msg" class="text-xs text-center mt-4 hidden"></div>
+  `;
+
+  document.getElementById('panel-actions').innerHTML = `
+    <button onclick="saveProduct()" class="btn-primary w-full justify-center">
+      <span class="ms" style="font-size:17px;">save</span> Enregistrer
+    </button>`;
+}
+
+function renderFondsGrid(fonds) {
+  return fonds.map((f, i) => `
+    <div class="fond-admin-card">
+      <img src="${escHtml(f.url)}" alt="${escHtml(f.label)}"
+           onerror="this.style.opacity='0.3'" style="border-radius:10px;">
+      <button class="fond-delete-btn" onclick="deleteFond(${i})" title="Supprimer">
+        <span class="ms" style="font-size:14px;">close</span>
+      </button>
+      <p class="text-xs text-center mt-1" style="color:#7A5A6A;">${escHtml(f.label)}</p>
+    </div>`).join('') +
+  `<div class="fond-add-card" onclick="document.getElementById('img-fond-input').click()">
+    <span class="ms" style="font-size:24px;">add_photo_alternate</span>
+    <span>Ajouter</span>
+  </div>`;
+}
+
+// ── Upload photo principale ──
+async function handleMainImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file || !currentProduit) return;
+  event.target.value = '';
+
+  const status = document.getElementById('upload-status');
+  status.textContent = 'Upload en cours…';
+  status.style.color = '#7A5A6A';
+  status.classList.remove('hidden');
+
+  try {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `${currentProduit.type_key}/cover-${Date.now()}.${ext}`;
+
+    const { error: upErr } = await _supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+
+    const { data: { publicUrl } } = _supabase.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+    // Aperçu immédiat
+    const prev = document.getElementById('preview-main');
+    if (prev.tagName === 'IMG') {
+      prev.src = publicUrl;
+    } else {
+      const img = document.createElement('img');
+      img.id = 'preview-main';
+      img.src = publicUrl;
+      img.className = 'w-full h-full object-cover';
+      prev.replaceWith(img);
+    }
+
+    const { error: dbErr } = await _supabase
+      .from('produits_perso')
+      .update({ image_url: publicUrl, updated_at: new Date().toISOString() })
+      .eq('id', currentProduit.id);
+    if (dbErr) throw dbErr;
+
+    currentProduit.image_url = publicUrl;
+    const idx = allProduits.findIndex(p => p.id === currentProduit.id);
+    if (idx !== -1) allProduits[idx].image_url = publicUrl;
+    renderGrid();
+
+    status.textContent = '✓ Photo mise à jour';
+    status.style.color = '#207040';
+    setTimeout(() => status.classList.add('hidden'), 3000);
+  } catch (err) {
+    status.textContent = 'Erreur : ' + (err.message || 'réessayez');
+    status.style.color = '#C96B8A';
+  }
+}
+
+// ── Upload fond (calligraphie arabe) ──
+async function handleFondUpload(event) {
+  const file = event.target.files[0];
+  if (!file || !currentProduit) return;
+  event.target.value = '';
+
+  try {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `calligraphie-arabe/fond-${Date.now()}.${ext}`;
+
+    const { error: upErr } = await _supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+
+    const { data: { publicUrl } } = _supabase.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+    const n     = (currentProduit.options?.fonds || []).length + 1;
+    const fonds = [...(currentProduit.options?.fonds || []), { label: `Fond ${n}`, url: publicUrl }];
+    await persistFonds(fonds);
+  } catch (err) {
+    alert('Erreur upload : ' + (err.message || 'réessayez'));
+  }
+}
+
+async function deleteFond(index) {
+  if (!currentProduit || !confirm('Supprimer ce fond ?')) return;
+  const fonds = [...(currentProduit.options?.fonds || [])];
+  fonds.splice(index, 1);
+  await persistFonds(fonds);
+}
+
+async function persistFonds(fonds) {
+  const opts = { ...(currentProduit.options || {}), fonds };
+  const { error } = await _supabase
+    .from('produits_perso')
+    .update({ options: opts, updated_at: new Date().toISOString() })
+    .eq('id', currentProduit.id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  currentProduit.options = opts;
+  const idx = allProduits.findIndex(p => p.id === currentProduit.id);
+  if (idx !== -1) allProduits[idx].options = opts;
+  const grid = document.getElementById('fonds-grid');
+  if (grid) grid.innerHTML = renderFondsGrid(fonds);
+}
+
+// ── Enregistrer ──
+async function saveProduct() {
+  if (!currentProduit) return;
+  const btn = document.querySelector('#panel-actions .btn-primary');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ms" style="font-size:17px;">hourglass_top</span> Enregistrement…';
+
+  const prixStr   = document.getElementById('pnl-prix').value.trim().replace(',', '.');
+  const prixCents = prixStr ? Math.round(parseFloat(prixStr) * 100) : 0;
+  const desc      = document.getElementById('pnl-desc').value.trim();
+  const actif     = document.getElementById('pnl-actif').checked;
+
+  const opts = { ...(currentProduit.options || {}) };
+  if (currentProduit.type_key === 'pochon') {
+    opts.colors = (document.getElementById('opt-colors')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+  }
+  if (currentProduit.type_key === 'cadre-argile') {
+    opts.tailles  = (document.getElementById('opt-tailles')?.value  || '').split(',').map(s => s.trim()).filter(Boolean);
+    opts.couleurs = (document.getElementById('opt-couleurs')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+    opts.versions = (document.getElementById('opt-versions')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  const { error } = await _supabase.from('produits_perso').update({
+    description: desc,
+    price_cents: isNaN(prixCents) ? 0 : prixCents,
+    actif,
+    options: opts,
+    updated_at: new Date().toISOString(),
+  }).eq('id', currentProduit.id);
+
+  btn.disabled = false;
+  btn.innerHTML = '<span class="ms" style="font-size:17px;">save</span> Enregistrer';
+
+  const msg = document.getElementById('pnl-msg');
+  if (error) {
+    msg.textContent = 'Erreur : ' + error.message;
+    msg.style.color = '#C96B8A';
+    msg.classList.remove('hidden');
+    return;
+  }
+
+  Object.assign(currentProduit, { description: desc, price_cents: isNaN(prixCents) ? 0 : prixCents, actif, options: opts });
+  const idx = allProduits.findIndex(p => p.id === currentProduit.id);
+  if (idx !== -1) allProduits[idx] = { ...currentProduit };
+  renderGrid();
+
+  msg.textContent = '✓ Enregistré';
+  msg.style.color = '#207040';
+  msg.classList.remove('hidden');
+  setTimeout(() => msg.classList.add('hidden'), 3000);
+}
+
+// ── Auth ──
+async function signOut() {
+  await _supabase.auth.signOut();
+  window.location.href = 'login.html';
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+</script>
+</body>
+</html>
