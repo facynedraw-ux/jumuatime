@@ -521,12 +521,16 @@ async function loadResources() {
   allResources = data || [];
   document.getElementById('total-count').textContent = allResources.length;
   document.getElementById('list-skeleton').classList.add('hidden');
+  renderList();
+}
 
+function renderList() {
   if (allResources.length === 0) {
     document.getElementById('empty-state').classList.remove('hidden');
+    document.getElementById('resource-list').classList.add('hidden');
     return;
   }
-
+  document.getElementById('empty-state').classList.add('hidden');
   const rows = document.getElementById('resource-rows');
   rows.innerHTML = allResources.map(r => {
     const cat = CAT_LABELS[r.category] || r.category || '—';
@@ -919,8 +923,10 @@ async function toggleVedette(id, current) {
 async function toggleActive(id, current) {
   const { error } = await _supabase.from('resources').update({ is_active: !current }).eq('id', id);
   if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  const r = allResources.find(r => r.id === id);
+  if (r) r.is_active = !current;
   showToast(!current ? 'Ressource activée ✓' : 'Ressource désactivée', 'info');
-  await loadResources();
+  renderList();
 }
 
 function toggleSidebar() { document.getElementById('mobile-sidebar').classList.toggle('hidden'); }
