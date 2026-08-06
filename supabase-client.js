@@ -19,10 +19,7 @@ async function isAdmin() {
 }
 
 function thumbUrl(url, width = 600) {
-  if (!url) return url;
-  const marker = '/storage/v1/object/public/';
-  if (!url.includes(marker)) return url;
-  return url.replace(marker, '/storage/v1/render/image/public/') + `?width=${width}&quality=80`;
+  return url;
 }
 
 function showToast(message, type = 'info') {
