@@ -587,15 +587,14 @@ async function renderBundle() {
   document.getElementById('recap-total').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
 
-  // Colonne gauche : grille 2×2 des 4 articles (toujours, sans lightbox)
-  const imgWrap = document.getElementById('product-image-wrap');
-  imgWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;background:transparent;aspect-ratio:unset;border-radius:0;overflow:visible;';
-  imgWrap.innerHTML = items.slice(0, 4).map(b => {
-    const url = b.img ? thumbUrl(b.img, 400) : '';
-    return `<div class="rounded-xl overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">
-      ${url ? `<img src="${esc(url)}" alt="${esc(b.t)}" class="w-full h-full object-cover" loading="lazy">` : '<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:32px;color:#5B9EAD;opacity:0.4;">image</span></div>'}
-    </div>`;
-  }).join('');
+  // Colonne gauche : image principale du bundle
+  if (produit.preview_url) {
+    const img = document.getElementById('product-image');
+    img.src = thumbUrl(produit.preview_url, 800);
+    img.alt = produit.title;
+    img.classList.remove('hidden');
+    document.getElementById('product-image-placeholder').classList.add('hidden');
+  }
 
   // Économie
   if (saving > 0) {
