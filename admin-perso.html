@@ -279,11 +279,15 @@ function renderPanel(p) {
 
   document.getElementById('panel-content').innerHTML = `
     <div class="flex items-start justify-between mb-5">
-      <h2 class="font-display font-bold text-lg" style="color:#3D1F2D;">${escHtml(p.name)}</h2>
+      <p class="text-xs font-semibold uppercase tracking-wider" style="color:#9B7FA6;">Fiche produit</p>
       <button onclick="closePanel()" style="background:none;border:none;cursor:pointer;padding:4px;color:#7A5A6A;">
         <span class="ms" style="font-size:22px;">close</span>
       </button>
     </div>
+
+    <!-- Titre -->
+    <label class="f-label" for="pnl-name">Nom du produit</label>
+    <input id="pnl-name" type="text" class="f-input mb-5" value="${escHtml(p.name)}" placeholder="Ex : Pochon coton — Eid Mubarak">
 
     <!-- Photo principale -->
     <p class="f-label mb-2">Photo du produit</p>
@@ -482,6 +486,7 @@ async function saveProduct() {
   btn.disabled = true;
   btn.innerHTML = '<span class="ms" style="font-size:17px;">hourglass_top</span> Enregistrement…';
 
+  const name      = document.getElementById('pnl-name').value.trim();
   const prixStr   = document.getElementById('pnl-prix').value.trim().replace(',', '.');
   const prixCents = prixStr ? Math.round(parseFloat(prixStr) * 100) : 0;
   const desc      = document.getElementById('pnl-desc').value.trim();
@@ -498,11 +503,12 @@ async function saveProduct() {
   }
 
   const { error } = await _supabase.from('produits_perso').update({
+    name:        name || currentProduit.name,
     description: desc,
     price_cents: isNaN(prixCents) ? 0 : prixCents,
     actif,
-    options: opts,
-    updated_at: new Date().toISOString(),
+    options:     opts,
+    updated_at:  new Date().toISOString(),
   }).eq('id', currentProduit.id);
 
   btn.disabled = false;
@@ -516,7 +522,7 @@ async function saveProduct() {
     return;
   }
 
-  Object.assign(currentProduit, { description: desc, price_cents: isNaN(prixCents) ? 0 : prixCents, actif, options: opts });
+  Object.assign(currentProduit, { name: name || currentProduit.name, description: desc, price_cents: isNaN(prixCents) ? 0 : prixCents, actif, options: opts });
   const idx = allProduits.findIndex(p => p.id === currentProduit.id);
   if (idx !== -1) allProduits[idx] = { ...currentProduit };
   renderGrid();

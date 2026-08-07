@@ -11,7 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Personnalisation — Jumua Time</title>
-<meta name="description" content="Des créations personnalisées faites à la main par Facyne. Pochons lin, totebags — avec le prénom de votre enfant. Délai 3 à 5 jours ouvrés.">
+<meta name="description" content="Des créations personnalisées faites à la main par Facyne. Pochons coton, totebags — avec le prénom de votre enfant. Délai 3 à 5 jours ouvrés.">
 <meta property="og:title" content="Personnalisation — Jumua Time">
 <meta property="og:url" content="https://jumuatime.com/personnalisation.html">
 <meta property="og:image" content="https://jumuatime.com/Images/logo_version_white.png">
@@ -190,18 +190,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <main class="max-w-3xl mx-auto px-4 pt-10 pb-28 md:pb-16">
 
-  <!-- ═══ PRODUITS (chargés depuis la DB) ═══ -->
-  <div class="mb-10 fade-up">
-    <p class="section-eyebrow mb-2">Nos créations</p>
-    <h2 class="font-display text-2xl font-bold mb-6" style="color:#1A1208;">Choisissez votre produit</h2>
-
-    <div id="products-grid" class="grid md:grid-cols-2 gap-5">
-      <!-- skeleton affiché pendant le chargement -->
-      <div class="product-card"><div class="aspect-square skeleton"></div><div class="p-5 space-y-2"><div class="skeleton h-5 w-40" style="border-radius:6px;"></div><div class="skeleton h-4 w-24" style="border-radius:6px;"></div></div></div>
-      <div class="product-card"><div class="aspect-square skeleton"></div><div class="p-5 space-y-2"><div class="skeleton h-5 w-40" style="border-radius:6px;"></div><div class="skeleton h-4 w-24" style="border-radius:6px;"></div></div></div>
-
-    </div>
-  </div>
 
 
   <!-- ═══ FORMULAIRE DE COMMANDE ═══ -->
@@ -214,8 +202,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="step-label">1</span>
         <h3 class="font-semibold text-base">Produit choisi</h3>
       </div>
-      <div class="field-input" style="cursor:default;background:#FAFAFA;color:#8B7A5A;" id="product-display">
-        ← Sélectionnez un produit ci-dessus
+      <select id="product-select" class="field-input field-select" onchange="onProductSelectChange(this.value)">
+        <option value="">Chargement…</option>
+      </select>
+      <div class="flex items-center justify-between mt-2 hidden" id="product-price-line">
+        <span class="text-sm" style="color:#8B7A5A;">Prix unitaire</span>
+        <span class="font-semibold" style="color:#5B9EAD;" id="product-price-display">—</span>
       </div>
     </div>
 
@@ -400,41 +392,32 @@ async function init() {
     (data || []).forEach(p => { dbProduits[p.type_key] = p; });
     renderProductCards(data || []);
     const urlType = new URLSearchParams(window.location.search).get('type');
-    if (urlType && dbProduits[urlType]) selectProduct(urlType);
+    if (urlType && dbProduits[urlType]) {
+      const sel = document.getElementById('product-select');
+      if (sel) sel.value = urlType;
+      selectProduct(urlType);
+    }
   } catch {
-    document.getElementById('products-grid').innerHTML =
-      '<p class="text-sm col-span-2" style="color:#C96B8A;">Impossible de charger les produits. Rafraîchissez la page.</p>';
+    const sel = document.getElementById('product-select');
+    if (sel) sel.innerHTML = '<option value="">Erreur de chargement — Rafraîchissez la page.</option>';
   }
 }
 
-// ── Rendu des cartes produits depuis DB ──
+// ── Rendu dropdown produits depuis DB ──
 function renderProductCards(list) {
-  const grid = document.getElementById('products-grid');
-  if (!list.length) {
-    grid.innerHTML = '<p class="text-sm col-span-2" style="color:#8B7A5A;">Aucun produit disponible pour le moment.</p>';
+  const sel = document.getElementById('product-select');
+  if (!sel) return;
+  const disponibles = (list || []).filter(p => p.price_cents > 0);
+  if (!disponibles.length) {
+    sel.innerHTML = '<option value="">Aucun produit disponible pour le moment.</option>';
     return;
   }
-  grid.innerHTML = list.map(p => {
-    const bientot    = p.price_cents === 0;
-    const priceBadge = bientot
-      ? `<span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:#F5EDE0;color:#C49A5A;">Bientôt</span>`
-      : `<span class="text-sm font-semibold" style="color:#5B9EAD;">${(p.price_cents / 100).toLocaleString('fr-FR', {minimumFractionDigits:2})} €</span>`;
-    const img = p.image_url
-      ? `<img src="${p.image_url}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy">`
-      : `<div class="w-full h-full flex items-center justify-center" style="background:#F5EDE0;"><span class="ms" style="font-size:40px;color:#C49A5A;">auto_awesome</span></div>`;
-    return `
-      <div class="product-card cursor-pointer" id="card-${p.type_key}" onclick="selectProduct('${p.type_key}')" role="button" aria-pressed="false">
-        <div class="aspect-square overflow-hidden rounded-t-xl">${img}</div>
-        <div class="p-5">
-          <div class="flex items-start justify-between gap-2 mb-1.5">
-            <p class="font-semibold text-sm leading-snug" style="color:#1A1208;">${p.name}</p>
-            <span id="check-${p.type_key}" class="ms hidden flex-shrink-0" style="color:#5B9EAD;font-size:20px;font-variation-settings:'FILL' 1;">check_circle</span>
-          </div>
-          <div class="flex items-center gap-2">${priceBadge}</div>
-          ${p.description ? `<p class="text-xs mt-2 leading-relaxed" style="color:#8B7A5A;">${p.description}</p>` : ''}
-        </div>
-      </div>`;
-  }).join('');
+  sel.innerHTML = '<option value="">— Choisir un produit —</option>' +
+    disponibles.map(p => `<option value="${p.type_key}">${p.name}</option>`).join('');
+  if (disponibles.length === 1) {
+    sel.value = disponibles[0].type_key;
+    selectProduct(disponibles[0].type_key);
+  }
 }
 
 // ── Champs dynamiques par type ──
@@ -448,14 +431,28 @@ function getFormFields(key, options = {}) {
     </div>`;
 
   if (key === 'pochon') {
-    const colors = options.colors || ['Noir', 'Or', 'Blanc'];
     return `
     <div class="grid md:grid-cols-2 gap-4">
       <div>
+        <label for="taille-pochon" class="field-label">Taille</label>
+        <select id="taille-pochon" class="field-input field-select" onchange="onPochonSizeChange(this.value)">
+          <option value="">— Choisir —</option>
+          <option value="xs">XS — 20 × 14 cm, zone 15 × 11 cm, vol. 1 L</option>
+          <option value="s">S — 30 × 25 cm, zone 25 × 22 cm, vol. 3 L</option>
+        </select>
+      </div>
+      <div>
+        <label for="couleur-pochon" class="field-label">Couleur du pochon</label>
+        <select id="couleur-pochon" class="field-input field-select" onchange="onPochonColorChange(this.value)">
+          <option value="">— Choisir —</option>
+          <option value="naturel">Naturel (crème)</option>
+          <option value="noir">Noir</option>
+        </select>
+      </div>
+      <div>
         <label for="couleur" class="field-label">Couleur du motif</label>
         <select id="couleur" class="field-input field-select">
-          <option value="">— Choisir —</option>
-          ${colors.map(c => `<option value="${c.toLowerCase()}">${c}</option>`).join('')}
+          <option value="">— Choisir d'abord la couleur du pochon —</option>
         </select>
       </div>
       <div>
@@ -584,16 +581,17 @@ function selectProduct(key) {
   const produit = dbProduits[key];
   if (!produit) return;
 
-  Object.keys(dbProduits).forEach(k => {
-    const card = document.getElementById('card-' + k);
-    const chk  = document.getElementById('check-' + k);
-    if (card) { card.classList.toggle('selected', k === key); card.setAttribute('aria-pressed', k === key ? 'true' : 'false'); }
-    if (chk)  chk.classList.toggle('hidden', k !== key);
-  });
-
-  const display = document.getElementById('product-display');
-  display.textContent = produit.name;
-  display.style.color = '#1A1208';
+  // Pour pochon : prix affiché après choix de taille ; sinon prix fixe
+  const priceLine = document.getElementById('product-price-line');
+  const priceDisp = document.getElementById('product-price-display');
+  if (priceLine && priceDisp) {
+    if (key === 'pochon') {
+      priceLine.classList.add('hidden');
+    } else {
+      priceLine.classList.remove('hidden');
+      priceDisp.textContent = (produit.price_cents / 100).toFixed(2).replace('.', ',') + ' €';
+    }
+  }
 
   document.getElementById('form-fields-container').innerHTML = getFormFields(key, produit.options || {});
 
@@ -637,7 +635,9 @@ function validateForm() {
   if (!prenom) { showToast('Veuillez renseigner le prénom.', 'error'); return false; }
 
   if (selectedProduct === 'pochon') {
-    if (!document.getElementById('couleur')?.value) { showToast('Veuillez choisir une couleur.', 'error'); return false; }
+    if (!document.getElementById('taille-pochon')?.value) { showToast('Veuillez choisir une taille.', 'error'); return false; }
+    if (!document.getElementById('couleur-pochon')?.value) { showToast('Veuillez choisir la couleur du pochon.', 'error'); return false; }
+    if (!document.getElementById('couleur')?.value) { showToast('Veuillez choisir la couleur du motif.', 'error'); return false; }
   } else if (selectedProduct === 'calligraphie-arabe') {
     const fonds = produit.options?.fonds || [];
     if (fonds.length && !selectedFond) { showToast('Veuillez choisir un fond.', 'error'); return false; }
@@ -660,10 +660,12 @@ function buildCustomization() {
   const prenom = document.getElementById('prenom-input')?.value.trim() || '';
 
   if (selectedProduct === 'pochon') {
-    const couleur = document.getElementById('couleur')?.value || '';
-    const langue  = document.querySelector('input[name="langue_prenom"]:checked')?.value || 'fr';
-    return { type: 'pochon', prenom, couleur, langue_prenom: langue,
-      customization: `Couleur : ${couleur} | Prénom : ${prenom} (${langue === 'ar' ? 'Arabe' : 'Français'})` };
+    const taille         = document.getElementById('taille-pochon')?.value || '';
+    const couleur_pochon = document.getElementById('couleur-pochon')?.value || '';
+    const couleur        = document.getElementById('couleur')?.value || '';
+    const langue         = document.querySelector('input[name="langue_prenom"]:checked')?.value || 'fr';
+    return { type: 'pochon', prenom, taille, couleur_pochon, couleur, langue_prenom: langue,
+      customization: `Taille : ${taille.toUpperCase()} | Pochon : ${couleur_pochon} | Motif : ${couleur} | Prénom : ${prenom} (${langue === 'ar' ? 'Arabe' : 'Français'})` };
   }
   if (selectedProduct === 'calligraphie-latine') {
     return { type: 'calligraphie-latine', prenom,
@@ -695,11 +697,14 @@ async function startCheckout() {
   const quantite = parseInt(document.getElementById('quantite').value) || 1;
   const perso    = buildCustomization();
 
+  const taillePochon = selectedProduct === 'pochon' ? (document.getElementById('taille-pochon')?.value || '') : '';
+  const priceCents   = selectedProduct === 'pochon' ? (POCHON_PRIX[taillePochon] || produit.price_cents) : produit.price_cents;
+
   const orderData = {
     type:             'physical_product',
     product_name:     produit.name,
     product_type:     selectedProduct,
-    price_cents:      produit.price_cents,
+    price_cents:      priceCents,
     quantity:         quantite,
     personnalisation: perso,
     ...perso,
@@ -744,6 +749,38 @@ function toggleMenu() {
   const open = !menu.classList.contains('hidden');
   menu.classList.toggle('hidden');
   btn.setAttribute('aria-expanded', String(!open));
+}
+
+// ── Pochon : prix par taille ──
+const POCHON_PRIX = { xs: 790, s: 1090 };
+
+function onProductSelectChange(val) {
+  if (val) selectProduct(val);
+}
+
+function onPochonSizeChange(val) {
+  const price = POCHON_PRIX[val];
+  const line  = document.getElementById('product-price-line');
+  const disp  = document.getElementById('product-price-display');
+  if (line && disp && price) {
+    line.classList.remove('hidden');
+    disp.textContent = (price / 100).toFixed(2).replace('.', ',') + ' €';
+  }
+}
+
+function onPochonColorChange(val) {
+  const sel = document.getElementById('couleur');
+  if (!sel) return;
+  const prev = sel.value;
+  if (val === 'naturel') {
+    sel.innerHTML = '<option value="">— Choisir —</option><option value="noir">Noir</option><option value="or">Or</option>';
+  } else if (val === 'noir') {
+    sel.innerHTML = '<option value="">— Choisir —</option><option value="or">Or</option><option value="blanc">Blanc</option>';
+  } else {
+    sel.innerHTML = '<option value="">— Choisir d\'abord la couleur du pochon —</option>';
+  }
+  const valid = Array.from(sel.options).map(o => o.value);
+  if (!valid.includes(prev)) sel.value = '';
 }
 
 // ── Boot ──
