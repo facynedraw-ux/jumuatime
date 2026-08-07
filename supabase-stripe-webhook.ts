@@ -229,7 +229,7 @@ Deno.serve(async (req: Request) => {
         ville:       shippingDetails.address.city,
         code_postal: shippingDetails.address.postal_code,
         pays:        shippingDetails.address.country,
-      } : null;
+      } : (meta.adresse_livraison ? JSON.parse(meta.adresse_livraison) : null);
 
       const emailClient = session.customer_details?.email;
       const nomClient   = session.customer_details?.name || "";
@@ -267,6 +267,8 @@ Deno.serve(async (req: Request) => {
 
       // Produits physiques : enregistrer commande + emails
       for (const item of physicalItems) {
+        console.log("[webhook] panier physique item:", JSON.stringify({ i: item.i, v: item.v, t: item.t, tp: item.tp }));
+        console.log("[webhook] panier physique session:", JSON.stringify({ id: session.id, email: emailClient, nom: nomClient, montant: session.amount_total, shipping: adresseLivraison }));
         const { data: cmdInsert, error: cmdErr } = await supabase
           .from("commandes_physiques")
           .insert({
@@ -282,7 +284,11 @@ Deno.serve(async (req: Request) => {
             statut:            "en_attente",
           })
           .select().single();
-        if (cmdErr) console.warn("[webhook] panier commandes_physiques insert:", cmdErr.message);
+        if (cmdErr) {
+          console.error("[webhook] ERREUR insert commandes_physiques:", JSON.stringify({ code: cmdErr.code, message: cmdErr.message, details: cmdErr.details, hint: cmdErr.hint }));
+        } else {
+          console.log("[webhook] commandes_physiques OK, id:", cmdInsert?.id);
+        }
 
         // Décrémenter le stock
         await supabase.rpc("decrement_stock", { product_id: item.i });

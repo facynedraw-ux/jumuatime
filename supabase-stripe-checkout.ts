@@ -199,10 +199,25 @@ Deno.serve(async (req: Request) => {
         cancel_url:  `${body.origin}/panier.html`,
       };
 
-      if (hasPhysical) {
+      const prefilledAddress = body.shipping_address as any;
+
+      if (hasPhysical && !prefilledAddress) {
+        // Pas d'adresse pré-collectée → Stripe la demande
         sessionParams.shipping_address_collection = {
           allowed_countries: ['FR', 'BE', 'CH', 'CA', 'MA', 'DZ', 'TN', 'SN', 'CI'],
         };
+      }
+
+      if (prefilledAddress) {
+        // Adresse déjà saisie dans le panier (Gelato) → stocker dans metadata
+        sessionParams.metadata.adresse_livraison = JSON.stringify({
+          nom:         `${prefilledAddress.firstName || ''} ${prefilledAddress.lastName || ''}`.trim(),
+          rue:         prefilledAddress.line1 || '',
+          complement:  prefilledAddress.line2 || '',
+          ville:       prefilledAddress.city || '',
+          code_postal: prefilledAddress.postalCode || '',
+          pays:        prefilledAddress.country || '',
+        });
       }
 
       const session = await stripe.checkout.sessions.create(sessionParams);
