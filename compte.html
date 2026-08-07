@@ -210,6 +210,83 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="commandes-list" class="space-y-3 hidden"></div>
   </div>
 
+  <!-- ── MES ADRESSES ── -->
+  <div class="fade-up mt-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-display font-bold text-lg" style="color:#1A1208;">Mes adresses</h2>
+      <button onclick="showAddAdresse()" class="btn-ghost" style="font-size:13px;padding:7px 14px;border-radius:12px;">
+        <span class="ms" style="font-size:15px;">add</span> Ajouter
+      </button>
+    </div>
+
+    <div id="adresses-list" class="space-y-3">
+      <div class="skeleton rounded-2xl" style="height:76px;"></div>
+    </div>
+
+    <!-- Formulaire ajout -->
+    <div id="adresse-form" class="hidden mt-4 bg-white border border-border rounded-2xl p-5">
+      <p class="font-semibold text-sm mb-4" style="color:#1A1208;">Nouvelle adresse</p>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Nom complet *</label>
+          <input type="text" id="adr-nom" class="field-input" placeholder="Prénom Nom">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Adresse *</label>
+          <input type="text" id="adr-rue" class="field-input" placeholder="12 rue des Roses">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Complément</label>
+          <input type="text" id="adr-complement" class="field-input" placeholder="Apt, bât., étage…">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Code postal *</label>
+            <input type="text" id="adr-cp" class="field-input" placeholder="75001">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Ville *</label>
+            <input type="text" id="adr-ville" class="field-input" placeholder="Paris">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Pays</label>
+          <select id="adr-pays" class="field-input" style="cursor:pointer;">
+            <option value="FR">France</option>
+            <option value="BE">Belgique</option>
+            <option value="CH">Suisse</option>
+            <option value="CA">Canada</option>
+            <option value="MA">Maroc</option>
+            <option value="DZ">Algérie</option>
+            <option value="TN">Tunisie</option>
+            <option value="SN">Sénégal</option>
+            <option value="CI">Côte d'Ivoire</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-4">
+        <button onclick="saveAdresse()" class="btn-teal" style="font-size:13px;padding:8px 18px;border-radius:12px;">
+          <span class="ms" style="font-size:15px;">check</span> Enregistrer
+        </button>
+        <button onclick="hideAddAdresse()" class="btn-ghost" style="font-size:13px;">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MON COMPTE ── -->
+  <div class="fade-up mt-8 mb-4">
+    <h2 class="font-display font-bold text-lg mb-4" style="color:#1A1208;">Mon compte</h2>
+    <div class="bg-white border border-border rounded-2xl p-5">
+      <p class="font-semibold text-sm mb-1" style="color:#1A1208;">Supprimer mon compte</p>
+      <p class="text-xs mb-4" style="color:#8B7A5A; line-height:1.6;">
+        Toutes vos données personnelles seront effacées définitivement. Vos commandes passées sont conservées de façon anonymisée pour nos obligations légales.
+      </p>
+      <button onclick="deleteAccount()" class="btn-danger">
+        <span class="ms" style="font-size:16px;">delete_forever</span> Supprimer définitivement mon compte
+      </button>
+    </div>
+  </div>
+
 </main>
 
 
@@ -258,6 +335,7 @@ async function init() {
   loadProfile();
   loadAchats();
   loadCommandes();
+  loadAdresses();
 }
 
 // ── Profil ──
@@ -399,7 +477,7 @@ async function loadCommandes() {
   const email = session.user.email;
   const { data, error } = await _supabase
     .from('commandes_physiques')
-    .select('id, created_at, statut, montant_total, montant_livraison, numero_suivi, produit_id, resources!produit_id(title, preview_url)')
+    .select('id, created_at, statut, montant_total, montant_livraison, numero_suivi, ressource_id, resources(title, preview_url)')
     .eq('email_client', email)
     .order('created_at', { ascending: false });
 
@@ -455,6 +533,100 @@ function renderCommande(c) {
         </div>
       </div>
     </div>`;
+}
+
+// ── Adresses ──
+async function loadAdresses() {
+  const { data, error } = await _supabase
+    .from('adresses_livraison')
+    .select('*')
+    .eq('user_id', session.user.id)
+    .order('created_at', { ascending: false });
+
+  const list = document.getElementById('adresses-list');
+  const items = (!error && data) ? data : [];
+
+  if (items.length === 0) {
+    list.innerHTML = `
+      <div class="text-center py-8">
+        <span class="ms block mb-2" style="font-size:36px;color:#E2D4BC;">home</span>
+        <p class="text-xs" style="color:#8B7A5A;">Aucune adresse enregistrée. Ajoutez-en une pour accélérer vos prochaines commandes.</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(a => `
+    <div class="bg-white border border-border rounded-2xl p-4 flex items-start gap-3">
+      <span class="ms flex-shrink-0 mt-0.5" style="font-size:20px;color:#5B9EAD;">location_on</span>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm mb-0.5" style="color:#1A1208;">${esc(a.nom)}</p>
+        <p class="text-xs leading-relaxed" style="color:#8B7A5A;">
+          ${esc(a.rue)}${a.complement ? ', ' + esc(a.complement) : ''}<br>
+          ${esc(a.code_postal)} ${esc(a.ville)}${a.pays !== 'FR' ? ' — ' + esc(a.pays) : ''}
+        </p>
+      </div>
+      <button onclick="deleteAdresse('${a.id}')"
+              class="flex-shrink-0 w-8 h-8 rounded-xl border border-border flex items-center justify-center transition-colors"
+              style="color:#8B7A5A;" aria-label="Supprimer cette adresse"
+              onmouseover="this.style.color='#C03030';this.style.borderColor='#FDDCDC';"
+              onmouseout="this.style.color='#8B7A5A';this.style.borderColor='#E2D4BC';">
+        <span class="ms" style="font-size:16px;">delete</span>
+      </button>
+    </div>`).join('');
+}
+
+function showAddAdresse() {
+  document.getElementById('adresse-form').classList.remove('hidden');
+  document.getElementById('adr-nom').focus();
+}
+
+function hideAddAdresse() {
+  document.getElementById('adresse-form').classList.add('hidden');
+  ['adr-nom', 'adr-rue', 'adr-complement', 'adr-cp', 'adr-ville'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('adr-pays').value = 'FR';
+}
+
+async function saveAdresse() {
+  const nom   = document.getElementById('adr-nom').value.trim();
+  const rue   = document.getElementById('adr-rue').value.trim();
+  const comp  = document.getElementById('adr-complement').value.trim();
+  const cp    = document.getElementById('adr-cp').value.trim();
+  const ville = document.getElementById('adr-ville').value.trim();
+  const pays  = document.getElementById('adr-pays').value;
+
+  if (!nom || !rue || !cp || !ville) {
+    showToast('Remplis tous les champs obligatoires *', 'error');
+    return;
+  }
+
+  const { error } = await _supabase
+    .from('adresses_livraison')
+    .insert({ user_id: session.user.id, nom, rue, complement: comp || null, code_postal: cp, ville, pays });
+
+  if (error) { showToast('Erreur lors de l\'enregistrement', 'error'); return; }
+  hideAddAdresse();
+  showToast('Adresse enregistrée ✓', 'success');
+  loadAdresses();
+}
+
+async function deleteAdresse(id) {
+  if (!confirm('Supprimer cette adresse ?')) return;
+  const { error } = await _supabase.from('adresses_livraison').delete().eq('id', id);
+  if (!error) { showToast('Adresse supprimée', 'info'); loadAdresses(); }
+}
+
+// ── Suppression de compte ──
+async function deleteAccount() {
+  if (!confirm('Supprimer définitivement votre compte ?\nToutes vos données personnelles seront effacées. Cette action est irréversible.')) return;
+  if (!confirm('Dernière confirmation : votre compte et toutes vos données seront supprimés.')) return;
+
+  const { error } = await _supabase.functions.invoke('delete-account');
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+
+  showToast('Compte supprimé. Au revoir.', 'info');
+  setTimeout(() => { window.location.href = 'index.html'; }, 2000);
 }
 
 async function logout() {
