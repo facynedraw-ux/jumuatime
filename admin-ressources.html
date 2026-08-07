@@ -603,6 +603,8 @@ function editResource(id) {
   document.getElementById('f-slug').value = r.slug || '';
   document.getElementById('f-desc').value = r.description || '';
   document.getElementById('f-cat').value = r.category || '';
+  document.getElementById('f-type-objet').value = r.type_objet || '';
+  document.getElementById('f-collection').value = r.collection || '';
   document.getElementById('f-type-produit').value = r.type_produit || 'numerique';
   document.getElementById('f-price').value = r.price || '';
   document.getElementById('f-preview').value = r.preview_url || '';
@@ -662,6 +664,8 @@ function openPanel() {
   document.getElementById('f-preview-input').value = '';
   document.getElementById('f-preview-name').textContent = 'Sélectionner une image…';
   document.getElementById('f-cat').value = '';
+  document.getElementById('f-type-objet').value = '';
+  document.getElementById('f-collection').value = '';
   document.getElementById('f-type-produit').value = 'numerique';
   document.getElementById('f-format').value = 'PDF';
   document.getElementById('f-active').checked = true;
@@ -857,6 +861,8 @@ async function saveResource() {
     slug: document.getElementById('f-slug').value.trim() || slugify(title) + '-' + Date.now().toString(36),
     description: document.getElementById('f-desc').value.trim() || null,
     category: document.getElementById('f-cat').value || null,
+    type_objet: document.getElementById('f-type-objet').value || null,
+    collection: document.getElementById('f-collection').value || null,
     type_produit: document.getElementById('f-type-produit').value || 'numerique',
     price: parseFloat(document.getElementById('f-price').value) || 0,
     gallery_urls: getGalleryUrls(),

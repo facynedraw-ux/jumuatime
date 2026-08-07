@@ -649,6 +649,7 @@ function renderProduit() {
     url: `https://jumuatime.com/produit-physique.html?slug=${encodeURIComponent(slug)}`,
     outOfStock: produit.stock === 0
   });
+  loadCollection();
 }
 
 function renderStockBadge() {
@@ -951,6 +952,35 @@ function openLightbox(idx) {
   lb.querySelector('img').src = url;
   lb.style.display = 'flex';
   document.body.style.overflow = 'hidden';
+}
+
+async function loadCollection() {
+  if (!produit?.collection) return;
+  const { data } = await _supabase
+    .from('resources')
+    .select('id, slug, title, preview_url, price, variantes')
+    .eq('collection', produit.collection)
+    .eq('is_active', true)
+    .eq('type_produit', 'physique')
+    .neq('id', produit.id);
+  if (!data?.length) return;
+  const section = document.getElementById('collection-section');
+  if (!section) return;
+  const LABELS = { automne: 'Automne', ete: 'Été', printemps: 'Printemps', hiver: 'Hiver' };
+  document.getElementById('collection-label').textContent =
+    'Collection ' + (LABELS[produit.collection] || produit.collection);
+  document.getElementById('collection-grid').innerHTML = data.map(r => {
+    const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
+    const priceStr = prix.length
+      ? (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €'
+      : Number(r.price).toFixed(2).replace('.', ',') + ' €';
+    const imgUrl = r.preview_url ? thumbUrl(r.preview_url, 400) : '';
+    const cover = imgUrl
+      ? `<img src="${esc(imgUrl)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+      : `<span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.2;">category</span>`;
+    return `<a href="produit-physique.html?slug=${esc(r.slug)}" class="block rounded-xl overflow-hidden border border-border bg-white transition-transform hover:-translate-y-1" style="text-decoration:none;color:#1A1208;"><div class="flex items-center justify-center overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">${cover}</div><div class="p-3"><p class="font-semibold text-xs leading-snug mb-1">${esc(r.title)}</p><p class="font-bold text-sm" style="color:#C49A5A;">${priceStr}</p></div></a>`;
+  }).join('');
+  section.classList.remove('hidden');
 }
 
 async function submitContact(e) {
