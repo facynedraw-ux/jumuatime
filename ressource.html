@@ -530,7 +530,6 @@ function renderResource(r) {
 
   // Infos pratiques
   let infosHtml = '';
-  if (r.format)    infosHtml += infoCell('Format', r.format);
   if (r.page_count) infosHtml += infoCell('Pages', r.page_count + ' pages');
   if (r.age_min != null) infosHtml += infoCell('Âge cible', `${r.age_min}–${r.age_max} ans`);
   if ((r.themes||[]).length > 0)
