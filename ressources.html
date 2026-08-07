@@ -382,7 +382,7 @@ async function init() {
       .order('created_at', { ascending: false }),
     _supabase
       .from('produits_perso')
-      .select('id, type_key, name, description, price_cents, image_url, categories')
+      .select('id, type_key, name, description, price_cents, image_url')
       .eq('actif', true)
       .order('ordre'),
   ]);
