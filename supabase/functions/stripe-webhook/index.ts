@@ -142,6 +142,7 @@ Deno.serve(async (req: Request) => {
 
       const persoData = meta.personnalisation ? JSON.parse(meta.personnalisation) : {};
 
+      const montantLivraisonCas2 = parseInt(meta.montant_livraison || "0");
       const { data: cmdInsert, error: cmdErr } = await supabase
         .from("commandes_physiques")
         .insert({
@@ -149,8 +150,9 @@ Deno.serve(async (req: Request) => {
           ressource_id:      meta.produit_id,
           variante_id:       meta.variante_id || null,
           personnalisation:  persoData,
+          montant_produit:   (session.amount_total ?? 0) - montantLivraisonCas2,
           montant_total:     session.amount_total ?? 0,
-          montant_livraison: parseInt(meta.montant_livraison || "0"),
+          montant_livraison: montantLivraisonCas2,
           email_client:      session.customer_details?.email,
           nom_client:        session.customer_details?.name,
           adresse_livraison: adresseLivraison,
@@ -276,6 +278,7 @@ Deno.serve(async (req: Request) => {
             ressource_id:      item.i,
             variante_id:       item.v || null,
             personnalisation:  {},
+            montant_produit:   (item.p || 0) * (item.q || 1),
             montant_total:     session.amount_total ?? 0,
             montant_livraison: parseInt(meta.montant_livraison || "0"),
             email_client:      emailClient,
