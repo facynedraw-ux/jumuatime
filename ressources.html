@@ -475,7 +475,7 @@ function renderGrid() {
   grid.innerHTML = list.map((r, idx) => {
     if (r._perso) return renderPersoCard(r);
 
-    const isPhysique = r.type_produit === 'physique';
+    const isPhysique = r.type_produit === 'physique' || r.type_produit === 'bundle';
     const href = isPhysique
       ? `produit-physique.html?slug=${esc(r.slug)}`
       : `ressource.html?slug=${esc(r.slug)}`;
