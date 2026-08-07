@@ -970,6 +970,20 @@ function openLightbox(idx) {
   document.body.style.overflow = 'hidden';
 }
 
+function fmtCrossSell(r) {
+  if (Number(r.price) > 0) return Number(r.price).toFixed(2).replace('.', ',') + ' €';
+  const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
+  return prix.length ? (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €' : '—';
+}
+
+function crossSellCard(r) {
+  const imgUrl = r.preview_url ? thumbUrl(r.preview_url, 400) : '';
+  const cover = imgUrl
+    ? `<img src="${esc(imgUrl)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+    : `<span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.2;">category</span>`;
+  return `<a href="produit-physique.html?slug=${esc(r.slug)}" class="block rounded-xl overflow-hidden border border-border bg-white transition-transform hover:-translate-y-1" style="text-decoration:none;color:#1A1208;"><div class="flex items-center justify-center overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">${cover}</div><div class="p-3"><p class="font-semibold text-xs leading-snug mb-1">${esc(r.title)}</p><p class="font-bold text-sm" style="color:#C49A5A;">${fmtCrossSell(r)}</p></div></a>`;
+}
+
 async function loadYouMayAlsoLike() {
   if (produit?.collection) return;
   let q = _supabase
@@ -985,17 +999,7 @@ async function loadYouMayAlsoLike() {
   if (!data?.length) return;
   const section = document.getElementById('ymal-section');
   if (!section) return;
-  document.getElementById('ymal-grid').innerHTML = data.map(r => {
-    const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
-    const priceStr = prix.length
-      ? (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €'
-      : Number(r.price).toFixed(2).replace('.', ',') + ' €';
-    const imgUrl = r.preview_url ? thumbUrl(r.preview_url, 400) : '';
-    const cover = imgUrl
-      ? `<img src="${esc(imgUrl)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
-      : `<span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.2;">category</span>`;
-    return `<a href="produit-physique.html?slug=${esc(r.slug)}" class="block rounded-xl overflow-hidden border border-border bg-white transition-transform hover:-translate-y-1" style="text-decoration:none;color:#1A1208;"><div class="flex items-center justify-center overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">${cover}</div><div class="p-3"><p class="font-semibold text-xs leading-snug mb-1">${esc(r.title)}</p><p class="font-bold text-sm" style="color:#C49A5A;">${priceStr}</p></div></a>`;
-  }).join('');
+  document.getElementById('ymal-grid').innerHTML = data.map(crossSellCard).join('');
   section.classList.remove('hidden');
 }
 
