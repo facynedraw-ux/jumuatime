@@ -205,6 +205,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <select id="product-select" class="field-input field-select" onchange="onProductSelectChange(this.value)">
         <option value="">Chargement…</option>
       </select>
+      <div id="product-image-wrap" class="hidden mt-3 rounded-xl overflow-hidden" style="max-height:220px;">
+        <img id="product-image" src="" alt="" class="w-full object-cover" style="max-height:220px;">
+      </div>
       <div class="flex items-center justify-between mt-2 hidden" id="product-price-line">
         <span class="text-sm" style="color:#8B7A5A;">Prix unitaire</span>
         <span class="font-semibold" style="color:#5B9EAD;" id="product-price-display">—</span>
@@ -580,6 +583,19 @@ function selectProduct(key) {
 
   const produit = dbProduits[key];
   if (!produit) return;
+
+  // Image produit
+  const imgWrap = document.getElementById('product-image-wrap');
+  const imgEl   = document.getElementById('product-image');
+  if (imgWrap && imgEl) {
+    if (produit.image_url) {
+      imgEl.src = produit.image_url;
+      imgEl.alt = produit.name;
+      imgWrap.classList.remove('hidden');
+    } else {
+      imgWrap.classList.add('hidden');
+    }
+  }
 
   // Pour pochon : prix affiché après choix de taille ; sinon prix fixe
   const priceLine = document.getElementById('product-price-line');
