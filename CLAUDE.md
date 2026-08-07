@@ -41,7 +41,7 @@ Fiches produit :
 
 Pages auth/compte :
 - login.html (noindex)
-- compte.html (noindex)
+- compte.html (noindex) — profil, achats numériques, commandes physiques, adresses, suppression compte
 - telechargement.html — téléchargement après achat numérique
 - commande-confirmee.html — confirmation commande physique
 - confirmation-physique.html
@@ -99,17 +99,46 @@ Colonnes :
 - `numero_suivi` (text, nullable)
 - `notes_admin` (text, nullable)
 
-RLS : policy SELECT via `profiles.role = 'admin'` + `auth.uid()` (PAS auth.email())
+RLS policies actives :
+- `admin_read`   — SELECT — admin via `profiles.role = 'admin'` + `auth.uid()`
+- `admin_update` — UPDATE — admin via `profiles.role = 'admin'` + `auth.uid()`
+- `admin_delete` — DELETE — admin via `profiles.role = 'admin'` + `auth.uid()`
+- `client_read_own` — SELECT — clientes : `auth.email() = email_client`
 
 ### Table `purchases` — achats numériques
 - `id`, `created_at`, `user_id`, `resource_id`, `download_token`, `downloaded_at`
 
-### Autres tables actives
-- `profiles` — utilisateurs (role: 'admin' pour Facyne)
-- `email_subscribers`
+### Table `profiles` — utilisateurs
+- `id` (uuid, FK auth.users)
+- `display_name` (text)
+- `avatar_url` (text, nullable)
+- `role` (text) — `'admin'` pour Facyne, null pour clientes
+- `created_at`
+- `author_id` (uuid, nullable — reliquat, ignorer)
+
+### Table `adresses_livraison` — adresses sauvegardées clientes
+- `id` (uuid)
+- `user_id` (uuid, FK auth.users ON DELETE CASCADE)
+- `nom` (text, NOT NULL)
+- `rue` (text, NOT NULL)
+- `complement` (text, nullable)
+- `code_postal` (text, NOT NULL)
+- `ville` (text, NOT NULL)
+- `pays` (text, NOT NULL, default 'FR')
+- `created_at`
+
+RLS : `owner_all` — `USING (auth.uid() = user_id)` + `WITH CHECK (auth.uid() = user_id)`
+
+### Table `purchases` — achats numériques
+- `id`, `created_at`, `user_id`, `resource_id`, `download_token`, `downloaded_at`
+
+RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
+
+### Table `email_subscribers`
+(abonnées newsletter)
 
 ### ⚠️ Tables reliquats à supprimer (vérifier avant)
-`books`, `authors`, `publishers`, `submissions`, `themes`, `reviews`, `reading_list`
+`books`, `authors`, `publishers`, `submissions`, `themes`, `reviews`, `reading_list`, `orders`
 
 ## Gelato (fulfillment physique automatique)
 - Compte créé, clé API dans Cloudflare env: `GELATO_API_KEY`
@@ -139,9 +168,10 @@ RLS : policy SELECT via `profiles.role = 'admin'` + `auth.uid()` (PAS auth.email
 ## Edge Functions Supabase
 | Fonction | URL | JWT |
 |---|---|---|
-| `send-email` | `/functions/v1/swift-function` | OFF |
+| `swift-function` | `/functions/v1/swift-function` | OFF |
 | `stripe-checkout` | `/functions/v1/stripe-checkout` | OFF |
 | `stripe-webhook` | `/functions/v1/stripe-webhook` | OFF |
+| `delete-account` | `/functions/v1/delete-account` | ON — vérifie le JWT, anonymise commandes_physiques puis supprime auth.users |
 
 ## Cloudflare Functions (functions/api/)
 | Fichier | Route | Rôle |
@@ -180,10 +210,15 @@ RLS : policy SELECT via `profiles.role = 'admin'` + `auth.uid()` (PAS auth.email
 - Toujours RLS activé sur les nouvelles tables
 - `supabase-client.js` est le seul endroit où `_supabase` est déclaré — clé anon = JWT (eyJ...), PAS sb_publishable_
 - cover_url N'EXISTE PAS dans la table resources → toujours utiliser preview_url
-- Dans `commandes_physiques`, la colonne s'appelle `ressource_id` (PAS resource_id)
+- Dans `commandes_physiques`, la colonne s'appelle `ressource_id` (PAS resource_id, PAS produit_id)
 - `montant_produit` est NOT NULL dans commandes_physiques — toujours l'inclure à l'insert
 - Les 2 webhooks Stripe ont chacun leur propre `STRIPE_WEBHOOK_SECRET` — ne pas les mélanger
-- RLS policies : utiliser `auth.uid()` + check `profiles.role = 'admin'`, PAS `auth.email()`
+- RLS admin : toujours utiliser `auth.uid()` + check `profiles.role = 'admin'` (PAS auth.email() pour identifier l'admin)
+- RLS clientes : `auth.email() = email_client` est correct pour que chaque cliente voie ses propres commandes
+
+## Phase 2 — à faire (non implémenté)
+- Pré-remplissage automatique adresse dans panier depuis `adresses_livraison`
+- Factures Stripe : activer `invoice_creation` dans stripe-checkout.ts + stocker `stripe_customer_id` dans profiles + Edge Function pour récupérer PDFs
 
 ## Ecosystème Jumua & Me
 - jumuatime.com — boutique illustrée famille musulmane
