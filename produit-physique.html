@@ -1083,12 +1083,10 @@ function openLightbox(idx) {
 }
 
 function fmtCrossSell(r) {
-  if (Number(r.price) > 0) return Number(r.price).toFixed(2).replace('.', ',') + ' €';
-  const isGelato = !!(r.gelato_product_id || (r.variantes||[]).some(v => v.gelato_product_id));
   const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
-  if (!prix.length) return '—';
-  const raw = Math.min(...prix);
-  return (isGelato ? raw / 100 : raw).toFixed(2).replace('.', ',') + ' €';
+  if (prix.length) return (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €';
+  if (Number(r.price) > 0) return Number(r.price).toFixed(2).replace('.', ',') + ' €';
+  return '—';
 }
 
 function crossSellCard(r) {
