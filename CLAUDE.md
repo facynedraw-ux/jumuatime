@@ -82,19 +82,24 @@ Colonnes :
 - `is_active` (boolean) — visible en boutique si true
 
 ### Table `commandes_physiques`
-Colonnes connues :
+Colonnes :
 - `id` (uuid)
 - `created_at`
 - `stripe_session_id` (text)
 - `statut` (text) — `en_attente` | `en_preparation` | `expedie` | `livre` | `annule`
-- `resource_id` (uuid) → join resources
+- `ressource_id` (uuid) → join resources  ⚠️ PAS resource_id
 - `variante_id` (text, nullable)
-- `adresse_livraison` (jsonb) — { name, email, line1, line2, postal_code, city, country }
+- `email_client` (text)
+- `nom_client` (text)
+- `adresse_livraison` (jsonb) — { nom, rue, complement, ville, code_postal, pays }
 - `personnalisation` (jsonb)
+- `montant_produit` (integer, centimes, NOT NULL) — obligatoire à l'insert
 - `montant_livraison` (integer, centimes)
 - `montant_total` (integer, centimes, nullable)
-- `numero_suivi` (text, nullable) — ajouté via SQL
-- `notes_admin` (text, nullable) — ajouté via SQL
+- `numero_suivi` (text, nullable)
+- `notes_admin` (text, nullable)
+
+RLS : policy SELECT via `profiles.role = 'admin'` + `auth.uid()` (PAS auth.email())
 
 ### Table `purchases` — achats numériques
 - `id`, `created_at`, `user_id`, `resource_id`, `download_token`, `downloaded_at`
@@ -173,8 +178,12 @@ Colonnes connues :
 - NE JAMAIS modifier Stripe en mode TEST (on est en LIVE)
 - NE JAMAIS supprimer de données Supabase sans confirmation explicite
 - Toujours RLS activé sur les nouvelles tables
-- `supabase-client.js` est le seul endroit où `_supabase` est déclaré
+- `supabase-client.js` est le seul endroit où `_supabase` est déclaré — clé anon = JWT (eyJ...), PAS sb_publishable_
 - cover_url N'EXISTE PAS dans la table resources → toujours utiliser preview_url
+- Dans `commandes_physiques`, la colonne s'appelle `ressource_id` (PAS resource_id)
+- `montant_produit` est NOT NULL dans commandes_physiques — toujours l'inclure à l'insert
+- Les 2 webhooks Stripe ont chacun leur propre `STRIPE_WEBHOOK_SECRET` — ne pas les mélanger
+- RLS policies : utiliser `auth.uid()` + check `profiles.role = 'admin'`, PAS `auth.email()`
 
 ## Ecosystème Jumua & Me
 - jumuatime.com — boutique illustrée famille musulmane
