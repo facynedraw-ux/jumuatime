@@ -287,26 +287,29 @@ export async function onRequestPost(context) {
         results.push({ produit: bundle.t || 'Bundle', ok: gelatoRes.ok, status: gelatoRes.status, data });
       }
 
-      // Emails — envoi en parallèle, non bloquant
+      // Emails
       const physiques = items.filter(i => i.tp === 'physique' || i.tp === 'bundle');
+      let emailResults = { skipped: 'no_physiques_or_no_email' };
       if (physiques.length && customerEmail) {
-        await Promise.allSettled([
-          // Email client
+        const [clientRes, adminRes] = await Promise.allSettled([
           sendEmail(resendApiKey, {
             to: customerEmail,
             subject: 'Jumua Time — Commande confirmée ✓',
             html: emailConfirmationClient({ name: customerName, items: physiques, address: addressStr, total: amountTotal, shipping: amountShipping }),
           }),
-          // Email admin (Facyne)
           sendEmail(resendApiKey, {
             to: 'facyne.draw@gmail.com',
             subject: `🛒 Nouvelle commande — ${customerName || customerEmail}`,
             html: emailNotifAdmin({ customerName, customerEmail, items, address: addressStr, total: amountTotal, sessionId: session.id }),
           }),
         ]);
+        emailResults = {
+          client: clientRes.status === 'fulfilled' ? clientRes.value : clientRes.reason,
+          admin:  adminRes.status  === 'fulfilled' ? adminRes.value  : adminRes.reason,
+        };
       }
 
-      return jsonResponse({ received:true, gelato_orders:results, manual_items:manualItems.length, session_id:session.id }, 200);
+      return jsonResponse({ received:true, gelato_orders:results, manual_items:manualItems.length, session_id:session.id, email:emailResults }, 200);
     }
 
     // ── CAS PHYSIQUE simple (rétrocompat) ──
