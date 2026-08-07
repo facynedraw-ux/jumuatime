@@ -31,13 +31,16 @@ function jsonResponse(data, status = 200) {
 
 // ── Email via Resend ──
 async function sendEmail(resendKey, { to, subject, html }) {
-  if (!resendKey) return { skipped: 'no RESEND_API_KEY' };
+  if (!resendKey) { console.error('[email] RESEND_API_KEY manquante'); return { skipped: 'no RESEND_API_KEY' }; }
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from: 'Jumua Time <contact@jumuatime.com>', to: Array.isArray(to) ? to : [to], subject, html }),
   });
-  return res.ok ? { ok: true } : { error: await res.text() };
+  const body = await res.text();
+  if (res.ok) { console.log('[email] envoyé à', to, '→', res.status); return { ok: true }; }
+  console.error('[email] ERREUR Resend', res.status, body);
+  return { error: body };
 }
 
 // ── Email templates ──
