@@ -572,16 +572,6 @@ async function renderBundle() {
   const bundlePriceCents = Math.round(produit.price * 100);
   const saving = totalIndiv - bundlePriceCents;
 
-  // Image principale = preview du bundle
-  if (produit.preview_url) {
-    const img = document.getElementById('product-image');
-    img.src = thumbUrl(produit.preview_url, 800);
-    img.alt = produit.title;
-    img.classList.remove('hidden');
-    document.getElementById('product-image-placeholder').classList.add('hidden');
-    document.getElementById('product-watermark').classList.remove('hidden');
-  }
-
   // Prix
   document.getElementById('product-price-display').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
@@ -594,17 +584,15 @@ async function renderBundle() {
   document.getElementById('recap-total').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
 
-  // Remplacer la colonne gauche par une grille 2×2
+  // Colonne gauche : grille 2×2 des 4 articles (toujours, sans lightbox)
   const imgWrap = document.getElementById('product-image-wrap');
-  if (items.length >= 4) {
-    imgWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;background:transparent;aspect-ratio:unset;border-radius:0;overflow:visible;';
-    imgWrap.innerHTML = items.slice(0, 4).map(b => {
-      const url = b.img ? thumbUrl(b.img, 400) : '';
-      return `<div class="rounded-xl overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">
-        ${url ? `<img src="${esc(url)}" alt="${esc(b.t)}" class="w-full h-full object-cover" loading="lazy">` : ''}
-      </div>`;
-    }).join('');
-  }
+  imgWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;background:transparent;aspect-ratio:unset;border-radius:0;overflow:visible;';
+  imgWrap.innerHTML = items.slice(0, 4).map(b => {
+    const url = b.img ? thumbUrl(b.img, 400) : '';
+    return `<div class="rounded-xl overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">
+      ${url ? `<img src="${esc(url)}" alt="${esc(b.t)}" class="w-full h-full object-cover" loading="lazy">` : '<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:32px;color:#5B9EAD;opacity:0.4;">image</span></div>'}
+    </div>`;
+  }).join('');
 
   // Économie
   if (saving > 0) {
@@ -699,8 +687,8 @@ function renderProduit() {
     }
   }
 
-  // Badge délai
-  const _isGelato = !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
+  // Badge délai — mode_livraison défini = produit manuel (priorité sur gelato_product_id)
+  const _isGelato = !produit.mode_livraison && !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
   const _isLettre = produit.mode_livraison === 'lettre';
   const _delaiDef = _isGelato ? '5 à 7 jours ouvrés' : (_isLettre ? '3 jours ouvrés' : '3 à 5 jours ouvrés');
   const delai = produit.delai_livraison || _delaiDef;
@@ -819,7 +807,7 @@ function renderFaq() {
   const faqEl = document.getElementById('faq-list');
   if (!faqEl) return;
 
-  const isGelato  = !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
+  const isGelato  = !produit.mode_livraison && !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
   const isLettre  = produit.mode_livraison === 'lettre';
   const delaiDef  = isGelato ? '5 à 7 jours ouvrés' : (isLettre ? '3 jours ouvrés' : '3 à 5 jours ouvrés');
   const delai     = produit.delai_livraison || delaiDef;
