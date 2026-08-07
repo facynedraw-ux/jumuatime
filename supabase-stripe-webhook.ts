@@ -219,7 +219,7 @@ Deno.serve(async (req: Request) => {
       try { items = JSON.parse(meta.items || "[]"); } catch {}
 
       const digitalItems  = items.filter((i: any) => i.tp === "numerique");
-      const physicalItems = items.filter((i: any) => i.tp === "physique");
+      const physicalItems = items.filter((i: any) => i.tp === "physique" || i.tp === "bundle");
 
       const shippingDetails = session.shipping_details;
       const adresseLivraison = shippingDetails ? {
