@@ -280,7 +280,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <!-- VOUS AIMEREZ AUSSI (produits sans collection) -->
-  <section id="ymal-section" class="mt-10 hidden">
+  <section id="ymal-section" class="mt-16 hidden">
     <div class="mb-5">
       <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#C49A5A;letter-spacing:2px;">✦ Dans le même style</p>
       <h2 class="font-display text-lg font-bold" style="color:#1A1208;">Vous aimerez aussi</h2>
@@ -289,7 +289,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- COMPLÈTE TA COLLECTION (produits avec collection) -->
-  <section id="collection-section" class="mt-10 hidden">
+  <section id="collection-section" class="mt-16 hidden">
     <div class="mb-5">
       <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#C49A5A;letter-spacing:2px;">✦ Va avec ce produit</p>
       <h2 id="collection-label" class="font-display text-lg font-bold" style="color:#1A1208;">Complète ta collection</h2>
@@ -298,7 +298,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- FAQ + CONTACT côte à côte sur desktop -->
-  <div class="mt-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+  <div class="mt-16 grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
 
     <!-- FAQ (gauche, 2/5) -->
     <div class="md:col-span-2 bg-white border border-border rounded-2xl p-5">
@@ -972,8 +972,11 @@ function openLightbox(idx) {
 
 function fmtCrossSell(r) {
   if (Number(r.price) > 0) return Number(r.price).toFixed(2).replace('.', ',') + ' €';
+  const isGelato = !!(r.gelato_product_id || (r.variantes||[]).some(v => v.gelato_product_id));
   const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
-  return prix.length ? (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €' : '—';
+  if (!prix.length) return '—';
+  const raw = Math.min(...prix);
+  return (isGelato ? raw / 100 : raw).toFixed(2).replace('.', ',') + ' €';
 }
 
 function crossSellCard(r) {
@@ -988,7 +991,7 @@ async function loadYouMayAlsoLike() {
   if (produit?.collection) return;
   let q = _supabase
     .from('resources')
-    .select('id, slug, title, preview_url, price, variantes')
+    .select('id, slug, title, preview_url, price, variantes, gelato_product_id')
     .eq('is_active', true)
     .eq('type_produit', 'physique')
     .neq('id', produit.id)
@@ -1007,7 +1010,7 @@ async function loadCollection() {
   if (!produit?.collection) return;
   const { data } = await _supabase
     .from('resources')
-    .select('id, slug, title, preview_url, price, variantes')
+    .select('id, slug, title, preview_url, price, variantes, gelato_product_id')
     .eq('collection', produit.collection)
     .eq('is_active', true)
     .eq('type_produit', 'physique')
