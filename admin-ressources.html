@@ -236,6 +236,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <select id="f-type-produit" class="f-select" onchange="onTypeProduitChange()">
           <option value="numerique">Numérique</option>
           <option value="physique">Physique</option>
+          <option value="bundle">Bundle (coffret)</option>
         </select>
       </div>
     </div>
@@ -359,6 +360,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="text-xs text-muted mt-1">Laisser vide = délai par défaut selon le mode d'expédition.</p>
     </div>
 
+    <!-- Section bundle : visible si type = bundle -->
+    <div id="section-bundle" class="mb-4 rounded-xl border border-border p-4" style="display:none;background:#F6F9EF;">
+      <p class="f-label mb-3">Produits inclus dans le coffret (4 items)</p>
+      <div id="bundle-slots" class="space-y-3"></div>
+      <p class="text-xs text-muted mt-2">Sélectionner dans l'ordre souhaité (ex : Automne → Été → Printemps → Hiver).</p>
+    </div>
+
     <div class="mb-3">
       <label class="f-label">Galerie d'images (mockups, visuels supplémentaires)</label>
       <div id="f-gallery-list" class="space-y-2 mb-2"></div>
@@ -405,10 +413,123 @@ let allResources = [];
 let editingId = null;
 
 function onTypeProduitChange() {
-  const isPhysique = document.getElementById('f-type-produit').value === 'physique';
+  const val = document.getElementById('f-type-produit').value;
+  const isPhysique = val === 'physique';
+  const isBundle   = val === 'bundle';
   document.getElementById('section-physique').style.display = isPhysique ? '' : 'none';
-  document.getElementById('section-stock').style.display = isPhysique ? '' : 'none';
-  document.getElementById('section-delai').style.display = isPhysique ? '' : 'none';
+  document.getElementById('section-stock').style.display    = isPhysique ? '' : 'none';
+  document.getElementById('section-delai').style.display    = isPhysique ? '' : 'none';
+  document.getElementById('section-bundle').style.display   = isBundle   ? '' : 'none';
+  if (isBundle) loadBundleCandidates();
+}
+
+// ── Bundle helpers ──
+let _bundleCandidates = [];
+
+async function loadBundleCandidates() {
+  if (_bundleCandidates.length) { renderBundleSlots(); return; }
+  const { data } = await _supabase
+    .from('resources')
+    .select('id, title, price, preview_url, variantes, gelato_product_id')
+    .eq('type_produit', 'physique')
+    .eq('is_active', true)
+    .order('title');
+  _bundleCandidates = data || [];
+  renderBundleSlots();
+}
+
+function renderBundleSlots() {
+  const container = document.getElementById('bundle-slots');
+  if (!container) return;
+  const opts = _bundleCandidates.map(r => `<option value="${r.id}">${esc(r.title)}</option>`).join('');
+  const labels = ['Article 1', 'Article 2', 'Article 3', 'Article 4'];
+  container.innerHTML = labels.map((label, i) => `
+    <div class="grid grid-cols-2 gap-2 items-end">
+      <div>
+        <label class="f-label text-xs">${label} — Produit</label>
+        <select class="f-select" id="bundle-res-${i}" onchange="onBundleResChange(${i})">
+          <option value="">— Choisir —</option>
+          ${opts}
+        </select>
+      </div>
+      <div>
+        <label class="f-label text-xs">Variante</label>
+        <select class="f-select" id="bundle-var-${i}" onchange="onBundleVarChange(${i})">
+          <option value="">— produit d'abord —</option>
+        </select>
+        <input type="hidden" id="bundle-g-${i}" value="">
+        <input type="hidden" id="bundle-img-${i}" value="">
+        <input type="hidden" id="bundle-t-${i}" value="">
+        <input type="hidden" id="bundle-p-${i}" value="">
+        <input type="hidden" id="bundle-vid-${i}" value="">
+      </div>
+    </div>`).join('');
+}
+
+function onBundleResChange(idx) {
+  const resId = document.getElementById(`bundle-res-${idx}`).value;
+  const varSel = document.getElementById(`bundle-var-${idx}`);
+  const r = _bundleCandidates.find(r => r.id === resId);
+  if (!r) {
+    varSel.innerHTML = '<option value="">— produit d\'abord —</option>';
+    ['g','img','t','p','vid'].forEach(k => document.getElementById(`bundle-${k}-${idx}`).value = '');
+    return;
+  }
+  document.getElementById(`bundle-t-${idx}`).value   = r.title || '';
+  document.getElementById(`bundle-img-${idx}`).value = r.preview_url || '';
+
+  const gVars = (r.variantes || []).filter(v => v.gelato_product_id);
+  if (gVars.length) {
+    varSel.innerHTML = gVars.map(v => `<option value="${v.id}" data-g="${v.gelato_product_id || ''}" data-p="${v.prix || 0}">${esc(v.label || v.id)}</option>`).join('');
+    const first = gVars[0];
+    document.getElementById(`bundle-g-${idx}`).value   = first.gelato_product_id || '';
+    document.getElementById(`bundle-p-${idx}`).value   = first.prix || 0;
+    document.getElementById(`bundle-vid-${idx}`).value = first.id || '';
+  } else {
+    varSel.innerHTML = '<option value="__product__">Produit (sans variante)</option>';
+    document.getElementById(`bundle-g-${idx}`).value   = r.gelato_product_id || '';
+    document.getElementById(`bundle-p-${idx}`).value   = Math.round((r.price || 0) * 100);
+    document.getElementById(`bundle-vid-${idx}`).value = '';
+  }
+}
+
+function onBundleVarChange(idx) {
+  const varSel = document.getElementById(`bundle-var-${idx}`);
+  const opt = varSel.options[varSel.selectedIndex];
+  document.getElementById(`bundle-g-${idx}`).value   = opt?.dataset?.g || '';
+  document.getElementById(`bundle-p-${idx}`).value   = opt?.dataset?.p || 0;
+  document.getElementById(`bundle-vid-${idx}`).value = opt?.value !== '__product__' ? (opt?.value || '') : '';
+}
+
+function getBundleItems() {
+  return [0,1,2,3].map(i => {
+    const rid = document.getElementById(`bundle-res-${i}`)?.value || '';
+    const g   = document.getElementById(`bundle-g-${i}`)?.value || '';
+    const t   = document.getElementById(`bundle-t-${i}`)?.value || '';
+    const img = document.getElementById(`bundle-img-${i}`)?.value || '';
+    const p   = parseInt(document.getElementById(`bundle-p-${i}`)?.value || '0', 10);
+    const vid = document.getElementById(`bundle-vid-${i}`)?.value || '';
+    if (!rid || !g) return null;
+    return { rid, vid: vid || null, g, t, img, p };
+  }).filter(Boolean);
+}
+
+async function setBundleItems(items) {
+  if (!items?.length) return;
+  if (!_bundleCandidates.length) await loadBundleCandidates();
+  items.forEach((item, i) => {
+    const resSel = document.getElementById(`bundle-res-${i}`);
+    if (!resSel) return;
+    resSel.value = item.rid || '';
+    onBundleResChange(i);
+    requestAnimationFrame(() => {
+      const varSel = document.getElementById(`bundle-var-${i}`);
+      if (varSel && item.vid) varSel.value = item.vid;
+      if (item.g) document.getElementById(`bundle-g-${i}`).value = item.g;
+      if (item.p) document.getElementById(`bundle-p-${i}`).value = item.p;
+      if (item.vid) document.getElementById(`bundle-vid-${i}`).value = item.vid;
+    });
+  });
 }
 
 function onExpeditionChange() {
@@ -645,13 +766,17 @@ function editResource(id) {
     gelatoVariantes = [{ id: crypto.randomUUID(), label: '', prix: r.price || 0, gelato_product_id: r.gelato_product_id, preview_url: '' }];
   }
 
-  // Piloter les sections physique / expédition
+  // Piloter les sections physique / expédition / bundle
   onTypeProduitChange();
-  const isGelato = !!r.gelato_product_id || gelatoVariantes.some(v => v.gelato_product_id);
-  document.getElementById('r-gelato').checked = isGelato;
-  document.getElementById('r-manuel').checked = !isGelato;
-  onExpeditionChange();
-  renderGelatoVariantes();
+  if (r.type_produit === 'bundle') {
+    setBundleItems(r.bundle_items || []);
+  } else {
+    const isGelato = !!r.gelato_product_id || gelatoVariantes.some(v => v.gelato_product_id);
+    document.getElementById('r-gelato').checked = isGelato;
+    document.getElementById('r-manuel').checked = !isGelato;
+    onExpeditionChange();
+    renderGelatoVariantes();
+  }
 
   document.getElementById('panel').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -683,6 +808,7 @@ function openPanel() {
   document.getElementById('r-manuel').checked = true;
   document.getElementById('r-gelato').checked = false;
   document.getElementById('f-stock').value = '';
+  _bundleCandidates = [];
   onTypeProduitChange();
   onExpeditionChange();
   gelatoVariantes = [];
@@ -874,6 +1000,7 @@ async function saveResource() {
     type_objet: document.getElementById('f-type-objet').value || null,
     collection: document.getElementById('f-collection').value || null,
     type_produit: document.getElementById('f-type-produit').value || 'numerique',
+    bundle_items: document.getElementById('f-type-produit').value === 'bundle' ? getBundleItems() : null,
     price: parseFloat(document.getElementById('f-price').value) || 0,
     gallery_urls: getGalleryUrls(),
     preview_url: previewUrl,

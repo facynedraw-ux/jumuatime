@@ -516,13 +516,14 @@ let currentGalleryIdx = 0;
     .from('resources')
     .select('*')
     .eq('slug', produitSlug)
-    .eq('type_produit', 'physique')
+    .in('type_produit', ['physique', 'bundle'])
     .eq('is_active', true)
     .single();
 
   if (error || !data) { showError(); return; }
   produit = data;
-  renderProduit();
+  if (produit.type_produit === 'bundle') { await renderBundle(); }
+  else { renderProduit(); }
   const _basePrice = (produit.variantes && produit.variantes.length > 0)
     ? Math.min(...produit.variantes.map(v => Number(v.prix) / 100))
     : (Number(produit.price) || 0);
@@ -556,6 +557,116 @@ async function showAdminBar(resourceId) {
 function showError() {
   document.getElementById('loading-state').classList.add('hidden');
   document.getElementById('error-state').classList.remove('hidden');
+}
+
+async function renderBundle() {
+  document.getElementById('loading-state').classList.add('hidden');
+  document.getElementById('main-content').classList.remove('hidden');
+
+  document.title = `${produit.title} — Jumua Time`;
+  document.getElementById('page-title').textContent = `${produit.title} — Jumua Time`;
+  document.getElementById('product-title').textContent = produit.title;
+
+  const items = produit.bundle_items || [];
+  const totalIndiv = items.reduce((s, b) => s + (b.p || 0), 0);
+  const bundlePriceCents = Math.round(produit.price * 100);
+  const saving = totalIndiv - bundlePriceCents;
+
+  // Image principale = preview du bundle
+  if (produit.preview_url) {
+    const img = document.getElementById('product-image');
+    img.src = thumbUrl(produit.preview_url, 800);
+    img.alt = produit.title;
+    img.classList.remove('hidden');
+    document.getElementById('product-image-placeholder').classList.add('hidden');
+    document.getElementById('product-watermark').classList.remove('hidden');
+  }
+
+  // Prix
+  document.getElementById('product-price-display').textContent =
+    (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
+  document.getElementById('product-delay-badge').textContent = '⏱ 5 à 7 jours ouvrés';
+
+  // Récap
+  document.getElementById('recap-produit').textContent =
+    (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
+  document.getElementById('recap-livraison').textContent = 'Via Gelato';
+  document.getElementById('recap-total').textContent =
+    (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
+
+  // Remplacer la colonne gauche par une grille 2×2
+  const imgWrap = document.getElementById('product-image-wrap');
+  if (items.length >= 4) {
+    imgWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;background:transparent;aspect-ratio:unset;border-radius:0;overflow:visible;';
+    imgWrap.innerHTML = items.slice(0, 4).map(b => {
+      const url = b.img ? thumbUrl(b.img, 400) : '';
+      return `<div class="rounded-xl overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">
+        ${url ? `<img src="${esc(url)}" alt="${esc(b.t)}" class="w-full h-full object-cover" loading="lazy">` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // Économie
+  if (saving > 0) {
+    const savingEl = document.createElement('div');
+    savingEl.className = 'text-xs font-semibold mt-2 px-3 py-1 rounded-full inline-block';
+    savingEl.style.cssText = 'background:#D1FAE5;color:#065F46;';
+    savingEl.textContent = `Économisez ${(saving / 100).toFixed(2).replace('.', ',')} € vs achat séparé`;
+    document.getElementById('product-price-display').insertAdjacentElement('afterend', savingEl);
+  }
+
+  // Liste des 4 articles inclus
+  const details = document.getElementById('product-details');
+  details.innerHTML = `
+    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">inventory_2</span> <strong>Ce coffret contient 4 articles :</strong></div>
+    ${items.map(b => `<div class="flex items-center gap-2 pl-6"><span class="ms" style="font-size:14px;color:#C49A5A;">check</span> ${esc(b.t)}</div>`).join('')}
+    <div class="flex items-center gap-2 mt-1"><span class="ms" style="font-size:16px;color:#5B9EAD;">local_shipping</span> Impression et livraison par Gelato</div>
+    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">workspace_premium</span> Fabrication professionnelle à la demande</div>`;
+
+  // Activer le bouton panier
+  document.getElementById('add-cart-btn').disabled = false;
+  document.getElementById('order-btn').disabled = false;
+  document.getElementById('checkout-hint').textContent = 'Paiement sécurisé par Stripe';
+
+  // Masquer les sections inapplicables
+  document.getElementById('variantes-section').classList.add('hidden');
+  document.getElementById('perso-section').classList.add('hidden');
+  document.getElementById('stock-badge').classList.add('hidden');
+  document.getElementById('product-desc-accordion').style.display = 'none';
+
+  if (produit.description) {
+    const descHtml = mdToHtml(produit.description);
+    const descBox = document.getElementById('product-info-desktop');
+    descBox.classList.remove('hidden');
+    document.getElementById('product-description').innerHTML = descHtml;
+  }
+
+  renderFaq();
+  loadYouMayAlsoLike();
+}
+
+function addBundleToCart() {
+  const items = produit.bundle_items || [];
+  Cart.add({
+    produit_id:        produit.id,
+    slug:              produit.slug,
+    title:             produit.title,
+    preview_url:       produit.preview_url || '',
+    price_cents:       Math.round(produit.price * 100),
+    type_produit:      'bundle',
+    gelato_product_id: null,
+    mode_livraison:    'colis',
+    bundle_items:      items,
+    category:          produit.category || '',
+  });
+  const btn = document.getElementById('add-cart-btn');
+  btn.innerHTML = '<span class="ms" style="font-size:18px;">check</span> Ajouté !';
+  btn.style.background = '#065F46';
+  setTimeout(() => {
+    btn.innerHTML = '<span class="ms" style="font-size:18px;">shopping_bag</span> Ajouter au panier';
+    btn.style.background = '';
+  }, 2000);
+  window.location.href = 'panier.html';
 }
 
 function renderProduit() {
@@ -891,6 +1002,7 @@ function checkFormValid() {
 // ── Ajouter au panier ──
 function addToCartFromPage() {
   if (!produit) return;
+  if (produit.type_produit === 'bundle') { addBundleToCart(); return; }
   const variante    = (produit.variantes || []).find(v => v.id === varianteChoisie);
   const priceCents  = variante ? variante.prix : (produit.price || 0) * 100;
 

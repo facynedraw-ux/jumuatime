@@ -374,7 +374,10 @@ let quotedShippingCents = null;
 let quotedAddress = null;
 
 function hasGelatoItems() {
-  return Cart.get().some(i => i.type_produit === 'physique' && i.gelato_product_id);
+  return Cart.get().some(i =>
+    (i.type_produit === 'physique' && i.gelato_product_id) ||
+    i.type_produit === 'bundle'
+  );
 }
 
 function resetQuote() {
@@ -506,7 +509,13 @@ function removeItem(key) {
 }
 
 async function getQuote() {
-  const gelatoItems = Cart.get().filter(i => i.type_produit === 'physique' && i.gelato_product_id);
+  const rawGelatoItems = Cart.get().filter(i => i.type_produit === 'physique' && i.gelato_product_id);
+  const bundleItems    = Cart.get().filter(i => i.type_produit === 'bundle');
+  // Expander les bundles en leurs sous-items pour le devis
+  const bundleExpanded = bundleItems.flatMap(b =>
+    (b.bundle_items || []).filter(bi => bi.g).map(bi => ({ gelato_product_id: bi.g, quantity: 1 }))
+  );
+  const gelatoItems = [...rawGelatoItems, ...bundleExpanded.map(bi => ({ gelato_product_id: bi.gelato_product_id, quantity: bi.quantity }))];
   if (!gelatoItems.length) return;
 
   const prenom = (document.getElementById('addr-prenom')?.value || '').trim();

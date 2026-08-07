@@ -128,7 +128,7 @@ Deno.serve(async (req: Request) => {
       const items: any[] = body.items || [];
       if (!items.length) throw new Error('Panier vide');
 
-      const hasPhysical = items.some((i: any) => i.type_produit === 'physique');
+      const hasPhysical = items.some((i: any) => i.type_produit === 'physique' || i.type_produit === 'bundle');
 
       // Livraison : uniquement les produits manuels (non-Gelato)
       const manualPhysical = items.filter((i: any) => i.type_produit === 'physique' && !i.gelato_product_id);

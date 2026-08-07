@@ -204,15 +204,27 @@ export async function onRequestPost(context) {
       let items = [];
       try { items = JSON.parse(metadata.items || '[]'); } catch {}
 
-      const gelatoItems = items.filter(i => i.g);
-      const manualItems = items.filter(i => i.tp === 'physique' && !i.g);
+      const gelatoItems  = items.filter(i => i.g);
+      const bundleItems  = items.filter(i => i.tp === 'bundle');
+      const manualItems  = items.filter(i => i.tp === 'physique' && !i.g);
       const results = [];
 
-      // Gelato orders
+      const nameParts = (customerName || '').trim().split(/\s+/);
+      const firstName = nameParts[0] || 'Client';
+      const lastName  = nameParts.slice(1).join(' ') || '-';
+      const gelatoShipping = {
+        firstName,
+        lastName,
+        addressLine1: shipping.line1 || '',
+        ...(shipping.line2 ? { addressLine2: shipping.line2 } : {}),
+        city:     shipping.city || '',
+        postCode: shipping.postal_code || '',
+        country:  shipping.country || '',
+        email:    customerEmail,
+      };
+
+      // Gelato orders — produits individuels
       for (const item of gelatoItems) {
-        const nameParts  = (customerName || '').trim().split(/\s+/);
-        const firstName  = nameParts[0] || 'Client';
-        const lastName   = nameParts.slice(1).join(' ') || '-';
         const gelatoBody = {
           orderType:           'order',
           orderReferenceId:    `jt-${session.id.slice(-8)}-${(item.i||'').slice(-4)}`,
@@ -224,16 +236,7 @@ export async function onRequestPost(context) {
             quantity:        item.q || 1,
           }],
           shipmentMethodUid: 'standard',
-          shippingAddress: {
-            firstName,
-            lastName,
-            addressLine1: shipping.line1 || '',
-            ...(shipping.line2 ? { addressLine2: shipping.line2 } : {}),
-            city:         shipping.city || '',
-            postCode:     shipping.postal_code || '',
-            country:      shipping.country || '',
-            email:        customerEmail,
-          },
+          shippingAddress:   gelatoShipping,
         };
         const gelatoRes = await fetch('https://order.gelatoapis.com/v4/orders', {
           method:  'POST',
@@ -244,8 +247,45 @@ export async function onRequestPost(context) {
         results.push({ produit: item.t || item.i, ok: gelatoRes.ok, status: gelatoRes.status, data });
       }
 
+      // Gelato orders — bundles (1 commande Gelato avec N items)
+      for (const bundle of bundleItems) {
+        // Charger bundle_items depuis Supabase (les UIDs Gelato ne sont pas dans les métadonnées)
+        let subItems = [];
+        if (supabaseUrl && supabaseKey) {
+          const bRes = await fetch(
+            `${supabaseUrl}/rest/v1/resources?id=eq.${bundle.i}&select=bundle_items`,
+            { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
+          );
+          if (bRes.ok) {
+            const [bData] = await bRes.json().catch(() => []);
+            subItems = (bData?.bundle_items || []).filter(b => b.g);
+          }
+        }
+        if (!subItems.length) continue;
+        const gelatoBody = {
+          orderType:           'order',
+          orderReferenceId:    `jt-${session.id.slice(-8)}-bndl`,
+          customerReferenceId: customerEmail || session.id,
+          currency:            'EUR',
+          items: subItems.map((b, idx) => ({
+            itemReferenceId: `jt-bndl-${idx}`,
+            productUid:      b.g,
+            quantity:        1,
+          })),
+          shipmentMethodUid: 'standard',
+          shippingAddress:   gelatoShipping,
+        };
+        const gelatoRes = await fetch('https://order.gelatoapis.com/v4/orders', {
+          method:  'POST',
+          headers: { 'X-API-KEY': gelatoApiKey, 'Content-Type': 'application/json' },
+          body:    JSON.stringify(gelatoBody),
+        });
+        const data = await gelatoRes.json().catch(() => null);
+        results.push({ produit: bundle.t || 'Bundle', ok: gelatoRes.ok, status: gelatoRes.status, data });
+      }
+
       // Emails — envoi en parallèle, non bloquant
-      const physiques = items.filter(i => i.tp === 'physique');
+      const physiques = items.filter(i => i.tp === 'physique' || i.tp === 'bundle');
       if (physiques.length && customerEmail) {
         await Promise.allSettled([
           // Email client
