@@ -565,8 +565,9 @@ function infoCell(label, value) {
 async function loadSimilar(r) {
   const { data } = await _supabase
     .from('resources')
-    .select('slug, title, preview_url, preview_url, price, category')
+    .select('slug, title, preview_url, price, category')
     .eq('is_active', true)
+    .eq('type_produit', 'numerique')
     .neq('id', r.id)
     .limit(4);
 

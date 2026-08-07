@@ -560,6 +560,9 @@ function showError() {
 }
 
 async function renderBundle() {
+  document.body.style.overflow = '';
+  const _lb = document.getElementById('jt-lightbox');
+  if (_lb) _lb.remove();
   document.getElementById('loading-state').classList.add('hidden');
   document.getElementById('main-content').classList.remove('hidden');
 
@@ -1051,6 +1054,7 @@ function switchImage(idx, thumb) {
 }
 
 function openLightbox(idx) {
+  if (produit?.type_produit === 'bundle') return;
   const url = galleryImages[idx];
   if (!url) return;
   let lb = document.getElementById('jt-lightbox');
