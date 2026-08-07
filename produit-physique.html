@@ -622,13 +622,19 @@ async function renderBundle() {
   document.getElementById('variantes-section').classList.add('hidden');
   document.getElementById('perso-section').classList.add('hidden');
   document.getElementById('stock-badge').classList.add('hidden');
-  document.getElementById('product-desc-accordion').style.display = 'none';
 
-  if (produit.description) {
-    const descHtml = mdToHtml(produit.description);
-    const descBox = document.getElementById('product-info-desktop');
-    descBox.classList.remove('hidden');
-    document.getElementById('product-description').innerHTML = descHtml;
+  // Description — desktop + mobile accordion
+  const descHtml = produit.description ? mdToHtml(produit.description) : '';
+  const descBox = document.getElementById('product-info-desktop');
+  descBox.classList.remove('hidden');
+  document.getElementById('product-description').innerHTML = descHtml;
+  // Accordion mobile
+  const acc = document.getElementById('product-desc-accordion');
+  if (descHtml) {
+    document.getElementById('product-description-mobile').innerHTML = descHtml;
+    acc.style.display = '';
+  } else {
+    acc.style.display = 'none';
   }
 
   renderFaq();
@@ -809,7 +815,7 @@ function renderFaq() {
   const faqEl = document.getElementById('faq-list');
   if (!faqEl) return;
 
-  const isGelato  = !produit.mode_livraison && !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
+  const isGelato  = produit.type_produit === 'bundle' || (!produit.mode_livraison && !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id)));
   const isLettre  = produit.mode_livraison === 'lettre';
   const delaiDef  = isGelato ? '5 à 7 jours ouvrés' : (isLettre ? '3 jours ouvrés' : '3 à 5 jours ouvrés');
   const delai     = produit.delai_livraison || delaiDef;
