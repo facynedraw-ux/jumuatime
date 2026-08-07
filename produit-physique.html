@@ -279,13 +279,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <!-- FAQ -->
-  <div class="mt-12 bg-white border border-border rounded-2xl p-6 md:p-8">
-    <h2 class="font-display text-lg font-bold mb-5" style="color:#1A1208;">Questions fréquentes</h2>
-    <div id="faq-list" class="space-y-4"></div>
-  </div>
+  <!-- VOUS AIMEREZ AUSSI (produits sans collection) -->
+  <section id="ymal-section" class="mt-10 hidden">
+    <div class="mb-5">
+      <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#C49A5A;letter-spacing:2px;">✦ Dans le même style</p>
+      <h2 class="font-display text-lg font-bold" style="color:#1A1208;">Vous aimerez aussi</h2>
+    </div>
+    <div id="ymal-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+  </section>
 
-  <!-- COMPLÈTE TA COLLECTION -->
+  <!-- COMPLÈTE TA COLLECTION (produits avec collection) -->
   <section id="collection-section" class="mt-10 hidden">
     <div class="mb-5">
       <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#C49A5A;letter-spacing:2px;">✦ Va avec ce produit</p>
@@ -294,36 +297,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="collection-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
   </section>
 
-  <!-- CONTACT / SAV -->
-  <section class="mt-10">
-    <div class="bg-white border border-border rounded-2xl p-6 md:p-8">
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:#EBF5F7;">
-          <span class="ms" style="font-size:20px;color:#5B9EAD;">support_agent</span>
+  <!-- FAQ + CONTACT côte à côte sur desktop -->
+  <div class="mt-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+
+    <!-- FAQ (gauche, 2/5) -->
+    <div class="md:col-span-2 bg-white border border-border rounded-2xl p-5">
+      <h2 class="font-display text-base font-bold mb-4" style="color:#1A1208;">Questions fréquentes</h2>
+      <div id="faq-list" class="space-y-3 text-sm"></div>
+    </div>
+
+    <!-- CONTACT / SAV (droite, 3/5) -->
+    <div class="md:col-span-3 bg-white border border-border rounded-2xl p-5">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:#EBF5F7;">
+          <span class="ms" style="font-size:18px;color:#5B9EAD;">support_agent</span>
         </div>
         <div>
-          <h2 class="font-display text-lg font-bold" style="color:#1A1208;">Une question ou un problème ?</h2>
+          <h2 class="font-display text-base font-bold" style="color:#1A1208;">Une question ou un problème ?</h2>
           <p class="text-xs" style="color:#8B7A5A;">Réponse sous 24 à 48h</p>
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-3 mb-6">
-        <a href="mailto:contact@jumuatime.com" class="btn-teal" style="font-size:13px;padding:9px 18px;text-decoration:none;">
-          <span class="ms" style="font-size:16px;">mail</span>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <a href="mailto:contact@jumuatime.com" class="btn-teal" style="font-size:12px;padding:7px 14px;text-decoration:none;">
+          <span class="ms" style="font-size:14px;">mail</span>
           contact@jumuatime.com
         </a>
         <a href="https://www.instagram.com/jumua_time" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 rounded-full font-semibold text-sm"
-           style="background:#F0EBF5;color:#7A5F9A;font-family:'DM Sans',sans-serif;text-decoration:none;padding:9px 18px;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+           class="inline-flex items-center gap-2 rounded-full font-semibold text-xs"
+           style="background:#F0EBF5;color:#7A5F9A;font-family:'DM Sans',sans-serif;text-decoration:none;padding:7px 14px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
           @jumua_time
         </a>
       </div>
 
-      <form id="contact-form" class="space-y-4" onsubmit="submitContact(event)">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <form id="contact-form" class="space-y-3" onsubmit="submitContact(event)">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="field-label" for="c-nom">Nom</label>
             <input class="field-input" id="c-nom" type="text" placeholder="Votre nom" required>
@@ -344,7 +355,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div>
           <label class="field-label" for="c-message">Message</label>
-          <textarea class="field-input" id="c-message" rows="4" placeholder="Écrivez votre message ici…" required style="resize:vertical;min-height:100px;"></textarea>
+          <textarea class="field-input" id="c-message" rows="4" placeholder="Écrivez votre message ici…" required style="resize:vertical;min-height:90px;"></textarea>
         </div>
         <button type="submit" id="c-submit" class="btn-teal" style="width:100%;justify-content:center;">
           <span class="ms" style="font-size:18px;">send</span>
@@ -353,7 +364,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p id="c-result" class="text-sm text-center hidden" role="alert"></p>
       </form>
     </div>
-  </section>
+
+  </div>
 
 </main>
 
@@ -650,6 +662,7 @@ function renderProduit() {
     outOfStock: produit.stock === 0
   });
   loadCollection();
+  loadYouMayAlsoLike();
 }
 
 function renderStockBadge() {
@@ -952,6 +965,35 @@ function openLightbox(idx) {
   lb.querySelector('img').src = url;
   lb.style.display = 'flex';
   document.body.style.overflow = 'hidden';
+}
+
+async function loadYouMayAlsoLike() {
+  if (produit?.collection) return;
+  let q = _supabase
+    .from('resources')
+    .select('id, slug, title, preview_url, price, variantes')
+    .eq('is_active', true)
+    .eq('type_produit', 'physique')
+    .neq('id', produit.id)
+    .limit(4);
+  if (produit.type_objet) q = q.eq('type_objet', produit.type_objet);
+  else if (produit.category) q = q.eq('category', produit.category);
+  const { data } = await q;
+  if (!data?.length) return;
+  const section = document.getElementById('ymal-section');
+  if (!section) return;
+  document.getElementById('ymal-grid').innerHTML = data.map(r => {
+    const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
+    const priceStr = prix.length
+      ? (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €'
+      : Number(r.price).toFixed(2).replace('.', ',') + ' €';
+    const imgUrl = r.preview_url ? thumbUrl(r.preview_url, 400) : '';
+    const cover = imgUrl
+      ? `<img src="${esc(imgUrl)}" alt="${esc(r.title)}" class="w-full h-full object-cover" loading="lazy">`
+      : `<span class="ms" style="font-size:40px;color:#5B9EAD;opacity:0.2;">category</span>`;
+    return `<a href="produit-physique.html?slug=${esc(r.slug)}" class="block rounded-xl overflow-hidden border border-border bg-white transition-transform hover:-translate-y-1" style="text-decoration:none;color:#1A1208;"><div class="flex items-center justify-center overflow-hidden" style="aspect-ratio:1/1;background:#EBF5F7;">${cover}</div><div class="p-3"><p class="font-semibold text-xs leading-snug mb-1">${esc(r.title)}</p><p class="font-bold text-sm" style="color:#C49A5A;">${priceStr}</p></div></a>`;
+  }).join('');
+  section.classList.remove('hidden');
 }
 
 async function loadCollection() {
