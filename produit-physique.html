@@ -589,7 +589,10 @@ function renderProduit() {
   }
 
   // Badge délai
-  const delai = produit.delai_livraison || '5 à 7 jours ouvrés';
+  const _isGelato = !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
+  const _isLettre = produit.mode_livraison === 'lettre';
+  const _delaiDef = _isGelato ? '5 à 7 jours ouvrés' : (_isLettre ? '3 jours ouvrés' : '3 à 5 jours ouvrés');
+  const delai = produit.delai_livraison || _delaiDef;
   document.getElementById('product-delay-badge').textContent = `⏱ ${delai}`;
 
   // Description
