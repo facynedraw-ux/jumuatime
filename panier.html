@@ -368,6 +368,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 function fmt(cents) {
   return (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
+function fmtRelated(r) {
+  const prix = (r.variantes || []).map(v => Number(v.prix)).filter(p => p > 0);
+  if (prix.length) return (Math.min(...prix) / 100).toFixed(2).replace('.', ',') + ' €';
+  if (Number(r.price) > 0) return fmt(r.price);
+  return '—';
+}
 
 // État devis livraison Gelato
 let quotedShippingCents = null;
@@ -601,7 +607,7 @@ async function loadRelated() {
 
   let query = _supabase
     .from('resources')
-    .select('id, slug, title, preview_url, price, category, type_produit')
+    .select('id, slug, title, preview_url, price, variantes, category, type_produit')
     .eq('is_active', true)
     .limit(8);
 
@@ -633,7 +639,7 @@ async function loadRelated() {
         </div>
         <div class="p-3">
           <h3 class="font-semibold text-xs leading-snug mb-1" style="color:#1A1208;">${escR(r.title)}</h3>
-          <p class="font-display font-bold text-sm" style="color:#C49A5A;">${fmt(r.price)}</p>
+          <p class="font-display font-bold text-sm" style="color:#C49A5A;">${fmtRelated(r)}</p>
         </div>
       </a>`;
   }).join('');
