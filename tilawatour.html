@@ -96,23 +96,53 @@ p { text-wrap: pretty; }
 .btn-gold:disabled { opacity: .5; cursor: default; }
 #tilawa-msg { font-size: 13px; margin-top: .75rem; display: none; text-align: center; }
 
-/* Features — vrai style app Tilawa Tour */
+/* Features */
 .features-section { background: #f7f7fd; }
-.features { max-width: 900px; margin: 0 auto; padding: 5rem 1.5rem; }
+.features { max-width: 960px; margin: 0 auto; padding: 5rem 1.5rem; }
 .features h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; text-align: center; color: #1a1a2e; margin-bottom: .6rem; }
 .features-sub { text-align: center; font-size: 14px; color: #46455a; margin-bottom: 3rem; }
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 1rem;
+}
 .feature-card {
-  background: white; border-radius: 24px; padding: 2rem 1.75rem 2.25rem;
+  background: white; border-radius: 24px; padding: 1.75rem;
   box-shadow: 0 1px 4px rgba(26,26,46,0.06), 0 6px 20px rgba(26,26,46,0.05);
   border: 1px solid #e9e8f5;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  overflow: hidden;
+  display: flex; flex-direction: column;
 }
+.feature-card.bloom:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(92,91,158,0.18), 0 2px 8px rgba(26,26,46,0.06);
+}
+.feature-card.serenity:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0,145,124,0.18), 0 2px 8px rgba(26,26,46,0.06);
+}
+.feature-card.wide { grid-column: span 2; flex-direction: row; align-items: stretch; gap: 0; padding: 0; }
+.feature-card.wide .feature-text { padding: 1.75rem; flex: 1; display: flex; flex-direction: column; }
+.feature-card.wide .feature-visual { width: 48%; flex-shrink: 0; overflow: hidden; border-radius: 0 24px 24px 0; }
+.feature-card.wide .feature-visual img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+.feature-icon-circle {
+  width: 46px; height: 46px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: .9rem; flex-shrink: 0;
+}
+.feature-card.bloom .feature-icon-circle { background: rgba(92,91,158,0.1); }
+.feature-card.serenity .feature-icon-circle { background: rgba(0,145,124,0.1); }
+.feature-card.bloom .feature-icon-circle .ms { color: #5c5b9e; font-size: 22px; }
+.feature-card.serenity .feature-icon-circle .ms { color: #00917c; font-size: 22px; }
 .feature-eyebrow {
   font-size: 10px; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; color: #5c5b9e; margin-bottom: .55rem; display: block;
+  text-transform: uppercase; margin-bottom: .45rem; display: block;
 }
-.feature-card h3 { font-size: 15.5px; font-weight: 700; color: #1a1a2e; margin-bottom: .55rem; line-height: 1.3; }
-.feature-card p { font-size: 13.5px; color: #46455a; line-height: 1.7; }
+.feature-card.bloom .feature-eyebrow { color: #5c5b9e; }
+.feature-card.serenity .feature-eyebrow { color: #00917c; }
+.feature-card h3 { font-size: 15.5px; font-weight: 700; color: #1a1a2e; margin-bottom: .5rem; line-height: 1.3; }
+.feature-card p { font-size: 13.5px; color: #46455a; line-height: 1.7; margin: 0; }
 
 /* Quote */
 .quote-section {
@@ -132,6 +162,14 @@ p { text-wrap: pretty; }
 @media (max-width: 700px) {
   .hero-inner { grid-template-columns: 1fr; }
   .phone-wrap { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-card.wide { grid-column: 1; flex-direction: column; }
+  .feature-card.wide .feature-visual { width: 100%; height: 200px; border-radius: 0 0 24px 24px; }
+  .feature-card.wide .feature-text { padding: 1.75rem 1.75rem .5rem; }
+}
+@media (min-width: 701px) and (max-width: 920px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-card.wide { grid-column: span 2; }
 }
 
 /* CTA bas de page */
@@ -195,37 +233,54 @@ p { text-wrap: pretty; }
   <p class="features-sub">Six fonctionnalités pensées pour durer dans la lecture.</p>
   <div class="features-grid">
 
-    <div class="feature-card">
+    <!-- Lecture (bloom, 1 col) -->
+    <div class="feature-card bloom">
+      <div class="feature-icon-circle"><span class="ms">auto_stories</span></div>
       <span class="feature-eyebrow">LECTURE</span>
       <h3>Un lecteur pensé pour la lecture</h3>
       <p>Texte arabe intégral, traduction au choix, récitation audio verset par verset, sommaire des 114 sourates accessible en un geste.</p>
     </div>
 
-    <div class="feature-card">
-      <span class="feature-eyebrow">SUIVI</span>
-      <h3>Un suivi qui s'adapte à vous</h3>
-      <p>Calendrier mensuel, programme recalculé automatiquement si vous prenez du retard — sans culpabiliser, juste pour avancer.</p>
+    <!-- Suivi (serenity, 2 col wide + screenshot dashboard) -->
+    <div class="feature-card serenity wide">
+      <div class="feature-text">
+        <div class="feature-icon-circle"><span class="ms">calendar_month</span></div>
+        <span class="feature-eyebrow">SUIVI</span>
+        <h3>Un suivi qui s'adapte à vous</h3>
+        <p>Calendrier mensuel, programme recalculé automatiquement si vous prenez du retard — sans culpabiliser, juste pour avancer.</p>
+      </div>
+      <div class="feature-visual">
+        <img src="Images/dashboard_bloom.jpg" alt="Tableau de bord Tilawa Tour">
+      </div>
     </div>
 
-    <div class="feature-card">
+    <!-- Ramadan (bloom, 1 col) -->
+    <div class="feature-card bloom">
+      <div class="feature-icon-circle"><span class="ms">brightness_5</span></div>
       <span class="feature-eyebrow">RAMADAN</span>
       <h3>Un objectif Ramadan</h3>
       <p>Un mode dédié pour structurer votre lecture pendant le mois béni, selon le rythme que vous choisissez.</p>
     </div>
 
-    <div class="feature-card">
+    <!-- Thème (serenity, 1 col) -->
+    <div class="feature-card serenity">
+      <div class="feature-icon-circle"><span class="ms">palette</span></div>
       <span class="feature-eyebrow">THÈME</span>
       <h3>Deux univers, un pour chacun</h3>
-      <p>Bloom, tout en douceur terracotta, ou Serenity, en vert émeraude — choisissez le thème qui vous ressemble.</p>
+      <p>Bloom, tout en douceur violet, ou Serenity, en vert émeraude — choisissez le thème qui vous ressemble.</p>
     </div>
 
-    <div class="feature-card">
+    <!-- Tajwid (bloom, 1 col) -->
+    <div class="feature-card bloom">
+      <div class="feature-icon-circle"><span class="ms">spellcheck</span></div>
       <span class="feature-eyebrow">TAJWID</span>
       <h3>Un lexique tajwid intégré</h3>
       <p>Pour comprendre et progresser dans la lecture, avec un code couleur clair sur le texte arabe.</p>
     </div>
 
-    <div class="feature-card">
+    <!-- Khatma (serenity, 1 col) -->
+    <div class="feature-card serenity">
+      <div class="feature-icon-circle"><span class="ms">celebration</span></div>
       <span class="feature-eyebrow">KHATMA</span>
       <h3>Une célébration à chaque khatma</h3>
       <p>Parce que terminer le Coran, une fois par mois ou une fois par an, mérite d'être marqué.</p>
