@@ -85,6 +85,8 @@ p {
   .btn-sm:hover { background:#FACDD8; }
   .btn-sm-green { background:#E8F0E8; color:#5B8A5F; border:none; border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; }
   .btn-sm-green:hover { background:#D4E8D4; }
+  .btn-sm-red { background:#FEE2E2; color:#B91C1C; border:none; border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; }
+  .btn-sm-red:hover { background:#FECACA; }
   .btn-toggle { background:#E8F0E8; color:#5B8A5F; border:none; border-radius:8px; padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px; }
   .btn-toggle.off { background:#FDE8EE; color:#C96B8A; }
   .skeleton { position:relative;overflow:hidden;background:#F5E8F0;border-radius:8px; }
@@ -737,6 +739,9 @@ function renderList() {
           <button class="btn-sm" onclick="duplicateResource('${r.id}')" title="Dupliquer">
             <span class="ms" style="font-size:14px;">content_copy</span>
           </button>
+          <button class="btn-sm-red" onclick="deleteResource('${r.id}', ${JSON.stringify(esc(r.title))})" title="Supprimer">
+            <span class="ms" style="font-size:14px;">delete</span>
+          </button>
         </div>
       </div>`;
   }).join('');
@@ -1097,6 +1102,16 @@ async function saveResource() {
   showToast(editingId ? 'Ressource mise à jour ✓' : 'Ressource ajoutée ✓', 'success');
   closePanel();
   await loadResources();
+}
+
+async function deleteResource(id, title) {
+  if (!confirm(`Supprimer définitivement "${title}" ?\n\nCette action est irréversible.`)) return;
+
+  const { error } = await _supabase.from('resources').delete().eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+
+  allResources = allResources.filter(r => r.id !== id);
+  renderList(allResources);
 }
 
 async function duplicateResource(id) {
