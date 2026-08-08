@@ -723,8 +723,9 @@ function renderResourceCard(r) {
     ? `<span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:${cs.bg};color:${cs.color};">${cs.label}</span>`
     : '';
 
+  const isPhys = r.type_produit === 'physique' || r.type_produit === 'bundle';
   return `
-    <a href="ressource.html?slug=${escHtml(r.slug)}" class="resource-card">
+    <a href="${isPhys ? 'produit-physique' : 'ressource'}.html?slug=${escHtml(r.slug)}" class="resource-card">
       <div class="overflow-hidden" style="aspect-ratio:1/1;background:#FAF6F0;">${cover}</div>
       <div class="p-4">
         ${tagHtml ? `<div class="mb-2">${tagHtml}</div>` : ''}
