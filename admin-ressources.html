@@ -739,7 +739,7 @@ function renderList() {
           <button class="btn-sm" onclick="duplicateResource('${r.id}')" title="Dupliquer">
             <span class="ms" style="font-size:14px;">content_copy</span>
           </button>
-          <button class="btn-sm-red" onclick="deleteResource('${r.id}', ${JSON.stringify(esc(r.title))})" title="Supprimer">
+          <button class="btn-sm-red" onclick="deleteResource('${r.id}')" title="Supprimer">
             <span class="ms" style="font-size:14px;">delete</span>
           </button>
         </div>
@@ -1104,7 +1104,9 @@ async function saveResource() {
   await loadResources();
 }
 
-async function deleteResource(id, title) {
+async function deleteResource(id) {
+  const r = allResources.find(x => x.id === id);
+  const title = r ? r.title : 'ce produit';
   if (!confirm(`Supprimer définitivement "${title}" ?\n\nCette action est irréversible.`)) return;
 
   const { error } = await _supabase.from('resources').delete().eq('id', id);
