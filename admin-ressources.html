@@ -728,7 +728,7 @@ function renderList() {
             <span class="ms" style="font-size:14px;color:${r.vedette ? '#C49A5A' : '#8B7A5A'};">${r.vedette ? 'star' : 'star_border'}</span>
             ${r.vedette ? `<span style="font-size:11px;font-weight:700;color:#C49A5A;">${r.vedette_ordre}</span>` : ''}
           </button>
-          <a href="${r.type_produit === 'physique' ? 'produit-physique' : 'ressource'}.html?slug=${esc(r.slug)}" target="_blank" class="btn-sm" title="Voir la fiche">
+          <a href="${(r.type_produit === 'physique' || r.type_produit === 'bundle') ? 'produit-physique' : 'ressource'}.html?slug=${esc(r.slug)}" target="_blank" class="btn-sm" title="Voir la fiche">
             <span class="ms" style="font-size:14px;">open_in_new</span>
           </a>
           <button class="btn-sm-green" onclick="editResource('${r.id}')" title="Modifier">
