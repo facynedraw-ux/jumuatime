@@ -653,6 +653,8 @@ async function renderBundle() {
 
 function addBundleToCart() {
   const items = produit.bundle_items || [];
+  // Gelato si au moins un article a un ID Gelato (g), sinon livraison manuelle
+  const gelato_product_id = items.some(b => b.g) ? 'bundle' : null;
   Cart.add({
     produit_id:        produit.id,
     slug:              produit.slug,
@@ -660,7 +662,7 @@ function addBundleToCart() {
     preview_url:       produit.preview_url || '',
     price_cents:       Math.round(produit.price * 100),
     type_produit:      'bundle',
-    gelato_product_id: null,
+    gelato_product_id,
     mode_livraison:    'colis',
     bundle_items:      items,
     category:          produit.category || '',

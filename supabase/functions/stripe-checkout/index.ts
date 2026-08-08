@@ -130,8 +130,11 @@ Deno.serve(async (req: Request) => {
 
       const hasPhysical = items.some((i: any) => i.type_produit === 'physique' || i.type_produit === 'bundle');
 
-      // Livraison : uniquement les produits manuels (non-Gelato)
-      const manualPhysical = items.filter((i: any) => i.type_produit === 'physique' && !i.gelato_product_id);
+      // Livraison : produits physiques et bundles sans Gelato (livraison manuelle)
+      const manualPhysical = items.filter((i: any) =>
+        (i.type_produit === 'physique' && !i.gelato_product_id) ||
+        (i.type_produit === 'bundle' && !i.gelato_product_id)
+      );
       const manualSubtotal = manualPhysical.reduce((sum: number, i: any) => sum + (i.price_cents || 0) * (i.quantity || 1), 0);
 
       // Récupérer mode_livraison depuis la DB (source de vérité, pas le client)

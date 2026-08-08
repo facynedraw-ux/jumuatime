@@ -382,7 +382,7 @@ let quotedAddress = null;
 function hasGelatoItems() {
   return Cart.get().some(i =>
     (i.type_produit === 'physique' && i.gelato_product_id) ||
-    i.type_produit === 'bundle'
+    (i.type_produit === 'bundle' && i.gelato_product_id)
   );
 }
 

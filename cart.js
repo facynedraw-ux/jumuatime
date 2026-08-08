@@ -67,9 +67,12 @@
       return this.get().reduce((s, i) => s + (i.price_cents || 0) * (i.quantity || 1), 0);
     },
 
-    // Produits physiques NON-Gelato uniquement (Gelato gère sa propre livraison)
+    // Produits physiques et bundles NON-Gelato (Gelato gère sa propre livraison)
     _manualPhysical() {
-      return this.get().filter(i => i.type_produit === 'physique' && !i.gelato_product_id);
+      return this.get().filter(i =>
+        (i.type_produit === 'physique' && !i.gelato_product_id) ||
+        (i.type_produit === 'bundle' && !i.gelato_product_id)
+      );
     },
 
     _manualSubtotal() {
