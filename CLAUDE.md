@@ -75,8 +75,9 @@ Colonnes :
 - `file_url` (text, nullable) — PDF téléchargeable (numériques uniquement)
 - `price` (integer, centimes)
 - `category` (text) — valeurs : `enfants` | `spiritualite` | `decoration` | `cadeaux`
-- `type_produit` (text) — `numerique` | `physique`
+- `type_produit` (text) — `numerique` | `physique` | `bundle`
 - `gelato_product_id` (text, nullable) — ID produit Gelato pour les physiques Gelato
+- `bundle_items` (jsonb[], nullable) — articles d'un bundle : `[{g, p, t, img, rid, vid}]` ; `g: null` = livraison manuelle (pas Gelato)
 - `format` (text, nullable)
 - `gallery_urls` (text[], nullable) — galerie d'images supplémentaires
 - `is_active` (boolean) — visible en boutique si true
@@ -86,7 +87,7 @@ Colonnes :
 - `id` (uuid)
 - `created_at`
 - `stripe_session_id` (text)
-- `statut` (text) — `en_attente` | `en_preparation` | `expedie` | `livre` | `annule`
+- `statut` (text) — CHECK constraint : `en_attente` | `en_creation` | `commande_gelato` | `en_preparation` | `expedie` | `livre` | `annule`
 - `ressource_id` (uuid) → join resources  ⚠️ PAS resource_id
 - `variante_id` (text, nullable)
 - `email_client` (text)
@@ -191,6 +192,8 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
   - Notification admin nouvelle commande
 - Template dans email-expedition.js :
   - Email expédition avec numéro de suivi → déclenché depuis admin-commandes quand statut → "expedie"
+  - Header : logo `Images/logo_version_white.png` sur fond teal (pas emoji)
+  - Lien suivi La Poste : `https://www.laposte.fr/outils/suivre-vos-envois?code=<tracking>`
 
 ## Admin — commandes (admin-commandes.html)
 - Onglet Physiques : liste commandes_physiques avec filtres statut
@@ -198,6 +201,19 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
 - Panel glissant : détails commande + adresse + changement statut + numéro de suivi + notes internes
 - Sauvegarde : UPDATE commandes_physiques (statut, numero_suivi, notes_admin)
 - Déclenche email expédition automatiquement quand statut passe à "expedie"
+- Bouton "+ Nouvelle commande" : INSERT manuel avec stripe_session_id = 'MANUEL-' + Date.now()
+
+## Admin — ressources (admin-ressources.html)
+- Bouton corbeille rouge sur chaque produit → confirm() + DELETE resources (RLS admin_delete requis)
+- "Voir la fiche" route vers produit-physique.html pour type_produit = 'physique' OU 'bundle'
+
+## Bundles — livraison manuelle (bypass Gelato)
+- Si `bundle_items[*].g = null` en DB → bundle traité comme livraison manuelle (pas de quote Gelato)
+- `addBundleToCart()` met `gelato_product_id: 'bundle'` si items Gelato, `null` sinon (sentinelle)
+- `hasGelatoItems()` dans panier.html teste `i.gelato_product_id` (pas juste `type_produit === 'bundle'`)
+- `_manualPhysical()` dans cart.js inclut les bundles sans gelato_product_id
+- `stripe-checkout` : manualPhysical inclut bundles sans gelato_product_id → port 4,90 € calculé
+- Bundle "Coffret 4 Mugs Les 4 saisons" : g=null en DB depuis 2026-08-08 → livraison manuelle
 
 ## Règles importantes
 - NE JAMAIS utiliser balise <form> → event handlers JS uniquement
@@ -213,9 +229,15 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
 - RLS admin : toujours utiliser `auth.uid()` + check `profiles.role = 'admin'` (PAS auth.email() pour identifier l'admin)
 - RLS clientes : `auth.email() = email_client` est correct pour que chaque cliente voie ses propres commandes
 
+## Pages statiques — notes importantes
+- **Footer** : Instagram handle = `@jumuatime` / `instagram.com/jumuatime` (PAS `jumua_time` avec underscore)
+- **Footer newsletter** : `submitNewsletter(e)` est définie dans `supabase-client.js` — ne pas la redéfinir dans chaque page
+- **tilawatour.html** : landing page Tilawa Tour — hero teal foncé + 6 cartes fonctionnalités (bloom/serenity) + carte Suivi wide avec screenshot `Images/dashboard_bloom.jpg`
+
 ## Phase 2 — à faire (non implémenté)
 - Pré-remplissage automatique adresse dans panier depuis `adresses_livraison`
 - Factures Stripe : activer `invoice_creation` dans stripe-checkout.ts + stocker `stripe_customer_id` dans profiles + Edge Function pour récupérer PDFs
+- Screenshots cartes Lecture et Khatma dans tilawatour.html (en attente captures de l'interface)
 
 ## Ecosystème Jumua & Me
 - jumuatime.com — boutique illustrée famille musulmane
