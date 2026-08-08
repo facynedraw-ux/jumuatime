@@ -174,9 +174,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h1 class="font-display font-bold text-xl text-text">Commandes</h1>
         <p id="count-label" class="text-xs text-muted mt-0.5">Chargement…</p>
       </div>
-      <button onclick="loadAll()" class="btn-sm">
-        <span class="ms" style="font-size:16px;">refresh</span> Actualiser
-      </button>
+      <div class="flex gap-2">
+        <button onclick="openNewOrder()" class="btn-primary">
+          <span class="ms" style="font-size:16px;">add</span> Nouvelle commande
+        </button>
+        <button onclick="loadAll()" class="btn-sm">
+          <span class="ms" style="font-size:16px;">refresh</span> Actualiser
+        </button>
+      </div>
     </div>
 
     <!-- Tabs physique / numérique -->
@@ -635,6 +640,110 @@ async function deleteOrder(id) {
   await loadAll();
 }
 
+// ── Nouvelle commande manuelle ──
+let newOrderProducts = [];
+
+async function openNewOrder() {
+  const ov = document.getElementById('new-order-overlay');
+  ov.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  // Charger produits physiques/bundles actifs
+  if (newOrderProducts.length === 0) {
+    const { data } = await _supabase
+      .from('resources')
+      .select('id, title, price, type_produit')
+      .in('type_produit', ['physique', 'bundle'])
+      .eq('is_active', true)
+      .order('title');
+    newOrderProducts = data || [];
+    const sel = document.getElementById('no-produit');
+    sel.innerHTML = '<option value="">— Choisir un produit —</option>' +
+      newOrderProducts.map(p => `<option value="${p.id}" data-price="${Math.round(p.price * 100)}">${escHtml(p.title)}</option>`).join('');
+  }
+  document.getElementById('no-form').reset();
+  document.getElementById('no-result').textContent = '';
+}
+
+function closeNewOrder() {
+  document.getElementById('new-order-overlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('no-produit').addEventListener('change', function() {
+    const opt = this.options[this.selectedIndex];
+    const price = parseInt(opt.dataset.price || '0');
+    const ship  = 490;
+    document.getElementById('no-montant-produit').value = (price / 100).toFixed(2);
+    document.getElementById('no-montant-livraison').value = (ship / 100).toFixed(2);
+    document.getElementById('no-montant-total').value = ((price + ship) / 100).toFixed(2);
+  });
+  document.getElementById('no-montant-produit').addEventListener('input', recalcTotal);
+  document.getElementById('no-montant-livraison').addEventListener('input', recalcTotal);
+});
+
+function recalcTotal() {
+  const p = parseFloat(document.getElementById('no-montant-produit').value) || 0;
+  const l = parseFloat(document.getElementById('no-montant-livraison').value) || 0;
+  document.getElementById('no-montant-total').value = (p + l).toFixed(2);
+}
+
+async function submitNewOrder() {
+  const btn = document.getElementById('no-submit-btn');
+  const res = document.getElementById('no-result');
+  const produitId  = document.getElementById('no-produit').value;
+  const nom        = document.getElementById('no-nom').value.trim();
+  const email      = document.getElementById('no-email').value.trim();
+  const line1      = document.getElementById('no-line1').value.trim();
+  const line2      = document.getElementById('no-line2').value.trim();
+  const postal     = document.getElementById('no-postal').value.trim();
+  const city       = document.getElementById('no-city').value.trim();
+  const montantP   = Math.round((parseFloat(document.getElementById('no-montant-produit').value) || 0) * 100);
+  const montantL   = Math.round((parseFloat(document.getElementById('no-montant-livraison').value) || 0) * 100);
+  const montantT   = Math.round((parseFloat(document.getElementById('no-montant-total').value) || 0) * 100);
+  const statut     = document.getElementById('no-statut').value;
+  const notes      = document.getElementById('no-notes').value.trim();
+
+  if (!produitId) { res.textContent = 'Choisissez un produit.'; res.style.color = '#C0392B'; return; }
+  if (!nom)       { res.textContent = 'Nom du client requis.'; res.style.color = '#C0392B'; return; }
+  if (!email)     { res.textContent = 'Email du client requis.'; res.style.color = '#C0392B'; return; }
+  if (!line1 || !postal || !city) { res.textContent = 'Adresse incomplète (rue, code postal, ville).'; res.style.color = '#C0392B'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement…';
+  res.textContent = '';
+
+  const { error } = await _supabase.from('commandes_physiques').insert({
+    stripe_session_id: 'MANUEL-' + Date.now(),
+    ressource_id:      produitId,
+    variante_id:       null,
+    personnalisation:  {},
+    montant_produit:   montantP,
+    montant_total:     montantT,
+    montant_livraison: montantL,
+    email_client:      email,
+    nom_client:        nom,
+    adresse_livraison: { name: nom, email, line1, line2: line2 || null, postal_code: postal, city, country: 'FR' },
+    statut,
+    notes_admin:       notes || null,
+  });
+
+  if (error) {
+    res.textContent = 'Erreur : ' + error.message;
+    res.style.color = '#C0392B';
+    btn.disabled = false;
+    btn.textContent = 'Créer la commande';
+    return;
+  }
+
+  res.textContent = 'Commande créée !';
+  res.style.color = '#065F46';
+  btn.textContent = 'Créer la commande';
+  btn.disabled = false;
+  await loadAll();
+  setTimeout(closeNewOrder, 1200);
+}
+
 // ── Auth ──
 async function signOut() {
   await _supabase.auth.signOut();
@@ -646,5 +755,86 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
+
+<!-- ═══ MODAL NOUVELLE COMMANDE ═══ -->
+<div id="new-order-overlay" class="panel-overlay hidden" onclick="if(event.target===this)closeNewOrder()">
+  <div class="panel-box">
+    <div class="panel-scroll">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="font-display font-bold text-lg" style="color:#3D1F2D;">Nouvelle commande</h2>
+        <button onclick="closeNewOrder()" style="background:none;border:none;cursor:pointer;padding:4px;color:#7A5A6A;">
+          <span class="ms" style="font-size:22px;">close</span>
+        </button>
+      </div>
+
+      <form id="no-form" onsubmit="event.preventDefault();submitNewOrder()">
+
+        <label class="f-label">Produit *</label>
+        <select id="no-produit" class="f-select mb-4" required>
+          <option value="">Chargement…</option>
+        </select>
+
+        <div class="f-sep"></div>
+        <label class="f-label">Client</label>
+        <div class="space-y-3 mb-4">
+          <div>
+            <label class="f-label" style="margin-bottom:4px;">Nom complet *</label>
+            <input id="no-nom" class="f-input" type="text" placeholder="Prénom Nom" required>
+          </div>
+          <div>
+            <label class="f-label" style="margin-bottom:4px;">Email *</label>
+            <input id="no-email" class="f-input" type="email" placeholder="client@email.com" required>
+          </div>
+        </div>
+
+        <div class="f-sep"></div>
+        <label class="f-label">Adresse de livraison</label>
+        <div class="space-y-3 mb-4">
+          <input id="no-line1" class="f-input" type="text" placeholder="Rue *" required>
+          <input id="no-line2" class="f-input" type="text" placeholder="Appartement, complément (optionnel)">
+          <div class="flex gap-2">
+            <input id="no-postal" class="f-input" type="text" placeholder="Code postal *" style="flex:0 0 110px;" required>
+            <input id="no-city" class="f-input" type="text" placeholder="Ville *" required>
+          </div>
+        </div>
+
+        <div class="f-sep"></div>
+        <label class="f-label">Montants</label>
+        <div class="flex gap-2 mb-4">
+          <div style="flex:1">
+            <label class="f-label" style="margin-bottom:4px;">Produit (€)</label>
+            <input id="no-montant-produit" class="f-input" type="number" step="0.01" min="0" placeholder="0.00">
+          </div>
+          <div style="flex:1">
+            <label class="f-label" style="margin-bottom:4px;">Livraison (€)</label>
+            <input id="no-montant-livraison" class="f-input" type="number" step="0.01" min="0" value="4.90">
+          </div>
+          <div style="flex:1">
+            <label class="f-label" style="margin-bottom:4px;">Total (€)</label>
+            <input id="no-montant-total" class="f-input" type="number" step="0.01" min="0" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="f-sep"></div>
+        <label class="f-label">Statut initial</label>
+        <select id="no-statut" class="f-select mb-4">
+          <option value="en_attente">⏳ En attente</option>
+          <option value="en_preparation">📦 En préparation</option>
+          <option value="expedie">🚚 Expédié</option>
+          <option value="livre">✅ Livré</option>
+        </select>
+
+        <label class="f-label">Notes internes (optionnel)</label>
+        <textarea id="no-notes" class="f-input mb-5" rows="2" style="resize:vertical;" placeholder="Ex : paiement par virement, commande du…"></textarea>
+
+        <p id="no-result" class="text-sm mb-3" style="min-height:1.2em;"></p>
+        <button id="no-submit-btn" type="submit" class="btn-primary w-full justify-center">
+          <span class="ms" style="font-size:16px;">add_shopping_cart</span> Créer la commande
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
