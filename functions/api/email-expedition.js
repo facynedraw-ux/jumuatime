@@ -20,7 +20,7 @@ function emailExpedition({ name, produit, tracking, email }) {
     : `<p style="margin:16px 0;font-size:13px;color:#8B7A5A;">Le numéro de suivi sera disponible auprès du transporteur.</p>`;
 
   const content = `
-    <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;color:#1A1208;">C'est parti ! 🚚</h1>
+    <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;color:#1A1208;">Ta commande est en route !</h1>
     <p style="margin:0 0 20px;color:#8B7A5A;font-size:14px;">Assalamu alaikum ${name ? name.split(' ')[0] : ''}, ta commande vient d'être expédiée !</p>
 
     <div style="padding:16px;background:#FAF6F0;border-radius:12px;border:1px solid #E2D4BC;margin-bottom:20px;">
@@ -40,7 +40,7 @@ function emailExpedition({ name, produit, tracking, email }) {
 <tr><td align="center">
 <table width="100%" style="max-width:560px;background:white;border-radius:20px;overflow:hidden;border:1px solid #E2D4BC;">
   <tr><td style="background:#5B9EAD;padding:24px 32px;text-align:center;">
-    <span style="font-size:22px;font-weight:700;color:white;">🌙 Jumua Time</span>
+    <img src="https://jumuatime.com/Images/logo_version_white.png" alt="Jumua Time" width="160" style="height:auto;display:block;margin:0 auto;" />
   </td></tr>
   <tr><td style="padding:32px;">${content}</td></tr>
   <tr><td style="background:#FAF6F0;padding:20px 32px;text-align:center;border-top:1px solid #E2D4BC;">
@@ -71,7 +71,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         from: 'Jumua Time <contact@jumuatime.com>',
         to: [email],
-        subject: '🚚 Ta commande Jumua Time est en route !',
+        subject: 'Ta commande Jumua Time est en route !',
         html: emailExpedition({ name, produit, tracking, email }),
       }),
     });
