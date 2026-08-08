@@ -743,7 +743,6 @@ function renderList() {
   document.getElementById('resource-list').classList.remove('hidden');
 
   // Init drag & drop
-  const rows = document.getElementById('resource-rows');
   if (window._sortable) window._sortable.destroy();
   window._sortable = Sortable.create(rows, {
     handle: '.drag-handle',
