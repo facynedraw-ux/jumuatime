@@ -125,8 +125,8 @@ p { text-wrap: pretty; }
 }
 .feature-card.wide { grid-column: span 2; flex-direction: row; align-items: stretch; gap: 0; padding: 0; }
 .feature-card.wide .feature-text { padding: 1.75rem; flex: 1; display: flex; flex-direction: column; }
-.feature-card.wide .feature-visual { width: 48%; flex-shrink: 0; overflow: hidden; border-radius: 0 24px 24px 0; position: relative; min-height: 220px; }
-.feature-card.wide .feature-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+.feature-card.wide .feature-visual { width: 48%; flex-shrink: 0; overflow: hidden; border-radius: 0 24px 24px 0; position: relative; min-height: 240px; }
+.feature-card.wide .feature-visual img { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
 .feature-icon-circle {
   width: 46px; height: 46px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center; margin-bottom: .9rem; flex-shrink: 0;
@@ -309,7 +309,7 @@ p { text-wrap: pretty; }
 <!-- FOOTER -->
 <footer class="py-12 px-4" style="background:#2D5A66;">
   <div class="max-w-5xl mx-auto">
-    <div class="grid md:grid-cols-3 gap-8 mb-8" style="display:grid;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-bottom:2rem;">
       <div>
         <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-10 w-auto object-contain mb-3" style="filter:brightness(0) invert(1);height:2.5rem;">
         <p style="font-size:12px;color:rgba(255,255,255,0.82);margin-bottom:4px;line-height:1.6;">L'univers illustré de la famille musulmane.</p>
