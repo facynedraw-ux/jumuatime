@@ -36,8 +36,7 @@ p { text-wrap: pretty; }
 /* Hero */
 .hero {
   background: linear-gradient(160deg, #1C3540 0%, #2D5A66 55%, #3D7A8A 100%);
-  padding: 5rem 1rem 4rem;
-  text-align: center;
+  padding: 0;
   position: relative;
   overflow: hidden;
 }
@@ -48,6 +47,11 @@ p { text-wrap: pretty; }
   background: radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.04), transparent 70%);
   pointer-events: none;
 }
+.hero-inner {
+  max-width: 64rem; margin: 0 auto; padding: 5rem 1.5rem 4rem;
+  display: grid; grid-template-columns: 1fr 260px; gap: 3.5rem; align-items: center;
+  position: relative; z-index: 1;
+}
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
@@ -55,12 +59,20 @@ p { text-wrap: pretty; }
 }
 .hero h1 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 900; color: white;
   line-height: 1.15; margin-bottom: 1rem;
 }
 .hero h1 em { font-style: italic; color: rgba(239,200,101,0.9); }
-.hero p { color: rgba(255,255,255,0.75); font-size: 1rem; max-width: 540px; margin: 0 auto 2.5rem; line-height: 1.75; font-weight: 300; }
+.hero-text p { color: rgba(255,255,255,0.75); font-size: 1rem; max-width: 480px; margin-bottom: 2rem; line-height: 1.75; font-weight: 300; }
+/* Phone mockup */
+.phone-wrap { display: flex; justify-content: center; align-items: flex-start; }
+.phone-frame {
+  width: 240px; border-radius: 36px; overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.35), 0 0 0 2px rgba(0,0,0,0.1), 0 0 0 4px rgba(255,255,255,0.06);
+  position: relative;
+}
+.phone-frame img { width: 100%; display: block; }
 
 /* Form */
 .signup-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 2rem; max-width: 460px; margin: 0 auto; }
@@ -84,14 +96,23 @@ p { text-wrap: pretty; }
 .btn-gold:disabled { opacity: .5; cursor: default; }
 #tilawa-msg { font-size: 13px; margin-top: .75rem; display: none; text-align: center; }
 
-/* Features */
-.features { max-width: 900px; margin: 0 auto; padding: 4rem 1rem; }
-.features h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; text-align: center; margin-bottom: 2.5rem; }
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
-.feature-card { background: white; border: 1px solid #E2D4BC; border-radius: 16px; padding: 1.5rem; }
-.feature-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
-.feature-card h3 { font-size: 15px; font-weight: 700; color: #1A1208; margin-bottom: .5rem; }
-.feature-card p { font-size: 13px; color: #8B7A5A; line-height: 1.65; }
+/* Features — vrai style app Tilawa Tour */
+.features-section { background: #f7f7fd; }
+.features { max-width: 900px; margin: 0 auto; padding: 5rem 1.5rem; }
+.features h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 700; text-align: center; color: #1a1a2e; margin-bottom: .6rem; }
+.features-sub { text-align: center; font-size: 14px; color: #46455a; margin-bottom: 3rem; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.feature-card {
+  background: white; border-radius: 24px; padding: 2rem 1.75rem 2.25rem;
+  box-shadow: 0 1px 4px rgba(26,26,46,0.06), 0 6px 20px rgba(26,26,46,0.05);
+  border: 1px solid #e9e8f5;
+}
+.feature-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: #5c5b9e; margin-bottom: .55rem; display: block;
+}
+.feature-card h3 { font-size: 15.5px; font-weight: 700; color: #1a1a2e; margin-bottom: .55rem; line-height: 1.3; }
+.feature-card p { font-size: 13.5px; color: #46455a; line-height: 1.7; }
 
 /* Quote */
 .quote-section {
@@ -107,6 +128,11 @@ p { text-wrap: pretty; }
   line-height: 1.6;
 }
 .quote-section cite { font-size: 13px; color: rgba(255,255,255,0.55); font-style: normal; font-weight: 600; }
+
+@media (max-width: 700px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .phone-wrap { display: none; }
+}
 
 /* CTA bas de page */
 .bottom-cta { background: #FAF6F0; padding: 4rem 1rem; text-align: center; }
@@ -131,74 +157,82 @@ p { text-wrap: pretty; }
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-eyebrow">
-    <span class="ms" style="font-size:16px;">auto_stories</span>
-    APPLICATION GRATUITE
-  </div>
-  <h1>Tilawa Tour —<br><em>Cheminez avec le Coran</em></h1>
-  <p>Une application de lecture et de révision du Coran pour toute la famille, mois après mois. Offerte par Jumua Time.</p>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <span class="ms" style="font-size:16px;">auto_stories</span>
+        APPLICATION GRATUITE
+      </div>
+      <h1>Tilawa Tour —<br><em>Cheminez avec le Coran</em></h1>
+      <p>Une application de lecture et de révision du Coran pour toute la famille, mois après mois. Offerte par Jumua Time.</p>
 
-  <div class="signup-box">
-    <p style="font-size:13px;color:rgba(255,255,255,0.8);font-weight:500;margin-bottom:1.25rem;text-align:left;">Recevez votre lien d'accès gratuit :</p>
-    <form id="tilawa-form" onsubmit="submitTilawa(event)">
-      <label for="tilawa-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Votre adresse email</label>
-      <input id="tilawa-email" type="email" required placeholder="votre@email.com" class="email-input">
-      <button type="submit" id="tilawa-btn" class="btn-gold">
-        Recevoir mon accès →
-      </button>
-    </form>
-    <p id="tilawa-msg"></p>
-    <p class="small">En soumettant votre email, vous acceptez de recevoir l'accès à Tilawa Tour et d'être contactée à ce sujet. Pour être retirée de la liste : <a href="mailto:contact@jumuatime.com" style="color:rgba(255,255,255,0.6);text-decoration:underline;">contact@jumuatime.com</a></p>
+      <div class="signup-box">
+        <p style="font-size:13px;color:rgba(255,255,255,0.8);font-weight:500;margin-bottom:1.25rem;text-align:left;">Recevez votre lien d'accès gratuit :</p>
+        <form id="tilawa-form" onsubmit="submitTilawa(event)">
+          <label for="tilawa-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Votre adresse email</label>
+          <input id="tilawa-email" type="email" required placeholder="votre@email.com" class="email-input">
+          <button type="submit" id="tilawa-btn" class="btn-gold">
+            Recevoir mon accès →
+          </button>
+        </form>
+        <p id="tilawa-msg"></p>
+        <p class="small">En soumettant votre email, vous acceptez de recevoir l'accès à Tilawa Tour et d'être contactée à ce sujet. Pour être retirée de la liste : <a href="mailto:contact@jumuatime.com" style="color:rgba(255,255,255,0.6);text-decoration:underline;">contact@jumuatime.com</a></p>
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone-frame">
+        <img src="Images/dashboard_bloom.jpg" alt="Tilawa Tour — tableau de bord" loading="eager">
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- FEATURES -->
-<section class="features">
+<section class="features-section">
+<div class="features">
   <h2>Qu'est-ce que Tilawa Tour ?</h2>
+  <p class="features-sub">Six fonctionnalités pensées pour durer dans la lecture.</p>
   <div class="features-grid">
+
     <div class="feature-card">
-      <div class="feature-icon" style="background:#EBF5F7;">
-        <span class="ms" style="font-size:20px;color:#5B9EAD;">menu_book</span>
-      </div>
-      <h3>Un plan de lecture structuré</h3>
-      <p>Avancez dans la lecture du Coran à votre rythme, avec un découpage clair mois par mois. Idéal pour les débutants comme pour les confirmés.</p>
+      <span class="feature-eyebrow">LECTURE</span>
+      <h3>Un lecteur pensé pour la lecture</h3>
+      <p>Texte arabe intégral, traduction au choix, récitation audio verset par verset, sommaire des 114 sourates accessible en un geste.</p>
     </div>
+
     <div class="feature-card">
-      <div class="feature-icon" style="background:#F5EDE0;">
-        <span class="ms" style="font-size:20px;color:#8B6230;">family_restroom</span>
-      </div>
-      <h3>Pour toute la famille</h3>
-      <p>Conçue pour être utilisée ensemble, en famille ou individuellement. Chaque membre peut suivre sa progression à son propre rythme.</p>
+      <span class="feature-eyebrow">SUIVI</span>
+      <h3>Un suivi qui s'adapte à vous</h3>
+      <p>Calendrier mensuel, programme recalculé automatiquement si vous prenez du retard — sans culpabiliser, juste pour avancer.</p>
     </div>
+
     <div class="feature-card">
-      <div class="feature-icon" style="background:#EDFAF1;">
-        <span class="ms" style="font-size:20px;color:#1E7E3C;">check_circle</span>
-      </div>
-      <h3>Suivi de progression</h3>
-      <p>Cochez les sourates lues, suivez votre avancement et restez motivée grâce à une interface simple et apaisante.</p>
+      <span class="feature-eyebrow">RAMADAN</span>
+      <h3>Un objectif Ramadan</h3>
+      <p>Un mode dédié pour structurer votre lecture pendant le mois béni, selon le rythme que vous choisissez.</p>
     </div>
+
     <div class="feature-card">
-      <div class="feature-icon" style="background:#F7EDE8;">
-        <span class="ms" style="font-size:20px;color:#C96B8A;">brush</span>
-      </div>
-      <h3>Illustrée par Facyne</h3>
-      <p>Un univers visuel doux et inspirant, dans la continuité des créations Jumua Time. L'application est belle et agréable à utiliser.</p>
+      <span class="feature-eyebrow">THÈME</span>
+      <h3>Deux univers, un pour chacun</h3>
+      <p>Bloom, tout en douceur terracotta, ou Serenity, en vert émeraude — choisissez le thème qui vous ressemble.</p>
     </div>
+
     <div class="feature-card">
-      <div class="feature-icon" style="background:#F0EBF5;">
-        <span class="ms" style="font-size:20px;color:#9B7FA6;">phonelink</span>
-      </div>
-      <h3>Accessible sur tous les appareils</h3>
-      <p>Application web accessible depuis n'importe quel smartphone, tablette ou ordinateur. Pas de téléchargement nécessaire.</p>
+      <span class="feature-eyebrow">TAJWID</span>
+      <h3>Un lexique tajwid intégré</h3>
+      <p>Pour comprendre et progresser dans la lecture, avec un code couleur clair sur le texte arabe.</p>
     </div>
+
     <div class="feature-card">
-      <div class="feature-icon" style="background:#FEF5E7;">
-        <span class="ms" style="font-size:20px;color:#B07D00;">card_giftcard</span>
-      </div>
-      <h3>100% gratuit</h3>
-      <p>Tilawa Tour est notre cadeau à la communauté. Aucun abonnement, aucune publicité. Juste l'essentiel.</p>
+      <span class="feature-eyebrow">KHATMA</span>
+      <h3>Une célébration à chaque khatma</h3>
+      <p>Parce que terminer le Coran, une fois par mois ou une fois par an, mérite d'être marqué.</p>
     </div>
+
   </div>
+</div>
 </section>
 
 <!-- CITATION -->
@@ -225,8 +259,8 @@ p { text-wrap: pretty; }
         <img src="Images/logo_jumuatime.svg" alt="Jumua Time" style="height:2.5rem;width:auto;object-fit:contain;margin-bottom:.75rem;filter:brightness(0) invert(1);">
         <p style="font-size:12px;color:rgba(255,255,255,0.82);margin-bottom:4px;line-height:1.6;">L'univers illustré de la famille musulmane.</p>
         <p style="font-size:12px;color:#EFC865;font-weight:500;margin-bottom:1rem;">Des créations qui ont du sens.</p>
-        <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#EFC865;text-decoration:none;margin-bottom:1.25rem;">
-          <span class="ms" style="font-size:18px;">photo_camera</span>@jumuatime
+        <a href="https://www.instagram.com/jumua_time" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#EFC865;text-decoration:none;margin-bottom:1.25rem;">
+          <span class="ms" style="font-size:18px;">photo_camera</span>@jumua_time
         </a>
         <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);margin-bottom:.5rem;">Rester informée</p>
         <form onsubmit="submitNewsletter(event)" style="display:flex;gap:6px;max-width:240px;">
