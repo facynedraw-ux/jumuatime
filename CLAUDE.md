@@ -105,9 +105,6 @@ RLS policies actives :
 - `admin_delete` — DELETE — admin via `profiles.role = 'admin'` + `auth.uid()`
 - `client_read_own` — SELECT — clientes : `auth.email() = email_client`
 
-### Table `purchases` — achats numériques
-- `id`, `created_at`, `user_id`, `resource_id`, `download_token`, `downloaded_at`
-
 ### Table `profiles` — utilisateurs
 - `id` (uuid, FK auth.users)
 - `display_name` (text)

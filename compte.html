@@ -1,339 +1,609 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5HLSGH6R');</script>
-<!-- End Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5HLSGH6R');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Mon compte — Jumua Time</title>
+<title>Mon espace — Jumua Time</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="favicon.png">
-<meta name="theme-color" content="#5B9EAD">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#2D5A66">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Jumua Time">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"></noscript>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap"></noscript>
 <style>
-:root {
-  /* Palette Jumua & Me */
-  --c-teal:         #5B9EAD;
-  --c-teal-light:   #EBF5F7;
-  --c-teal-dark:    #3D7A8A;
-  --c-gold:         #C49A5A;
-  --c-gold-light:   #F5EDE0;
-  --c-gold-dark:    #8B6230;
-  --c-pink:         #F2C4B2;
-  --c-pink-light:   #F7EDE8;
-  --c-dark:         #1A1208;
-  --c-bg:           #FAF6F0;
-  --c-white:        #FFFFFF;
-  --c-border:       #E2D4BC;
-  --c-text:         #1A1208;
-  --c-muted:        #8B7A5A;
-  --c-mauve:        #9B7FA6;
-  --c-rose:         #C96B8A;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { font-family: 'DM Sans', sans-serif; background: #FAF6F0; color: #1A1208; min-height: 100vh; }
+img, video { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
 
-  /* Fonts */
-  --f-display: 'Playfair Display', serif;
-  --f-body:    'DM Sans', sans-serif;
-
-  /* Échelle typographique (ratio 1.25 — major third) */
-  --t-xs:   0.75rem;
-  --t-sm:   0.875rem;
-  --t-base: 1rem;
-  --t-lg:   1.25rem;
-  --t-xl:   1.5625rem;
-  --t-2xl:  1.953rem;
-  --t-3xl:  2.441rem;
+.ms {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal; font-style: normal;
+  font-size: 20px; line-height: 1;
+  letter-spacing: normal; text-transform: none;
+  display: inline-block; white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Typographie globale */
-body {
-  font-optical-sizing: auto;
+/* ── Bandeau profil ── */
+.profile-banner {
+  background: linear-gradient(135deg, #2D5A66 0%, #4A8A9C 100%);
+  padding: 28px 20px 24px;
+}
+.profile-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: white; flex-shrink: 0;
+}
+.profile-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: white; line-height: 1.2;
+  margin-bottom: 3px;
+}
+.profile-email {
+  font-size: 13px;
+  color: rgba(255,255,255,0.72);
+}
+.profile-skel {
+  height: 18px; width: 130px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 6px; margin-bottom: 6px;
+}
+.profile-skel-sm {
+  height: 13px; width: 190px;
+  background: rgba(255,255,255,0.13);
+  border-radius: 4px;
 }
 
-h1, h2, h3 {
-  text-wrap: balance;
+/* ── Onglets ── */
+.tab-bar {
+  background: white;
+  border-bottom: 1px solid #E2D4BC;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.tab-bar-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar-inner::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 11px 8px 9px;
+  border: none;
+  background: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #8B7A5A;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  min-width: 80px;
+}
+.tab-btn .ms { font-size: 20px; }
+.tab-btn.active { color: #5B9EAD; border-bottom-color: #5B9EAD; font-weight: 600; }
+.tab-btn:hover:not(.active) { color: #3D7A8A; }
+
+/* ── Contenu onglets ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.panel-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px calc(90px + env(safe-area-inset-bottom));
 }
 
-p {
-  text-wrap: pretty;
+/* ── Cards commandes ── */
+.order-card {
+  background: white;
+  border: 1px solid #E2D4BC;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  transition: box-shadow 0.15s;
+  margin-bottom: 10px;
+}
+.order-card:hover { box-shadow: 0 3px 14px rgba(91,158,173,0.11); }
+.order-thumb {
+  width: 52px; height: 64px;
+  border-radius: 8px;
+  background: #F5EDE0;
+  flex-shrink: 0;
+  overflow: hidden;
+  object-fit: cover;
+}
+.order-thumb-placeholder {
+  width: 52px; height: 64px;
+  border-radius: 8px;
+  background: #F5EDE0;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.order-meta { flex: 1; min-width: 0; }
+.order-title {
+  font-weight: 600; font-size: 13px;
+  color: #1A1208; line-height: 1.3;
+  margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.order-date { font-size: 12px; color: #8B7A5A; margin-bottom: 5px; }
+.order-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 20px;
+  font-size: 10px; font-weight: 700;
+  white-space: nowrap;
+}
+.badge-type-num  { background: #EBF5F7; color: #3D7A8A; }
+.badge-type-phys { background: #F5EDE0; color: #8B6230; }
+.badge-attente   { background: #FEF5E7; color: #B07D00; }
+.badge-prep      { background: #EBF5F7; color: #3D7A8A; }
+.badge-expedie   { background: #EDFAF1; color: #1E7E3C; }
+.badge-livre     { background: #F0F0F0; color: #555; }
+.badge-annule    { background: #FDE8EE; color: #C96B8A; }
+
+.order-action {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1px solid #E2D4BC;
+  background: none;
+  display: flex; align-items: center; justify-content: center;
+  color: #8B7A5A;
+  transition: color 0.15s, border-color 0.15s;
+}
+.order-action:hover { color: #5B9EAD; border-color: #5B9EAD; }
+
+.tracking-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; color: #5B9EAD;
+  margin-top: 4px;
+}
+.tracking-link .ms { font-size: 13px; }
+
+/* ── Adresses ── */
+.address-card {
+  background: white;
+  border: 1px solid #E2D4BC;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.address-info { flex: 1; min-width: 0; }
+.address-name { font-weight: 600; font-size: 13px; color: #1A1208; margin-bottom: 3px; }
+.address-detail { font-size: 12px; color: #8B7A5A; line-height: 1.5; }
+.address-del {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid #E2D4BC;
+  background: none;
+  display: flex; align-items: center; justify-content: center;
+  color: #8B7A5A;
+  font-size: 14px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.address-del:hover { color: #C03030; border-color: #FDDCDC; }
+
+.btn-add {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%;
+  padding: 13px 16px;
+  background: white;
+  border: 1.5px dashed #C9B99A;
+  border-radius: 14px;
+  color: #8B7A5A;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  transition: border-color 0.15s, color 0.15s;
+  margin-top: 6px;
+}
+.btn-add:hover { border-color: #5B9EAD; color: #5B9EAD; }
+
+/* ── Formulaire adresse ── */
+.form-card {
+  background: white;
+  border: 1px solid #E2D4BC;
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 10px;
+}
+.form-card h3 { font-size: 14px; font-weight: 700; color: #1A1208; margin-bottom: 14px; }
+.field-group { margin-bottom: 12px; }
+.field-label { display: block; font-size: 11px; font-weight: 700; color: #8B7A5A; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+.field-input {
+  width: 100%; padding: 10px 13px;
+  border: 1.5px solid #E2D4BC; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; color: #1A1208;
+  background: white; outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus { border-color: #5B9EAD; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-actions { display: flex; gap: 8px; margin-top: 14px; }
+
+/* ── Boutons ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border-radius: 12px;
+  background: #5B9EAD; color: white; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #3D7A8A; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border-radius: 12px;
+  background: none; color: #8B7A5A;
+  border: 1.5px solid #E2D4BC;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-ghost:hover { border-color: #5B9EAD; color: #5B9EAD; }
+.btn-danger-soft {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border-radius: 12px;
+  background: #FEF0F0; color: #C03030; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  transition: background 0.15s;
+}
+.btn-danger-soft:hover { background: #FDDCDC; }
+
+/* ── Mon compte ── */
+.compte-section {
+  background: white;
+  border: 1px solid #E2D4BC;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.compte-row {
+  display: flex; align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #F0E8D8;
+  gap: 12px;
+}
+.compte-row:last-child { border-bottom: none; }
+.compte-row-label { font-size: 12px; color: #8B7A5A; margin-bottom: 2px; }
+.compte-row-value { font-size: 14px; font-weight: 600; color: #1A1208; }
+.compte-row-edit {
+  margin-left: auto; flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 8px; border: 1px solid #E2D4BC;
+  background: none; color: #8B7A5A;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.15s, border-color 0.15s;
+}
+.compte-row-edit:hover { color: #5B9EAD; border-color: #5B9EAD; }
+
+/* Edit nom inline */
+.edit-inline { display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0; }
+.edit-inline input { flex: 1; }
+
+/* Déconnexion row */
+.signout-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  width: 100%; background: none; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+  color: #8B7A5A; cursor: pointer;
+  transition: color 0.15s;
+}
+.signout-row:hover { color: #1A1208; }
+
+/* Suppression compte */
+.danger-card {
+  background: white;
+  border: 1px solid #E2D4BC;
+  border-radius: 14px;
+  padding: 18px;
+}
+.danger-card h3 { font-size: 13px; font-weight: 700; color: #1A1208; margin-bottom: 6px; }
+.danger-card p { font-size: 12px; color: #8B7A5A; line-height: 1.6; margin-bottom: 14px; }
+
+/* ── Skeleton ── */
+.skeleton {
+  position: relative; overflow: hidden;
+  background: #E8DCC8; border-radius: 8px;
+}
+.skeleton::after {
+  content: ""; position: absolute; inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
 }
 
-*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width:640px){.container{max-width:640px}}@media (min-width:768px){.container{max-width:768px}}@media (min-width:1024px){.container{max-width:1024px}}@media (min-width:1280px){.container{max-width:1280px}}@media (min-width:1536px){.container{max-width:1536px}}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0}.bottom-0{bottom:0}.bottom-6{bottom:1.5rem}.left-0{left:0}.left-1\/2{left:50%}.left-2{left:.5rem}.left-3{left:.75rem}.right-0{right:0}.right-1\/4{right:25%}.right-2{right:.5rem}.top-0{top:0}.top-1\/2{top:50%}.top-2{top:.5rem}.top-24{top:6rem}.z-10{z-index:10}.z-30{z-index:30}.z-40{z-index:40}.z-50{z-index:50}.col-span-2{grid-column:span 2/span 2}.m-0{margin:0}.m-3{margin:.75rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-0{margin-bottom:0}.mb-0\.5{margin-bottom:.125rem}.mb-1{margin-bottom:.25rem}.mb-1\.5{margin-bottom:.375rem}.mb-10{margin-bottom:2.5rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-7{margin-bottom:1.75rem}.mb-8{margin-bottom:2rem}.ml-1{margin-left:.25rem}.ml-2{margin-left:.5rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-12{margin-top:3rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.\!grid{display:grid!important}.grid{display:grid}.hidden{display:none}.aspect-square{aspect-ratio:1/1}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-16{height:4rem}.h-20{height:5rem}.h-24{height:6rem}.h-28{height:7rem}.h-3{height:.75rem}.h-4{height:1rem}.h-40{height:10rem}.h-5{height:1.25rem}.h-56{height:14rem}.h-60{height:15rem}.h-64{height:16rem}.h-7{height:1.75rem}.h-72{height:18rem}.h-8{height:2rem}.h-80{height:20rem}.h-9{height:2.25rem}.h-full{height:100%}.h-screen{height:100vh}.min-h-screen{min-height:100vh}.w-1\/2{width:50%}.w-1\/3{width:33.333333%}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-14{width:3.5rem}.w-16{width:4rem}.w-2\/3{width:66.666667%}.w-20{width:5rem}.w-24{width:6rem}.w-28{width:7rem}.w-3\/4{width:75%}.w-32{width:8rem}.w-36{width:9rem}.w-4\/5{width:80%}.w-40{width:10rem}.w-48{width:12rem}.w-5{width:1.25rem}.w-5\/6{width:83.333333%}.w-56{width:14rem}.w-60{width:15rem}.w-7{width:1.75rem}.w-72{width:18rem}.w-8{width:2rem}.w-80{width:20rem}.w-9{width:2.25rem}.w-auto{width:auto}.w-full{width:100%}.min-w-0{min-width:0}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.-translate-y-1\/2{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.list-none{list-style-type:none}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-0\.5{gap:.125rem}.gap-1{gap:.25rem}.gap-10{gap:2.5rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-x-5{-moz-column-gap:1.25rem;column-gap:1.25rem}.gap-y-3{row-gap:.75rem}.space-y-0>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0px*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0px*var(--tw-space-y-reverse))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.text-wrap{text-wrap:wrap}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-0{border-width:0}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-border{--tw-border-opacity:1;border-color:rgb(226 212 188/var(--tw-border-opacity,1))}.bg-bg{--tw-bg-opacity:1;background-color:rgb(250 246 240/var(--tw-bg-opacity,1))}.bg-black\/30{background-color:rgba(0,0,0,.3)}.bg-teal-light{--tw-bg-opacity:1;background-color:rgb(235 245 247/var(--tw-bg-opacity,1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/90{background-color:hsla(0,0%,100%,.9)}.bg-white\/95{background-color:hsla(0,0%,100%,.95)}.object-contain{-o-object-fit:contain;object-fit:contain}.object-cover{-o-object-fit:cover;object-fit:cover}.p-0{padding:0}.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-14{padding-top:3.5rem;padding-bottom:3.5rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-0{padding-bottom:0}.pb-1{padding-bottom:.25rem}.pb-12{padding-bottom:3rem}.pb-2{padding-bottom:.5rem}.pb-20{padding-bottom:5rem}.pb-28{padding-bottom:7rem}.pb-32{padding-bottom:8rem}.pb-4{padding-bottom:1rem}.pb-40{padding-bottom:10rem}.pl-1{padding-left:.25rem}.pt-1{padding-top:.25rem}.pt-10{padding-top:2.5rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.pt-8{padding-top:2rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-body{font-family:DM Sans,sans-serif}.font-display{font-family:Playfair Display,serif}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-wide{letter-spacing:.025em}.tracking-wider{letter-spacing:.05em}.tracking-widest{letter-spacing:.1em}.text-dark{--tw-text-opacity:1;color:rgb(26 18 8/var(--tw-text-opacity,1))}.text-muted{--tw-text-opacity:1;color:rgb(139 122 90/var(--tw-text-opacity,1))}.text-text{--tw-text-opacity:1;color:rgb(26 18 8/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.no-underline{text-decoration-line:none}.opacity-25{opacity:.25}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color)}.invert{--tw-invert:invert(100%)}.filter,.invert{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.last\:border-0:last-child{border-width:0}.hover\:border-teal:hover{--tw-border-opacity:1;border-color:rgb(91 158 173/var(--tw-border-opacity,1))}.hover\:bg-teal-light:hover{--tw-bg-opacity:1;background-color:rgb(235 245 247/var(--tw-bg-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:text-teal:hover{--tw-text-opacity:1;color:rgb(91 158 173/var(--tw-text-opacity,1))}.hover\:underline:hover{text-decoration-line:underline}.hover\:opacity-70:hover{opacity:.7}.hover\:opacity-80:hover{opacity:.8}.group[open] .group-open\:rotate-180{--tw-rotate:180deg}.group:hover .group-hover\:translate-x-1,.group[open] .group-open\:rotate-180{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:translate-x-1{--tw-translate-x:0.25rem}@media (min-width:640px){.sm\:block{display:block}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}}@media (min-width:768px){.md\:col-span-2{grid-column:span 2/span 2}.md\:col-span-3{grid-column:span 3/span 3}.md\:mb-0{margin-bottom:0}.md\:mt-0{margin-top:0}.md\:block{display:block}.md\:flex{display:flex}.md\:inline-flex{display:inline-flex}.md\:grid{display:grid}.md\:hidden{display:none}.md\:w-72{width:18rem}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.md\:flex-row{flex-direction:row}.md\:items-start{align-items:flex-start}.md\:items-center{align-items:center}.md\:justify-start{justify-content:flex-start}.md\:gap-12{gap:3rem}.md\:gap-8{gap:2rem}.md\:p-8{padding:2rem}.md\:py-28{padding-top:7rem;padding-bottom:7rem}.md\:pb-12{padding-bottom:3rem}.md\:pb-16{padding-bottom:4rem}.md\:text-left{text-align:left}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-lg{font-size:1.125rem;line-height:1.75rem}}
-</style>
-<style>
-  *, *::before, *::after { box-sizing: border-box; }
-  body { font-family:'DM Sans',sans-serif; background:#FAF6F0; color:#1A1208; margin:0; }
-  .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
-  .ms { font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased; }
+/* ── État vide ── */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: #8B7A5A;
+}
+.empty-state .ms { font-size: 44px; color: #D8C8AA; display: block; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; line-height: 1.6; }
+.empty-state a { color: #5B9EAD; font-weight: 600; }
 
-  /* Buttons */
-  .btn-teal { background:#5B9EAD;color:white;border:none;border-radius:20px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:background 0.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none; }
-  .btn-teal:hover { background:#3D7A8A; }
-  .btn-ghost { background:transparent;color:#8B7A5A;border:1.5px solid #E2D4BC;border-radius:12px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px; }
-  .btn-ghost:hover { border-color:#5B9EAD;color:#5B9EAD; }
-  .btn-danger { background:#FEF0F0;color:#C03030;border:none;border-radius:12px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background 0.2s; }
-  .btn-danger:hover { background:#FDDCDC; }
-
-  /* Achat card */
-  .achat-card { display:flex;gap:14px;background:white;border:1px solid #E2D4BC;border-radius:16px;padding:14px;transition:box-shadow 0.2s;align-items:center; }
-  .achat-card:hover { box-shadow:0 4px 16px rgba(91,158,173,0.1); }
-  .achat-cover { width:54px;height:70px;border-radius:10px;flex-shrink:0;overflow:hidden;background:#F5EDE0; }
-
-  /* Commande card */
-  .cmd-card { background:white;border:1px solid #E2D4BC;border-radius:16px;padding:16px;transition:box-shadow 0.2s; }
-  .cmd-card:hover { box-shadow:0 4px 16px rgba(91,158,173,0.1); }
-  .cmd-badge { display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600; }
-
-  /* Skeleton */
-  .skeleton { position:relative;overflow:hidden;background:#E2D4BC;border-radius:8px; }
-  .skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
-  @keyframes shimmer { to{transform:translateX(100%)} }
-
-  /* Field */
-  .field-input { width:100%;padding:11px 14px;border:1.5px solid #E2D4BC;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1A1208;background:white;outline:none;transition:border-color 0.2s,box-shadow 0.2s; }
-  .field-input:focus { border-color:#5B9EAD;box-shadow:0 0 0 3px rgba(91,158,173,0.1); }
-
-  /* Footer nav */
-  .footer-link { color:rgba(255,255,255,0.82);font-size:14px;text-decoration:none;transition:color 0.2s; }
-  .footer-link:hover { color:white; }
-
-  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-  .fade-up { animation:fadeUp 0.4s ease both; }
-  .delay-1 { animation-delay:0.08s; }
-  .delay-2 { animation-delay:0.16s; }
-
-  @media (prefers-reduced-motion:reduce) {
-    .fade-up { animation:none !important;opacity:1 !important; }
-    .skeleton::after { animation:none !important; }
-  }
+/* ── Nav mobile ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 1px solid #E2D4BC;
+  display: flex;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  z-index: 50;
+}
+@media (min-width: 768px) { .bottom-nav { display: none; } }
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 2px;
+  padding: 8px 4px;
+  color: #8B7A5A; font-size: 11px;
+  border: none; background: none; font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+}
+.nav-item.active { color: #5B9EAD; font-weight: 600; }
 </style>
 </head>
-<body class="bg-bg font-body text-text">
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HLSGH6R"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HLSGH6R" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-<!-- ═══════════════════════════════════
-     HEADER
-════════════════════════════════════ -->
-<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-border">
-  <div class="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-2 no-underline">
-      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-9 w-auto object-contain">
-    </a>
-    <button onclick="logout()" class="btn-danger">
-      <span class="ms" style="font-size:16px;">logout</span>
-      Déconnexion
+<!-- ── BANDEAU PROFIL ── -->
+<div class="profile-banner">
+  <div class="profile-inner">
+    <div class="avatar" id="avatar-circle">…</div>
+    <div>
+      <div id="display-name" class="profile-skel"></div>
+      <div id="user-email" class="profile-skel-sm"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ONGLETS ── -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" data-tab="commandes" onclick="showTab('commandes')">
+      <span class="ms">receipt_long</span>
+      Commandes
+    </button>
+    <button class="tab-btn" data-tab="adresses" onclick="showTab('adresses')">
+      <span class="ms">location_on</span>
+      Adresses
+    </button>
+    <button class="tab-btn" data-tab="compte" onclick="showTab('compte')">
+      <span class="ms">manage_accounts</span>
+      Mon compte
     </button>
   </div>
-</header>
+</div>
 
+<!-- ══════════════════════════════════════
+     ONGLET : MES COMMANDES
+══════════════════════════════════════ -->
+<div id="panel-commandes" class="tab-panel active">
+  <div class="panel-content">
 
-<main class="max-w-2xl mx-auto px-4 pt-6 pb-28">
-
-  <!-- ── PROFIL ── -->
-  <div class="bg-white rounded-2xl border border-border p-5 mb-5 fade-up">
-    <div class="flex items-center gap-4">
-      <div id="avatar-circle"
-           class="w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center text-xl font-bold font-display"
-           style="background:linear-gradient(135deg,#EBF5F7,#F5EDE0);color:#5B9EAD;">…</div>
-      <div class="flex-1 min-w-0">
-        <div id="display-name" class="skeleton h-5 rounded w-32 mb-2"></div>
-        <div id="user-email"   class="skeleton h-4 rounded w-48"></div>
-      </div>
-      <button onclick="toggleEditProfile()" class="w-9 h-9 rounded-xl border border-border flex items-center justify-center text-muted hover:text-teal hover:border-teal transition-colors" aria-label="Modifier le profil">
-        <span class="ms" style="font-size:18px;">edit</span>
-      </button>
+    <div id="commandes-skeleton">
+      <div class="skeleton" style="height:84px;border-radius:14px;margin-bottom:10px;"></div>
+      <div class="skeleton" style="height:84px;border-radius:14px;margin-bottom:10px;"></div>
+      <div class="skeleton" style="height:84px;border-radius:14px;"></div>
     </div>
 
-    <!-- Édition profil (caché par défaut) -->
-    <div id="edit-form" class="hidden mt-4 pt-4 border-t border-border">
-      <label for="input-name" class="block text-xs font-semibold text-muted mb-1 uppercase tracking-wide">Nom affiché</label>
-      <input type="text" id="input-name" class="field-input mb-3" placeholder="Votre prénom ou pseudo">
-      <div class="flex gap-2">
-        <button onclick="saveProfile()" class="btn-teal text-sm" style="padding:8px 18px;border-radius:12px;">
-          <span class="ms" style="font-size:15px;">check</span> Sauvegarder
-        </button>
-        <button onclick="toggleEditProfile()" class="btn-ghost text-sm">Annuler</button>
-      </div>
-    </div>
+    <div id="commandes-list" style="display:none;"></div>
+
   </div>
+</div>
 
-  <!-- ── MES ACHATS ── -->
-  <div class="fade-up delay-1">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="font-display font-bold text-lg" style="color:#1A1208;">
-        Mes achats
-        <span id="achats-count" class="font-body font-normal text-sm ml-1" style="color:#8B7A5A;"></span>
-      </h2>
-      <a href="ressources.html" class="text-sm font-medium no-underline" style="color:#5B9EAD;">Voir la boutique →</a>
+<!-- ══════════════════════════════════════
+     ONGLET : MES ADRESSES
+══════════════════════════════════════ -->
+<div id="panel-adresses" class="tab-panel">
+  <div class="panel-content">
+
+    <div id="adresses-list">
+      <div class="skeleton" style="height:72px;border-radius:14px;margin-bottom:10px;"></div>
     </div>
 
-    <!-- Squelettes -->
-    <div id="achats-skeleton" class="space-y-3">
-      <div class="skeleton rounded-2xl" style="height:86px;"></div>
-      <div class="skeleton rounded-2xl" style="height:86px;"></div>
-    </div>
-
-    <!-- Liste -->
-    <div id="achats-list" class="space-y-3 hidden"></div>
-  </div>
-
-  <!-- ── MES COMMANDES (physiques) ── -->
-  <div class="fade-up delay-2 mt-8">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="font-display font-bold text-lg" style="color:#1A1208;">
-        Mes commandes
-        <span id="commandes-count" class="font-body font-normal text-sm ml-1" style="color:#8B7A5A;"></span>
-      </h2>
-    </div>
-
-    <!-- Squelettes -->
-    <div id="commandes-skeleton" class="space-y-3">
-      <div class="skeleton rounded-2xl" style="height:90px;"></div>
-      <div class="skeleton rounded-2xl" style="height:90px;"></div>
-    </div>
-
-    <!-- Liste -->
-    <div id="commandes-list" class="space-y-3 hidden"></div>
-  </div>
-
-  <!-- ── MES ADRESSES ── -->
-  <div class="fade-up mt-8">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="font-display font-bold text-lg" style="color:#1A1208;">Mes adresses</h2>
-      <button onclick="showAddAdresse()" class="btn-ghost" style="font-size:13px;padding:7px 14px;border-radius:12px;">
-        <span class="ms" style="font-size:15px;">add</span> Ajouter
-      </button>
-    </div>
-
-    <div id="adresses-list" class="space-y-3">
-      <div class="skeleton rounded-2xl" style="height:76px;"></div>
-    </div>
+    <button class="btn-add" onclick="showAddAdresse()">
+      <span class="ms" style="font-size:18px;">add_circle</span>
+      Ajouter une adresse
+    </button>
 
     <!-- Formulaire ajout -->
-    <div id="adresse-form" class="hidden mt-4 bg-white border border-border rounded-2xl p-5">
-      <p class="font-semibold text-sm mb-4" style="color:#1A1208;">Nouvelle adresse</p>
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Nom complet *</label>
-          <input type="text" id="adr-nom" class="field-input" placeholder="Prénom Nom">
+    <div id="adresse-form" class="form-card" style="display:none;">
+      <h3>Nouvelle adresse</h3>
+      <div class="field-group">
+        <label class="field-label" for="adr-nom">Nom complet *</label>
+        <input type="text" id="adr-nom" class="field-input" placeholder="Prénom Nom">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="adr-rue">Adresse *</label>
+        <input type="text" id="adr-rue" class="field-input" placeholder="12 rue des Roses">
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="adr-complement">Complément</label>
+        <input type="text" id="adr-complement" class="field-input" placeholder="Apt, bât., étage…">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="adr-cp">Code postal *</label>
+          <input type="text" id="adr-cp" class="field-input" placeholder="75001">
         </div>
-        <div>
-          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Adresse *</label>
-          <input type="text" id="adr-rue" class="field-input" placeholder="12 rue des Roses">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Complément</label>
-          <input type="text" id="adr-complement" class="field-input" placeholder="Apt, bât., étage…">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Code postal *</label>
-            <input type="text" id="adr-cp" class="field-input" placeholder="75001">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Ville *</label>
-            <input type="text" id="adr-ville" class="field-input" placeholder="Paris">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold mb-1" style="color:#8B7A5A;">Pays</label>
-          <select id="adr-pays" class="field-input" style="cursor:pointer;">
-            <option value="FR">France</option>
-            <option value="BE">Belgique</option>
-            <option value="CH">Suisse</option>
-            <option value="CA">Canada</option>
-            <option value="MA">Maroc</option>
-            <option value="DZ">Algérie</option>
-            <option value="TN">Tunisie</option>
-            <option value="SN">Sénégal</option>
-            <option value="CI">Côte d'Ivoire</option>
-          </select>
+        <div class="field-group">
+          <label class="field-label" for="adr-ville">Ville *</label>
+          <input type="text" id="adr-ville" class="field-input" placeholder="Paris">
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
-        <button onclick="saveAdresse()" class="btn-teal" style="font-size:13px;padding:8px 18px;border-radius:12px;">
-          <span class="ms" style="font-size:15px;">check</span> Enregistrer
+      <div class="field-group">
+        <label class="field-label" for="adr-pays">Pays</label>
+        <select id="adr-pays" class="field-input" style="cursor:pointer;">
+          <option value="FR">France</option>
+          <option value="BE">Belgique</option>
+          <option value="CH">Suisse</option>
+          <option value="CA">Canada</option>
+          <option value="MA">Maroc</option>
+          <option value="DZ">Algérie</option>
+          <option value="TN">Tunisie</option>
+          <option value="SN">Sénégal</option>
+          <option value="CI">Côte d'Ivoire</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button onclick="saveAdresse()" class="btn-primary">
+          <span class="ms" style="font-size:16px;">check</span> Enregistrer
         </button>
-        <button onclick="hideAddAdresse()" class="btn-ghost" style="font-size:13px;">Annuler</button>
+        <button onclick="hideAddAdresse()" class="btn-ghost">Annuler</button>
       </div>
     </div>
-  </div>
 
-  <!-- ── MON COMPTE ── -->
-  <div class="fade-up mt-8 mb-4">
-    <h2 class="font-display font-bold text-lg mb-4" style="color:#1A1208;">Mon compte</h2>
-    <div class="bg-white border border-border rounded-2xl p-5">
-      <p class="font-semibold text-sm mb-1" style="color:#1A1208;">Supprimer mon compte</p>
-      <p class="text-xs mb-4" style="color:#8B7A5A; line-height:1.6;">
-        Toutes vos données personnelles seront effacées définitivement. Vos commandes passées sont conservées de façon anonymisée pour nos obligations légales.
-      </p>
-      <button onclick="deleteAccount()" class="btn-danger">
-        <span class="ms" style="font-size:16px;">delete_forever</span> Supprimer définitivement mon compte
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ONGLET : MON COMPTE
+══════════════════════════════════════ -->
+<div id="panel-compte" class="tab-panel">
+  <div class="panel-content">
+
+    <!-- Informations -->
+    <div class="compte-section">
+      <div class="compte-row">
+        <span class="ms" style="font-size:20px;color:#5B9EAD;flex-shrink:0;">mail</span>
+        <div>
+          <div class="compte-row-label">Adresse e-mail</div>
+          <div class="compte-row-value" id="compte-email">—</div>
+        </div>
+      </div>
+      <div class="compte-row" id="nom-row">
+        <span class="ms" style="font-size:20px;color:#5B9EAD;flex-shrink:0;">person</span>
+        <div style="flex:1;min-width:0;">
+          <div class="compte-row-label">Nom affiché</div>
+          <div class="compte-row-value" id="compte-nom">—</div>
+        </div>
+        <button class="compte-row-edit" onclick="toggleEditNom()" title="Modifier">
+          <span class="ms" style="font-size:16px;">edit</span>
+        </button>
+      </div>
+      <!-- Édition nom inline -->
+      <div id="edit-nom-row" class="compte-row" style="display:none;">
+        <span class="ms" style="font-size:20px;color:#5B9EAD;flex-shrink:0;">person</span>
+        <div class="edit-inline">
+          <input type="text" id="input-nom" class="field-input" style="font-size:13px;padding:8px 11px;" placeholder="Votre prénom ou pseudo">
+          <button class="btn-primary" style="padding:8px 14px;flex-shrink:0;" onclick="saveNom()">
+            <span class="ms" style="font-size:15px;">check</span>
+          </button>
+          <button class="btn-ghost" style="padding:8px 12px;flex-shrink:0;" onclick="toggleEditNom()">
+            <span class="ms" style="font-size:15px;">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Déconnexion -->
+    <div class="compte-section">
+      <button class="signout-row" onclick="logout()">
+        <span class="ms" style="font-size:20px;">logout</span>
+        Se déconnecter
       </button>
     </div>
+
+    <!-- Suppression compte -->
+    <div class="danger-card" style="margin-top:24px;">
+      <h3>Supprimer mon compte</h3>
+      <p>Toutes vos données personnelles seront effacées définitivement. Vos commandes passées sont conservées de façon anonymisée pour nos obligations légales.</p>
+      <button onclick="deleteAccount()" class="btn-danger-soft">
+        <span class="ms" style="font-size:16px;">delete_forever</span>
+        Supprimer définitivement
+      </button>
+    </div>
+
   </div>
+</div>
 
-</main>
-
-
-<!-- ═══════════════════════════════════
-     BOTTOM NAV MOBILE (3 items)
-════════════════════════════════════ -->
-<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-border md:hidden z-50"
-     style="padding-bottom:max(0.75rem,env(safe-area-inset-bottom));"
-     aria-label="Navigation mobile">
-  <div class="grid grid-cols-3">
-    <a href="index.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
-      <span class="ms" style="font-size:20px;">home</span>
-      <span style="font-size:11px;">Accueil</span>
-    </a>
-    <a href="ressources.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#8B7A5A;">
-      <span class="ms" style="font-size:20px;">store</span>
-      <span style="font-size:11px;">Boutique</span>
-    </a>
-    <a href="compte.html" class="flex flex-col items-center py-2.5 gap-0.5 no-underline" style="color:#5B9EAD;">
-      <span class="ms" style="font-size:20px;font-variation-settings:'FILL' 1;">person</span>
-      <span style="font-size:11px;font-weight:600;">Compte</span>
-    </a>
-  </div>
+<!-- ── NAV MOBILE ── -->
+<nav class="bottom-nav" aria-label="Navigation">
+  <a href="index.html" class="nav-item">
+    <span class="ms" style="font-size:22px;">home</span>
+    Accueil
+  </a>
+  <a href="ressources.html" class="nav-item">
+    <span class="ms" style="font-size:22px;">store</span>
+    Boutique
+  </a>
+  <a href="compte.html" class="nav-item active">
+    <span class="ms" style="font-size:22px;font-variation-settings:'FILL' 1;">person</span>
+    Mon espace
+  </a>
 </nav>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js?v=2"></script>
-
 <script>
 let session = null;
-let editOpen = false;
+let editNomOpen = false;
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 function fmtDate(iso) {
   if (!iso) return '';
-  const d = new Date(iso);
-  return d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+  return new Date(iso).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
 }
 
-// ── Guard auth ──
+// ── Navigation onglets ──
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+}
+
+// ── Init ──
 async function init() {
   const { data: { session: s } } = await _supabase.auth.getSession();
   if (!s) { window.location.href = 'login.html'; return; }
   session = s;
   loadProfile();
-  loadAchats();
   loadCommandes();
   loadAdresses();
 }
@@ -346,96 +616,150 @@ async function loadProfile() {
     .eq('id', session.user.id)
     .single();
 
-  const name = profile?.display_name || session.user.email.split('@')[0];
-  document.getElementById('avatar-circle').textContent = name[0].toUpperCase();
+  const nom = profile?.display_name || session.user.email.split('@')[0];
+  const email = session.user.email;
+
+  // Bandeau
+  document.getElementById('avatar-circle').textContent = nom[0].toUpperCase();
   document.getElementById('display-name').outerHTML =
-    `<p id="display-name" class="font-semibold text-base" style="color:#1A1208;">${esc(name)}</p>`;
+    `<div id="display-name" class="profile-name">Bonjour, ${esc(nom)} !</div>`;
   document.getElementById('user-email').outerHTML =
-    `<p id="user-email" class="text-sm truncate" style="color:#8B7A5A;">${esc(session.user.email)}</p>`;
-  document.getElementById('input-name').value = profile?.display_name || '';
+    `<div id="user-email" class="profile-email">${esc(email)}</div>`;
+
+  // Onglet Mon compte
+  document.getElementById('compte-email').textContent = email;
+  document.getElementById('compte-nom').textContent = nom;
+  document.getElementById('input-nom').value = profile?.display_name || '';
 
   if (profile?.role === 'admin') {
-    document.querySelector('.flex.items-center.gap-4').insertAdjacentHTML('beforeend',
-      `<a href="admin.html" class="w-9 h-9 rounded-xl border border-border flex items-center justify-center text-muted hover:text-teal hover:border-teal transition-colors no-underline" title="Admin">
+    document.querySelector('.profile-inner').insertAdjacentHTML('beforeend',
+      `<a href="admin.html" title="Admin" style="margin-left:auto;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;">
          <span class="ms" style="font-size:18px;">admin_panel_settings</span>
        </a>`);
   }
 }
 
-function toggleEditProfile() {
-  editOpen = !editOpen;
-  document.getElementById('edit-form').classList.toggle('hidden', !editOpen);
+function toggleEditNom() {
+  editNomOpen = !editNomOpen;
+  document.getElementById('nom-row').style.display     = editNomOpen ? 'none' : 'flex';
+  document.getElementById('edit-nom-row').style.display = editNomOpen ? 'flex' : 'none';
+  if (editNomOpen) document.getElementById('input-nom').focus();
 }
 
-async function saveProfile() {
-  const name = document.getElementById('input-name').value.trim();
-  if (!name) return;
-  const { error } = await _supabase
-    .from('profiles')
-    .upsert({ id: session.user.id, display_name: name });
-  if (!error) {
-    document.getElementById('display-name').textContent = name;
-    document.getElementById('avatar-circle').textContent = name[0].toUpperCase();
-    toggleEditProfile();
-    showToast('Profil mis à jour ✓', 'success');
-  }
+async function saveNom() {
+  const nom = document.getElementById('input-nom').value.trim();
+  if (!nom) return;
+  const { error } = await _supabase.from('profiles').upsert({ id: session.user.id, display_name: nom });
+  if (error) { showToast('Erreur lors de la sauvegarde', 'error'); return; }
+  document.getElementById('compte-nom').textContent = nom;
+  document.getElementById('avatar-circle').textContent = nom[0].toUpperCase();
+  const nameEl = document.getElementById('display-name');
+  if (nameEl) nameEl.textContent = `Bonjour, ${nom} !`;
+  toggleEditNom();
+  showToast('Nom mis à jour ✓', 'success');
 }
 
-// ── Achats ──
-async function loadAchats() {
-  const { data, error } = await _supabase
-    .from('purchases')
-    .select('id, created_at, resource_id, resources(id, slug, title, preview_url, file_url, price)')
-    .eq('user_id', session.user.id)
-    .order('created_at', { ascending: false });
+// ── Commandes (physiques + numériques unifiées) ──
+const STATUTS = {
+  confirmed:      { label: 'En attente',     cls: 'badge-attente' },
+  en_attente:     { label: 'En attente',     cls: 'badge-attente' },
+  en_preparation: { label: 'En préparation', cls: 'badge-prep'    },
+  expedie:        { label: 'Expédié',        cls: 'badge-expedie' },
+  livre:          { label: 'Livré',          cls: 'badge-livre'   },
+  annule:         { label: 'Annulé',         cls: 'badge-annule'  },
+};
 
-  document.getElementById('achats-skeleton').classList.add('hidden');
-  const list = document.getElementById('achats-list');
-  list.classList.remove('hidden');
+async function loadCommandes() {
+  const email = session.user.id;
 
-  const items = (!error && data) ? data : [];
-  document.getElementById('achats-count').textContent = items.length > 0 ? `(${items.length})` : '';
+  const [physRes, numRes] = await Promise.all([
+    _supabase
+      .from('commandes_physiques')
+      .select('id, created_at, statut, montant_total, numero_suivi, ressource_id, personnalisation, resources(title, preview_url)')
+      .eq('email_client', session.user.email)
+      .order('created_at', { ascending: false }),
+    _supabase
+      .from('purchases')
+      .select('id, created_at, resource_id, download_token, resources(title, preview_url, file_url)')
+      .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false }),
+  ]);
 
-  if (items.length === 0) {
+  document.getElementById('commandes-skeleton').style.display = 'none';
+  const list = document.getElementById('commandes-list');
+  list.style.display = 'block';
+
+  const physiques  = (physRes.data  || []).map(o => ({ ...o, _type: 'physique'  }));
+  const numeriques = (numRes.data   || []).map(o => ({ ...o, _type: 'numerique' }));
+  const all = [...physiques, ...numeriques].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  if (!all.length) {
     list.innerHTML = `
-      <div class="text-center py-14">
-        <span class="ms block mb-3" style="font-size:40px;color:#E2D4BC;">shopping_bag</span>
-        <p class="font-semibold text-sm mb-1" style="color:#1A1208;">Aucun achat pour l'instant</p>
-        <p class="text-xs mb-5" style="color:#8B7A5A;">Vos ressources PDF achetées apparaîtront ici.</p>
-        <a href="ressources.html" class="btn-teal" style="font-size:13px;padding:9px 20px;border-radius:16px;">
-          <span class="ms" style="font-size:16px;">store</span> Voir la boutique
-        </a>
+      <div class="empty-state">
+        <span class="ms">receipt_long</span>
+        <p>Vous n'avez pas encore de commande.<br>
+           <a href="ressources.html">Découvrir la boutique →</a></p>
       </div>`;
     return;
   }
 
-  list.innerHTML = items.map(p => renderAchat(p)).join('');
+  list.innerHTML = all.map(o => o._type === 'physique' ? renderPhysique(o) : renderNumerique(o)).join('');
 }
 
-function renderAchat(purchase) {
-  const r = purchase.resources;
-  if (!r) return '';
-  const cover = r.preview_url
-    ? `<img src="${esc(r.preview_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
-    : `<div class="w-full h-full flex items-center justify-center">
-         <span class="ms" style="font-size:22px;color:#5B9EAD;opacity:0.4;">description</span>
-       </div>`;
-  const fileUrl = esc(r.file_url || '');
-  const title   = esc(r.title || 'Ressource');
-  const price   = r.price ? `<span class="text-xs px-2 py-0.5 rounded-full" style="background:#F5EDE0;color:#8B6230;">${r.price} €</span>` : '';
+function renderPhysique(o) {
+  const r      = o.resources || {};
+  const titre  = esc(r.title || 'Produit physique');
+  const thumb  = r.preview_url
+    ? `<img src="${esc(r.preview_url)}" class="order-thumb" alt="" loading="lazy">`
+    : `<div class="order-thumb-placeholder"><span class="ms" style="font-size:22px;color:#C9B99A;">inventory_2</span></div>`;
+  const st     = STATUTS[o.statut] || STATUTS.en_attente;
+  const prix   = o.montant_total ? `${(o.montant_total / 100).toFixed(2)} €` : '';
+  const perso  = o.personnalisation && Object.keys(o.personnalisation).length
+    ? `<div style="font-size:11px;color:#8B7A5A;margin-top:3px;">${Object.entries(o.personnalisation).filter(([,v])=>v).map(([k,v])=>`${k} : ${esc(String(v))}`).join(' · ')}</div>`
+    : '';
+  const suivi  = o.numero_suivi
+    ? `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${encodeURIComponent(o.numero_suivi)}" target="_blank" rel="noopener" class="tracking-link">
+         <span class="ms">local_shipping</span> Suivre ma commande
+       </a>`
+    : '';
 
   return `
-    <div class="achat-card">
-      <div class="achat-cover">${cover}</div>
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm leading-snug mb-0.5" style="color:#1A1208;">${title}</p>
-        <p class="text-xs mb-2" style="color:#8B7A5A;">${fmtDate(purchase.created_at)}</p>
-        ${price}
+    <div class="order-card">
+      ${thumb}
+      <div class="order-meta">
+        <div class="order-title">${titre}</div>
+        <div class="order-date">${fmtDate(o.created_at)}${prix ? ' · ' + prix : ''}</div>
+        <div class="order-badges">
+          <span class="badge badge-type-phys">Physique</span>
+          <span class="badge ${st.cls}">${st.label}</span>
+        </div>
+        ${perso}
+        ${suivi}
       </div>
-      <button onclick="downloadResource('${fileUrl}', '${title}', this)"
-              class="flex-shrink-0 w-9 h-9 rounded-xl border border-border flex items-center justify-center text-muted hover:text-teal hover:border-teal transition-colors"
-              aria-label="Télécharger">
-        <span class="ms" style="font-size:20px;">download</span>
+    </div>`;
+}
+
+function renderNumerique(o) {
+  const r     = o.resources || {};
+  const titre = esc(r.title || 'Ressource numérique');
+  const thumb = r.preview_url
+    ? `<img src="${esc(r.preview_url)}" class="order-thumb" alt="" loading="lazy">`
+    : `<div class="order-thumb-placeholder"><span class="ms" style="font-size:22px;color:#C9B99A;">description</span></div>`;
+
+  return `
+    <div class="order-card">
+      ${thumb}
+      <div class="order-meta">
+        <div class="order-title">${titre}</div>
+        <div class="order-date">${fmtDate(o.created_at)}</div>
+        <div class="order-badges">
+          <span class="badge badge-type-num">Numérique</span>
+          <span class="badge badge-expedie">Payé</span>
+        </div>
+      </div>
+      <button onclick="downloadResource('${esc(r.file_url || '')}', '${titre}', this)"
+              class="order-action" aria-label="Télécharger" title="Re-télécharger">
+        <span class="ms" style="font-size:18px;">download</span>
       </button>
     </div>`;
 }
@@ -444,95 +768,14 @@ async function downloadResource(fileUrl, title, btn) {
   if (!fileUrl) { showToast('Fichier introuvable', 'error'); return; }
   btn.disabled = true;
   btn.querySelector('.ms').textContent = 'hourglass_empty';
-
-  const { data: signed, error } = await _supabase.storage
-    .from('resources')
-    .createSignedUrl(fileUrl, 3600);
-
+  const { data: signed, error } = await _supabase.storage.from('resources').createSignedUrl(fileUrl, 3600);
   btn.disabled = false;
   btn.querySelector('.ms').textContent = 'download';
-
-  if (error || !signed?.signedUrl) {
-    showToast('Impossible de générer le lien. Réessayez.', 'error');
-    return;
-  }
+  if (error || !signed?.signedUrl) { showToast('Impossible de générer le lien', 'error'); return; }
   const a = document.createElement('a');
   a.href = signed.signedUrl;
   a.download = (title || 'ressource') + '.pdf';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-// ── Commandes physiques ──
-const CMD_STATUS = {
-  confirmed:      { label: 'En attente',     bg: '#FEF5E7', color: '#B07D00' },
-  en_attente:     { label: 'En attente',     bg: '#FEF5E7', color: '#B07D00' },
-  en_preparation: { label: 'En préparation', bg: '#EBF5F7', color: '#3D7A8A' },
-  expedie:        { label: 'Expédié',        bg: '#EDFAF1', color: '#1E7E3C' },
-  livre:          { label: 'Livré',          bg: '#F0F0F0', color: '#666'    },
-};
-
-async function loadCommandes() {
-  const email = session.user.email;
-  const { data, error } = await _supabase
-    .from('commandes_physiques')
-    .select('id, created_at, statut, montant_total, montant_livraison, numero_suivi, ressource_id, resources(title, preview_url)')
-    .eq('email_client', email)
-    .order('created_at', { ascending: false });
-
-  document.getElementById('commandes-skeleton').classList.add('hidden');
-  const list = document.getElementById('commandes-list');
-  list.classList.remove('hidden');
-
-  const items = (!error && data) ? data : [];
-  document.getElementById('commandes-count').textContent = items.length > 0 ? `(${items.length})` : '';
-
-  if (items.length === 0) {
-    list.innerHTML = `
-      <div class="text-center py-10">
-        <span class="ms block mb-3" style="font-size:40px;color:#E2D4BC;">local_shipping</span>
-        <p class="font-semibold text-sm mb-1" style="color:#1A1208;">Aucune commande pour l'instant</p>
-        <p class="text-xs" style="color:#8B7A5A;">Vos commandes de produits physiques apparaîtront ici.</p>
-      </div>`;
-    return;
-  }
-
-  list.innerHTML = items.map(c => renderCommande(c)).join('');
-}
-
-function renderCommande(c) {
-  const st     = CMD_STATUS[c.statut] || CMD_STATUS['en_attente'];
-  const total  = c.montant_total ? (c.montant_total / 100).toFixed(2) + ' €' : '—';
-  const title  = c.resources?.title || 'Produit physique';
-  const cover  = c.resources?.preview_url
-    ? `<img src="${esc(c.resources.preview_url)}" alt="" class="w-full h-full object-cover" loading="lazy">`
-    : `<div class="w-full h-full flex items-center justify-center"><span class="ms" style="font-size:22px;color:#5B9EAD;opacity:0.4;">inventory_2</span></div>`;
-
-  const tracking = c.numero_suivi
-    ? `<a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${encodeURIComponent(c.numero_suivi)}"
-          target="_blank" rel="noopener"
-          class="inline-flex items-center gap-1 text-xs font-medium no-underline mt-2"
-          style="color:#5B9EAD;">
-         <span class="ms" style="font-size:14px;">local_shipping</span>
-         Suivre — ${esc(c.numero_suivi)}
-       </a>`
-    : '';
-
-  return `
-    <div class="cmd-card">
-      <div class="flex gap-3 items-center">
-        <div class="achat-cover flex-shrink-0">${cover}</div>
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-sm leading-snug mb-1" style="color:#1A1208;">${esc(title)}</p>
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="cmd-badge" style="background:${st.bg};color:${st.color};">${st.label}</span>
-            <span class="text-xs" style="color:#8B7A5A;">${fmtDate(c.created_at)} · ${total}</span>
-          </div>
-          ${tracking}
-        </div>
-      </div>
-    </div>`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
 // ── Adresses ──
@@ -543,51 +786,43 @@ async function loadAdresses() {
     .eq('user_id', session.user.id)
     .order('created_at', { ascending: false });
 
-  const list = document.getElementById('adresses-list');
+  const list  = document.getElementById('adresses-list');
   const items = (!error && data) ? data : [];
 
-  if (items.length === 0) {
+  if (!items.length) {
     list.innerHTML = `
-      <div class="text-center py-8">
-        <span class="ms block mb-2" style="font-size:36px;color:#E2D4BC;">home</span>
-        <p class="text-xs" style="color:#8B7A5A;">Aucune adresse enregistrée. Ajoutez-en une pour accélérer vos prochaines commandes.</p>
+      <div class="empty-state" style="padding:32px 20px;">
+        <span class="ms">home</span>
+        <p>Aucune adresse enregistrée.<br>Ajoutez-en une pour accélérer vos prochaines commandes.</p>
       </div>`;
     return;
   }
 
   list.innerHTML = items.map(a => `
-    <div class="bg-white border border-border rounded-2xl p-4 flex items-start gap-3">
-      <span class="ms flex-shrink-0 mt-0.5" style="font-size:20px;color:#5B9EAD;">location_on</span>
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm mb-0.5" style="color:#1A1208;">${esc(a.nom)}</p>
-        <p class="text-xs leading-relaxed" style="color:#8B7A5A;">
+    <div class="address-card">
+      <span class="ms" style="font-size:20px;color:#5B9EAD;flex-shrink:0;margin-top:1px;">location_on</span>
+      <div class="address-info">
+        <div class="address-name">${esc(a.nom)}</div>
+        <div class="address-detail">
           ${esc(a.rue)}${a.complement ? ', ' + esc(a.complement) : ''}<br>
           ${esc(a.code_postal)} ${esc(a.ville)}${a.pays !== 'FR' ? ' — ' + esc(a.pays) : ''}
-        </p>
+        </div>
       </div>
-      <button onclick="deleteAdresse('${a.id}')"
-              class="flex-shrink-0 w-8 h-8 rounded-xl border border-border flex items-center justify-center transition-colors"
-              style="color:#8B7A5A;" aria-label="Supprimer cette adresse"
-              onmouseover="this.style.color='#C03030';this.style.borderColor='#FDDCDC';"
-              onmouseout="this.style.color='#8B7A5A';this.style.borderColor='#E2D4BC';">
+      <button class="address-del" onclick="deleteAdresse('${a.id}')" aria-label="Supprimer">
         <span class="ms" style="font-size:16px;">delete</span>
       </button>
     </div>`).join('');
 }
 
 function showAddAdresse() {
-  document.getElementById('adresse-form').classList.remove('hidden');
+  document.getElementById('adresse-form').style.display = 'block';
   document.getElementById('adr-nom').focus();
 }
-
 function hideAddAdresse() {
-  document.getElementById('adresse-form').classList.add('hidden');
-  ['adr-nom', 'adr-rue', 'adr-complement', 'adr-cp', 'adr-ville'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
+  document.getElementById('adresse-form').style.display = 'none';
+  ['adr-nom','adr-rue','adr-complement','adr-cp','adr-ville'].forEach(id => { document.getElementById(id).value = ''; });
   document.getElementById('adr-pays').value = 'FR';
 }
-
 async function saveAdresse() {
   const nom   = document.getElementById('adr-nom').value.trim();
   const rue   = document.getElementById('adr-rue').value.trim();
@@ -595,40 +830,31 @@ async function saveAdresse() {
   const cp    = document.getElementById('adr-cp').value.trim();
   const ville = document.getElementById('adr-ville').value.trim();
   const pays  = document.getElementById('adr-pays').value;
-
-  if (!nom || !rue || !cp || !ville) {
-    showToast('Remplis tous les champs obligatoires *', 'error');
-    return;
-  }
-
-  const { error } = await _supabase
-    .from('adresses_livraison')
+  if (!nom || !rue || !cp || !ville) { showToast('Remplis les champs obligatoires *', 'error'); return; }
+  const { error } = await _supabase.from('adresses_livraison')
     .insert({ user_id: session.user.id, nom, rue, complement: comp || null, code_postal: cp, ville, pays });
-
   if (error) { showToast('Erreur lors de l\'enregistrement', 'error'); return; }
   hideAddAdresse();
   showToast('Adresse enregistrée ✓', 'success');
   loadAdresses();
 }
-
 async function deleteAdresse(id) {
   if (!confirm('Supprimer cette adresse ?')) return;
   const { error } = await _supabase.from('adresses_livraison').delete().eq('id', id);
   if (!error) { showToast('Adresse supprimée', 'info'); loadAdresses(); }
 }
 
-// ── Suppression de compte ──
+// ── Suppression compte ──
 async function deleteAccount() {
   if (!confirm('Supprimer définitivement votre compte ?\nToutes vos données personnelles seront effacées. Cette action est irréversible.')) return;
-  if (!confirm('Dernière confirmation : votre compte et toutes vos données seront supprimés.')) return;
-
+  if (!confirm('Dernière confirmation : votre compte sera supprimé.')) return;
   const { error } = await _supabase.functions.invoke('delete-account');
   if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
-
   showToast('Compte supprimé. Au revoir.', 'info');
   setTimeout(() => { window.location.href = 'index.html'; }, 2000);
 }
 
+// ── Auth ──
 async function logout() {
   await _supabase.auth.signOut();
   window.location.href = 'index.html';
@@ -637,6 +863,5 @@ async function logout() {
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 init();
 </script>
-
 </body>
 </html>
