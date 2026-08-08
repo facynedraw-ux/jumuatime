@@ -134,6 +134,15 @@ p {
     .fade-up { animation:none !important; opacity:1 !important; transform:none !important; }
     .skeleton::after { animation:none !important; }
   }
+
+  .footer-link { color:rgba(255,255,255,0.82);font-size:14px;text-decoration:none;transition:color 0.2s; }
+  .footer-link:hover { color:white; }
+
+  /* Accordion contact */
+  .contact-accordion summary { list-style:none; cursor:pointer; }
+  .contact-accordion summary::-webkit-details-marker { display:none; }
+  .contact-accordion[open] .accordion-chevron { transform:rotate(180deg); }
+  .accordion-chevron { transition:transform 0.25s; }
 </style>
 </head>
 <body class="bg-bg font-body text-text">
@@ -292,65 +301,61 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="similar-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
     </section>
 
-    <!-- CONTACT / SAV -->
+    <!-- CONTACT / SAV — accordéon -->
     <section class="mt-10">
-      <div class="bg-white border border-border rounded-2xl p-6 md:p-8">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:#EBF5F7;">
-            <span class="ms" style="font-size:20px;color:#5B9EAD;">support_agent</span>
-          </div>
-          <div>
-            <h2 class="font-display text-lg font-bold" style="color:#1A1208;">Une question ou un problème ?</h2>
-            <p class="text-xs" style="color:#8B7A5A;">Réponse sous 24 à 48h</p>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-3 mb-6">
-          <a href="mailto:contact@jumuatime.com" class="btn-teal" style="font-size:13px;padding:9px 18px;text-decoration:none;">
-            <span class="ms" style="font-size:16px;">mail</span>
-            contact@jumuatime.com
-          </a>
-          <a href="https://www.instagram.com/jumua_time" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 rounded-full font-semibold text-sm"
-             style="background:#F0EBF5;color:#7A5F9A;font-family:'DM Sans',sans-serif;text-decoration:none;padding:9px 18px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            @jumua_time
-          </a>
-        </div>
-
-        <form id="contact-form" class="space-y-4" onsubmit="submitContact(event)">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="field-label" for="c-nom">Nom</label>
-              <input class="field-input" id="c-nom" type="text" placeholder="Votre nom" required>
+      <details class="contact-accordion bg-white border border-border rounded-2xl overflow-hidden">
+        <summary class="flex items-center justify-between gap-3 p-6 md:p-8 select-none">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:#EBF5F7;">
+              <span class="ms" style="font-size:20px;color:#5B9EAD;">support_agent</span>
             </div>
             <div>
-              <label class="field-label" for="c-email">Email</label>
-              <input class="field-input" id="c-email" type="email" placeholder="votre@email.com" required>
+              <h2 class="font-display text-lg font-bold" style="color:#1A1208;">Une question ou un problème ?</h2>
+              <p class="text-xs" style="color:#8B7A5A;">Réponse sous 24 à 48h · <a href="faq.html" class="hover:underline" style="color:#5B9EAD;text-decoration:none;">Consulter la FAQ</a></p>
             </div>
           </div>
-          <div>
-            <label class="field-label" for="c-sujet">Sujet</label>
-            <select class="field-input" id="c-sujet">
-              <option value="question">Question sur un produit</option>
-              <option value="commande">Ma commande</option>
-              <option value="sav">SAV / Retour</option>
-              <option value="autre">Autre</option>
-            </select>
+          <span class="ms accordion-chevron flex-shrink-0" style="font-size:22px;color:#5B9EAD;">expand_more</span>
+        </summary>
+        <div class="px-6 md:px-8 pb-6 md:pb-8 border-t border-border" style="border-color:#E2D4BC;">
+          <div class="flex flex-wrap gap-3 mb-6 mt-5">
+            <a href="mailto:contact@jumuatime.com" class="btn-teal" style="font-size:13px;padding:9px 18px;text-decoration:none;">
+              <span class="ms" style="font-size:16px;">mail</span>
+              contact@jumuatime.com
+            </a>
           </div>
-          <div>
-            <label class="field-label" for="c-message">Message</label>
-            <textarea class="field-input" id="c-message" rows="4" placeholder="Écrivez votre message ici…" required style="resize:vertical;min-height:100px;"></textarea>
-          </div>
-          <button type="submit" id="c-submit" class="btn-teal" style="width:100%;justify-content:center;">
-            <span class="ms" style="font-size:18px;">send</span>
-            Envoyer
-          </button>
-          <p id="c-result" class="text-sm text-center hidden" role="alert"></p>
-        </form>
-      </div>
+
+          <form id="contact-form" class="space-y-4" onsubmit="submitContact(event)">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="field-label" for="c-nom">Nom</label>
+                <input class="field-input" id="c-nom" type="text" placeholder="Votre nom" required>
+              </div>
+              <div>
+                <label class="field-label" for="c-email">Email</label>
+                <input class="field-input" id="c-email" type="email" placeholder="votre@email.com" required>
+              </div>
+            </div>
+            <div>
+              <label class="field-label" for="c-sujet">Sujet</label>
+              <select class="field-input" id="c-sujet">
+                <option value="question">Question sur un produit</option>
+                <option value="commande">Ma commande</option>
+                <option value="sav">SAV / Retour</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="c-message">Message</label>
+              <textarea class="field-input" id="c-message" rows="4" placeholder="Écrivez votre message ici…" required style="resize:vertical;min-height:100px;"></textarea>
+            </div>
+            <button type="submit" id="c-submit" class="btn-teal" style="width:100%;justify-content:center;">
+              <span class="ms" style="font-size:18px;">send</span>
+              Envoyer
+            </button>
+            <p id="c-result" class="text-sm text-center hidden" role="alert"></p>
+          </form>
+        </div>
+      </details>
     </section>
 
   </div>
@@ -399,6 +404,27 @@ let galleryImages   = [];
 let currentGalleryIdx = 0;
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function inlineMd(t) {
+  return t
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>');
+}
+function mdToHtml(text) {
+  return text.split(/\n\n+/).map(block => {
+    const lines = block.split('\n');
+    if (lines.every(l => /^[-*] /.test(l.trim()))) {
+      return '<ul style="list-style:disc;padding-left:1.3em;margin-bottom:.75em;">'
+        + lines.map(l => `<li>${inlineMd(l.replace(/^[-*]\s/,''))}</li>`).join('')
+        + '</ul>';
+    }
+    if (/^## /.test(block)) {
+      return `<p style="font-weight:600;color:#1A1208;margin-bottom:.5em;">${inlineMd(block.replace(/^## /,''))}</p>`;
+    }
+    return `<p style="margin-bottom:.75em;">${lines.map(inlineMd).join('<br>')}</p>`;
+  }).join('');
+}
 
 function injectProductSchema({ name, description, image, price, url }) {
   const schema = {
@@ -524,7 +550,7 @@ function renderResource(r) {
   // Description
   if (r.description) {
     const el = document.getElementById('resource-desc');
-    el.textContent = r.description;
+    el.innerHTML = mdToHtml(r.description);
     el.classList.remove('hidden');
   }
 
@@ -778,6 +804,71 @@ async function submitContact(e) {
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 init();
 </script>
+
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="px-4" style="background:#2D5A66;">
+  <!-- Desktop : 3 colonnes -->
+  <div class="hidden md:block py-12">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-10 w-auto object-contain mb-3" style="filter:brightness(0) invert(1);">
+          <p class="text-xs leading-relaxed mb-1" style="color:rgba(255,255,255,0.82);">L'univers illustré de la famille musulmane.</p>
+          <p class="text-xs mb-4 font-medium" style="color:#EFC865;">Des créations qui ont du sens.</p>
+          <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 text-sm no-underline mb-5" style="color:#EFC865;">
+            <span class="ms" style="font-size:18px;">photo_camera</span>@jumuatime
+          </a>
+          <p class="text-xs font-semibold mb-2" style="color:rgba(255,255,255,0.55);">Rester informée</p>
+          <form onsubmit="submitNewsletter(event)" class="flex gap-2" style="max-width:240px;">
+            <input type="email" required placeholder="votre@email.com"
+                   class="flex-1 min-w-0 text-xs px-3 py-2 rounded-xl"
+                   style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;font-family:'DM Sans',sans-serif;outline:none;">
+            <button type="submit" class="flex-shrink-0 px-3 py-2 rounded-xl font-bold text-sm"
+                    style="background:#C49A5A;color:white;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">→</button>
+          </form>
+          <p id="footer-nl-msg" class="text-xs mt-2 hidden"></p>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Navigation</p>
+          <ul class="space-y-2 list-none p-0 m-0">
+            <li><a href="ressources.html" class="footer-link">Boutique</a></li>
+            <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
+            <li><a href="tilawatour.html" class="footer-link">Tilawa Tour</a></li>
+            <li><a href="a-propos.html" class="footer-link">À propos</a></li>
+            <li><a href="contact.html" class="footer-link">Contact</a></li>
+            <li><a href="faq.html" class="footer-link">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:rgba(255,255,255,0.35);">Légal</p>
+          <ul class="space-y-2 list-none p-0 m-0">
+            <li><a href="mentions.html" class="footer-link">Mentions légales</a></li>
+            <li><a href="cgv.html" class="footer-link">CGV</a></li>
+            <li><a href="confidentialite.html" class="footer-link">Confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t pt-6 flex flex-col md:flex-row items-center justify-between gap-2"
+           style="border-color:rgba(255,255,255,0.07);">
+        <p class="text-xs" style="color:rgba(255,255,255,0.7);">© 2026 Jumua Time · Tous droits réservés</p>
+        <p class="text-xs" style="color:rgba(255,255,255,0.4);">jumuatime.com</p>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile : compact, légal accessible -->
+  <div class="md:hidden py-6 text-center" style="padding-bottom:max(80px,env(safe-area-inset-bottom));">
+    <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-7 w-auto object-contain mb-5" style="filter:brightness(0) invert(1);display:inline-block;">
+    <div class="flex flex-wrap justify-center gap-x-5 gap-y-3 mb-5">
+      <a href="mentions.html" class="footer-link">Mentions légales</a>
+      <a href="cgv.html" class="footer-link">CGV</a>
+      <a href="confidentialite.html" class="footer-link">Confidentialité</a>
+      <a href="contact.html" class="footer-link">Contact</a>
+    </div>
+    <p class="text-xs" style="color:rgba(255,255,255,0.3);">© 2026 Jumua Time</p>
+  </div>
+</footer>
 
 </body>
 </html>

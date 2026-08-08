@@ -22,6 +22,24 @@ function thumbUrl(url, width = 600) {
   return url;
 }
 
+async function submitNewsletter(e) {
+  e.preventDefault();
+  const input = e.target.querySelector('input[type=email]');
+  const email = (input?.value || '').trim().toLowerCase();
+  const msgEl = document.getElementById('footer-nl-msg');
+  const btn   = e.target.querySelector('button[type=submit]');
+  if (!email) return;
+  if (btn) btn.disabled = true;
+  const { error } = await _supabase.from('email_subscribers').insert({ email, source: 'footer_newsletter' });
+  if (error && error.code !== '23505') {
+    if (msgEl) { msgEl.textContent = 'Erreur — réessayez.'; msgEl.style.color = '#F2A4B2'; msgEl.style.display = 'block'; }
+    if (btn) btn.disabled = false;
+    return;
+  }
+  e.target.innerHTML = '';
+  if (msgEl) { msgEl.textContent = '✓ Merci ! Vous êtes inscrite.'; msgEl.style.color = '#EFC865'; msgEl.style.display = 'block'; }
+}
+
 function showToast(message, type = 'info') {
   const existing = document.getElementById('toast');
   if (existing) existing.remove();

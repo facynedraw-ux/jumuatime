@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5HLSGH6R');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FAQ — Questions fréquentes — Jumua Time</title>
+<meta name="description" content="Toutes les réponses à vos questions sur les commandes, livraisons, téléchargements et personnalisations Jumua Time.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="theme-color" content="#5B9EAD">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@300;400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap"></noscript>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #FAF6F0; color: #1A1208; }
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.ms { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal;
+  font-size: 20px; line-height: 1; display: inline-block; white-space: nowrap; -webkit-font-smoothing: antialiased; }
+
+.footer-link { color: rgba(255,255,255,0.82); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+.footer-link:hover { color: white; }
+
+/* Header */
+.site-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #E2D4BC; }
+.header-inner { max-width: 64rem; margin: 0 auto; padding: 0 1rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; }
+.header-logo { height: 2.25rem; width: auto; object-fit: contain; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #2D5A66 0%, #4A8A9C 100%);
+  padding: 3.5rem 1rem 3rem;
+  text-align: center;
+}
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 5vw, 2.8rem); color: white; font-weight: 700; margin-bottom: .75rem; }
+.hero p { color: rgba(255,255,255,0.8); font-size: 1rem; max-width: 520px; margin: 0 auto; line-height: 1.7; }
+
+/* Content */
+.content { max-width: 720px; margin: 0 auto; padding: 3rem 1rem 6rem; }
+
+/* Section */
+.faq-section { margin-bottom: 2.5rem; }
+.faq-section-title {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700;
+  color: #1A1208; margin-bottom: 1rem;
+  padding-bottom: .75rem; border-bottom: 1px solid #E2D4BC;
+}
+.section-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* FAQ items */
+details.faq-item {
+  background: white; border: 1px solid #E2D4BC;
+  border-radius: 12px; margin-bottom: 8px; overflow: hidden;
+}
+details.faq-item summary {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  font-weight: 600; font-size: 14px; color: #1A1208;
+  gap: 12px;
+}
+details.faq-item summary::-webkit-details-marker { display: none; }
+details.faq-item summary .chevron { flex-shrink: 0; transition: transform 0.2s; font-size: 18px; color: #8B7A5A; }
+details.faq-item[open] summary .chevron { transform: rotate(180deg); }
+details.faq-item .faq-body {
+  padding: 0 16px 14px;
+  font-size: 13px; color: #6B5A3A; line-height: 1.7;
+}
+details.faq-item .faq-body a { color: #5B9EAD; text-decoration: underline; }
+
+/* CTA contact */
+.contact-cta {
+  background: white; border: 1px solid #E2D4BC;
+  border-radius: 16px; padding: 1.75rem;
+  text-align: center; margin-top: 2rem;
+}
+.contact-cta h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: .5rem; }
+.contact-cta p { font-size: 13px; color: #8B7A5A; margin-bottom: 1.25rem; }
+.btn-teal {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #5B9EAD; color: white; border: none;
+  border-radius: 20px; padding: 10px 20px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  text-decoration: none; cursor: pointer; transition: background .15s;
+}
+.btn-teal:hover { background: #3D7A8A; }
+</style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HLSGH6R" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" aria-label="Jumua Time — Accueil">
+      <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="header-logo">
+    </a>
+    <nav style="display:flex;align-items:center;gap:1.25rem;">
+      <a href="ressources.html" style="font-size:13px;font-weight:500;color:#8B7A5A;">Boutique</a>
+      <a href="contact.html" class="btn-teal" style="padding:8px 16px;font-size:12px;">Nous contacter</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Questions fréquentes</h1>
+  <p>Toutes les réponses à vos questions sur les commandes, livraisons et téléchargements.</p>
+</div>
+
+<!-- CONTENU FAQ -->
+<div class="content">
+
+  <!-- ── Commandes numériques ── -->
+  <div class="faq-section">
+    <h2 class="faq-section-title">
+      <span class="section-icon" style="background:#EBF5F7;">
+        <span class="ms" style="font-size:18px;color:#5B9EAD;">download</span>
+      </span>
+      Ressources numériques
+    </h2>
+
+    <details class="faq-item">
+      <summary>Comment accéder à ma ressource après l'achat ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Dès que le paiement est confirmé, vous recevez un email de confirmation avec un lien de téléchargement. Vous pouvez également retrouver vos ressources dans <a href="compte.html">Mon espace → Commandes</a>.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Mon lien de téléchargement ne fonctionne plus. <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Les liens sont sécurisés et ont une durée de validité limitée. Connectez-vous à votre espace client (<a href="compte.html">Mon compte</a>) pour re-télécharger vos ressources à tout moment, sans limite.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Dans quel format sont les fichiers ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Toutes les ressources numériques sont au format <strong>PDF haute résolution</strong>, prêtes à imprimer à domicile ou chez un imprimeur (A4 ou A3 selon le design).</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Puis-je imprimer la ressource plusieurs fois ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Oui, vous pouvez imprimer vos ressources autant de fois que vous le souhaitez pour un usage personnel ou familial. La revente ou la redistribution des fichiers est interdite (voir nos <a href="cgv.html">CGV</a>).</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ── Commandes physiques — Gelato ── -->
+  <div class="faq-section">
+    <h2 class="faq-section-title">
+      <span class="section-icon" style="background:#F5EDE0;">
+        <span class="ms" style="font-size:18px;color:#8B6230;">inventory_2</span>
+      </span>
+      Affiches & cartes physiques (impression Gelato)
+    </h2>
+
+    <details class="faq-item">
+      <summary>Qu'est-ce que Gelato ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Gelato est notre partenaire d'impression international, certifié ISO 14001. Ils impriment et expédient votre commande directement depuis l'imprimerie la plus proche de chez vous, pour une qualité professionnelle et des délais réduits.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Quels sont les délais de livraison pour les affiches et cartes ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Comptez <strong>5 à 7 jours ouvrés</strong> au total (impression + livraison). Le délai peut varier légèrement selon votre pays de livraison. Une fois votre commande expédiée, vous recevez un numéro de suivi par email.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Puis-je modifier ou annuler ma commande Gelato ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Contactez-nous très rapidement à <a href="mailto:contact@jumuatime.com">contact@jumuatime.com</a>. Si la commande n'a pas encore été transmise à l'imprimerie, nous pouvons la modifier ou l'annuler. Passé ce délai (quelques heures après la commande), l'impression est en cours et la modification n'est plus possible.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Est-ce que le produit arrive dans un emballage soigné ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Oui. Gelato emballe chaque produit de façon professionnelle et protégée. Les affiches sont roulées dans un tube rigide ; les cartes sont emballées individuellement.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ── Commandes physiques — Manuel ── -->
+  <div class="faq-section">
+    <h2 class="faq-section-title">
+      <span class="section-icon" style="background:#F7EDE8;">
+        <span class="ms" style="font-size:18px;color:#C96B8A;">package_2</span>
+      </span>
+      Produits personnalisés & articles faits main
+    </h2>
+
+    <details class="faq-item">
+      <summary>Quels sont les délais pour les commandes personnalisées ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Chaque commande est préparée à la main. Comptez <strong>1 à 2 jours ouvrés</strong> de préparation, puis 3 à 5 jours ouvrés de livraison selon votre adresse. Total estimé : 4 à 7 jours ouvrés.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Comment est expédié mon colis ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Expédition par La Poste (lettre suivie ou Colissimo selon le produit). Vous recevez un numéro de suivi par email dès l'envoi.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Puis-je modifier ma personnalisation après paiement ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Contactez-nous dans les 24h suivant votre commande à <a href="mailto:contact@jumuatime.com">contact@jumuatime.com</a>. Si votre commande n'a pas encore été préparée, nous ferons notre possible pour modifier les informations.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Peut-on ajouter une note cadeau à la commande ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Oui, en contactant-nous à <a href="mailto:contact@jumuatime.com">contact@jumuatime.com</a> après votre commande. Mentionnez le nom du/de la destinataire et votre message, nous l'inclurons avec soin.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ── Paiement & Compte ── -->
+  <div class="faq-section">
+    <h2 class="faq-section-title">
+      <span class="section-icon" style="background:#F0EBF5;">
+        <span class="ms" style="font-size:18px;color:#9B7FA6;">payments</span>
+      </span>
+      Paiement & Mon compte
+    </h2>
+
+    <details class="faq-item">
+      <summary>Quels moyens de paiement acceptez-vous ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Nous acceptons les <strong>cartes bancaires</strong> (Visa, Mastercard, American Express) via Stripe, partenaire sécurisé. Aucune donnée bancaire n'est stockée sur nos serveurs.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Comment créer un compte et me connecter ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Nous utilisons un système de connexion par <strong>lien magique</strong> : entrez votre email, et vous recevez un lien cliquable dans votre boîte mail — pas de mot de passe à créer ou retenir. Cliquez sur le lien et vous êtes connectée.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Est-ce que je reçois une facture ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Stripe envoie automatiquement un reçu de paiement par email après chaque transaction. Ce reçu fait office de justificatif d'achat.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Comment supprimer mon compte ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Rendez-vous dans <a href="compte.html">Mon compte → Mon compte</a> et cliquez sur "Supprimer définitivement". Vos données personnelles sont effacées, conformément au RGPD. Les commandes passées sont conservées de façon anonymisée pour nos obligations légales.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ── Retours & SAV ── -->
+  <div class="faq-section">
+    <h2 class="faq-section-title">
+      <span class="section-icon" style="background:#EDFAF1;">
+        <span class="ms" style="font-size:18px;color:#1E7E3C;">undo</span>
+      </span>
+      Retours & service après-vente
+    </h2>
+
+    <details class="faq-item">
+      <summary>Puis-je retourner un produit numérique ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Conformément à la loi sur le droit de rétractation, les biens numériques téléchargés ne sont pas éligibles au remboursement une fois le téléchargement effectué. En cas de problème technique (fichier illisible, erreur de contenu), contactez-nous et nous trouverons une solution.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Mon produit physique est arrivé endommagé ou incomplet. <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Contactez-nous à <a href="mailto:contact@jumuatime.com">contact@jumuatime.com</a> avec une photo du colis et/ou du produit. Nous organiserons un renvoi ou un remboursement sans frais supplémentaires.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Quels sont les délais de traitement SAV ? <span class="ms chevron">expand_more</span></summary>
+      <div class="faq-body">
+        <p>Nous répondons à tous les emails sous <strong>24 à 48h ouvrées</strong>. En période de forte activité (Aïd, Ramadan), le délai peut être légèrement allongé.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- CTA contact -->
+  <div class="contact-cta">
+    <span class="ms" style="font-size:36px;color:#5B9EAD;display:block;margin-bottom:10px;">support_agent</span>
+    <h2>Vous n'avez pas trouvé la réponse ?</h2>
+    <p>Notre équipe est disponible par email ou Instagram.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <a href="mailto:contact@jumuatime.com" class="btn-teal">
+        <span class="ms" style="font-size:16px;">mail</span>
+        contact@jumuatime.com
+      </a>
+      <a href="contact.html" class="btn-teal" style="background:#9B7FA6;">
+        <span class="ms" style="font-size:16px;">chat</span>
+        Formulaire de contact
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="py-12 px-4" style="background:#2D5A66;">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-8 mb-8" style="display:grid;">
+      <div>
+        <img src="Images/logo_jumuatime.svg" alt="Jumua Time" class="h-10 w-auto object-contain mb-3" style="filter:brightness(0) invert(1);height:2.5rem;">
+        <p style="font-size:12px;color:rgba(255,255,255,0.82);margin-bottom:4px;line-height:1.6;">L'univers illustré de la famille musulmane.</p>
+        <p style="font-size:12px;color:#EFC865;font-weight:500;margin-bottom:1rem;">Des créations qui ont du sens.</p>
+        <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#EFC865;text-decoration:none;margin-bottom:1.25rem;">
+          <span class="ms" style="font-size:18px;">photo_camera</span>@jumuatime
+        </a>
+        <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);margin-bottom:.5rem;">Rester informée</p>
+        <form onsubmit="submitNewsletter(event)" style="display:flex;gap:6px;max-width:240px;">
+          <input type="email" required placeholder="votre@email.com" style="flex:1;min-width:0;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:white;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;">
+          <button type="submit" style="padding:8px 12px;border-radius:10px;background:#C49A5A;color:white;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;">→</button>
+        </form>
+        <p id="footer-nl-msg" style="font-size:11px;margin-top:6px;display:none;"></p>
+      </div>
+      <div>
+        <h4 style="color:white;font-weight:600;font-size:13px;margin-bottom:1rem;">Navigation</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="ressources.html" class="footer-link">Boutique</a></li>
+          <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
+          <li><a href="tilawatour.html" class="footer-link">Tilawa Tour</a></li>
+          <li><a href="a-propos.html" class="footer-link">À propos</a></li>
+          <li><a href="contact.html" class="footer-link">Contact</a></li>
+          <li><a href="faq.html" class="footer-link" style="font-weight:600;color:white;">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:white;font-weight:600;font-size:13px;margin-bottom:1rem;">Légal</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+          <li><a href="mentions.html" class="footer-link">Mentions légales</a></li>
+          <li><a href="cgv.html" class="footer-link">CGV</a></li>
+          <li><a href="confidentialite.html" class="footer-link">Confidentialité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+      <p style="font-size:11px;color:rgba(255,255,255,0.7);">© 2026 Jumua Time · Tous droits réservés</p>
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);">jumuatime.com</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js?v=2"></script>
+</body>
+</html>

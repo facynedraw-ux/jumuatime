@@ -388,6 +388,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <input type="text" id="f-format" class="f-input" placeholder="PDF" value="PDF">
     </div>
 
+    <div class="mb-5">
+      <label class="f-label" for="f-ordre">Ordre d'affichage (boutique)</label>
+      <input type="number" id="f-ordre" class="f-input" min="1" max="999" step="1" placeholder="Ex: 1 = premier affiché">
+      <p class="text-xs text-muted mt-1">Nombre entier — les plus petits apparaissent en premier. Laisser vide = dernier.</p>
+    </div>
+
     <div class="mb-5 flex items-center gap-3">
       <input type="checkbox" id="f-active" checked style="accent-color:#C96B8A;width:15px;height:15px;">
       <label for="f-active" class="text-sm cursor-pointer">Ressource active (visible dans la boutique)</label>
@@ -748,6 +754,7 @@ function editResource(id) {
   document.getElementById('f-mode-livraison').value = r.mode_livraison || 'lettre';
   document.getElementById('f-delai-livraison').value = r.delai_livraison || '';
   document.getElementById('f-format').value = r.format || 'PDF';
+  document.getElementById('f-ordre').value = r.ordre ?? '';
   document.getElementById('f-active').checked = r.is_active;
   document.getElementById('f-stock').value = r.stock ?? '';
   document.getElementById('f-gallery-list').innerHTML = '';
@@ -803,6 +810,7 @@ function openPanel() {
   document.getElementById('f-type-produit').value = 'numerique';
   document.getElementById('f-delai-livraison').value = '';
   document.getElementById('f-format').value = 'PDF';
+  document.getElementById('f-ordre').value = '';
   document.getElementById('f-active').checked = true;
   document.getElementById('f-gallery-list').innerHTML = '';
   document.getElementById('r-manuel').checked = true;
@@ -1017,6 +1025,7 @@ async function saveResource() {
       : null,
     delai_livraison: document.getElementById('f-delai-livraison').value.trim() || null,
     format: document.getElementById('f-format').value.trim() || 'PDF',
+    ordre: document.getElementById('f-ordre').value !== '' ? parseInt(document.getElementById('f-ordre').value, 10) : null,
     is_active: document.getElementById('f-active').checked,
     stock: document.getElementById('f-type-produit').value === 'physique'
       ? (document.getElementById('f-stock').value !== '' ? parseInt(document.getElementById('f-stock').value, 10) : null)

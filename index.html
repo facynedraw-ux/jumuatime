@@ -533,10 +533,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </p>
         <p class="text-xs mb-4 font-medium" style="color:#EFC865;">Des créations qui ont du sens.</p>
         <a href="https://www.instagram.com/jumuatime" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 text-sm no-underline" style="color:#EFC865;">
+           class="inline-flex items-center gap-2 text-sm no-underline mb-5" style="color:#EFC865;">
           <span class="ms" style="font-size:18px;">photo_camera</span>
           @jumuatime
         </a>
+        <!-- Newsletter footer -->
+        <p class="text-xs font-semibold mb-2" style="color:rgba(255,255,255,0.55);">Rester informée</p>
+        <form onsubmit="submitNewsletter(event)" class="flex gap-2" style="max-width:240px;">
+          <input type="email" required placeholder="votre@email.com"
+                 class="flex-1 min-w-0 text-xs px-3 py-2 rounded-xl"
+                 style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;font-family:'DM Sans',sans-serif;outline:none;">
+          <button type="submit" class="flex-shrink-0 px-3 py-2 rounded-xl font-bold text-sm"
+                  style="background:#C49A5A;color:white;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">→</button>
+        </form>
+        <p id="footer-nl-msg" class="text-xs mt-2 hidden"></p>
       </div>
 
       <!-- Navigation -->
@@ -545,9 +555,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <ul class="space-y-2 list-none p-0 m-0">
           <li><a href="ressources.html" class="footer-link">Boutique</a></li>
           <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
-          <li><a href="https://tilawatour.jumuaandme.workers.dev/" target="_blank" rel="noopener" class="footer-link">Tilawa Tour</a></li>
+          <li><a href="tilawatour.html" class="footer-link">Tilawa Tour</a></li>
           <li><a href="a-propos.html" class="footer-link">À propos</a></li>
           <li><a href="contact.html" class="footer-link">Contact</a></li>
+          <li><a href="faq.html" class="footer-link">FAQ</a></li>
         </ul>
       </div>
 
@@ -565,7 +576,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="border-t pt-6 flex flex-col md:flex-row items-center justify-between gap-2"
          style="border-color:rgba(255,255,255,0.07);">
-      <p class="text-xs" style="color:rgba(255,255,255,0.7);">© 2026 Jumua Time · Des créations qui ont du sens.</p>
+      <p class="text-xs" style="color:rgba(255,255,255,0.7);">© 2026 Jumua Time · Tous droits réservés</p>
       <p class="text-xs" style="color:rgba(255,255,255,0.7);">jumuatime.com</p>
     </div>
 
