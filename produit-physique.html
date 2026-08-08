@@ -484,6 +484,8 @@ function injectProductSchema({ name, description, image, price, url, outOfStock 
   if (el) el.textContent = JSON.stringify(schema);
 }
 
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 // ── Markdown léger ──
 function inlineMd(t) {
   return t
