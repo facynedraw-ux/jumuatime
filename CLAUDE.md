@@ -73,7 +73,7 @@ Colonnes :
 - `preview_url` (text) — image principale (PAS cover_url — cover_url N'EXISTE PAS)
 - `preview_pdf_url` (text, nullable)
 - `file_url` (text, nullable) — PDF téléchargeable (numériques uniquement)
-- `price` (integer, centimes)
+- `price` (numeric, euros — ex: 3.9 pour 3,90 €) ⚠️ PAS en centimes ; `variantes[*].prix` est en centimes
 - `category` (text) — valeurs : `enfants` | `spiritualite` | `decoration` | `cadeaux`
 - `type_produit` (text) — `numerique` | `physique` | `bundle`
 - `gelato_product_id` (text, nullable) — ID produit Gelato pour les physiques Gelato

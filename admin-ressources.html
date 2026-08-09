@@ -455,7 +455,6 @@ async function loadBundleCandidates() {
     .from('resources')
     .select('id, title, price, preview_url, variantes, gelato_product_id')
     .eq('type_produit', 'physique')
-    .eq('is_active', true)
     .order('title');
   _bundleCandidates = data || [];
   renderBundleSlots();
