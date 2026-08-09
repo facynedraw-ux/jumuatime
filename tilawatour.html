@@ -243,12 +243,12 @@ p { text-wrap: pretty; }
     <p style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#00917c;margin-bottom:.75rem;">Pour toute la famille</p>
     <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:21px;font-weight:normal;color:#1A1208;margin-bottom:2rem;line-height:1.4;">Un compagnon de lecture<br>pour elle et pour lui</h2>
     <div style="display:flex;justify-content:center;align-items:flex-start;gap:4rem;flex-wrap:wrap;">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-        <img src="Images/avatar_feminin.png?v=2" alt="Avatar féminin" style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top center;border:3px solid #e9e8f5;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;" onclick="openLightbox('Images/screen1.png')">
+        <img src="Images/avatar_feminin.png?v=2" alt="Avatar féminin" style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top center;border:3px solid #e9e8f5;transition:transform .2s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
         <span style="font-size:13px;color:#7A6A58;font-style:italic;">Pour elle</span>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-        <img src="Images/avatar_homme.png?v=2" alt="Avatar masculin" style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top center;border:3px solid #e9e8f5;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;" onclick="openLightbox('Images/screen_serenity.png')">
+        <img src="Images/avatar_homme.png?v=2" alt="Avatar masculin" style="width:110px;height:110px;border-radius:50%;object-fit:cover;object-position:top center;border:3px solid #e9e8f5;transition:transform .2s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
         <span style="font-size:13px;color:#7A6A58;font-style:italic;">Pour lui</span>
       </div>
     </div>
@@ -378,7 +378,8 @@ p { text-wrap: pretty; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js?v=2"></script>
 <script>
-function openLightbox() {
+function openLightbox(src) {
+  if (src) document.querySelector('#lightbox > img').src = src;
   document.getElementById('lightbox').classList.add('is-open');
   document.body.style.overflow = 'hidden';
 }
