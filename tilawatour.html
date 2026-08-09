@@ -360,8 +360,8 @@ textarea.fb-input { resize:vertical; min-height:100px; }
   <div class="fb-section-inner">
 
     <!-- Avis validés -->
-    <p class="fb-section-title">Ce qu'elles en disent</p>
-    <p class="fb-section-sub">Retours d'utilisatrices de Tilawa Tour</p>
+    <p class="fb-section-title">Ce qu'ils et elles en disent</p>
+    <p class="fb-section-sub">Retours d'utilisateurs et utilisatrices de Tilawa Tour</p>
     <div id="fb-grid" class="fb-grid">
       <p class="fb-empty" style="grid-column:1/-1;">Chargement…</p>
     </div>
@@ -489,7 +489,7 @@ async function loadFeedbacks() {
     .eq('valide', true)
     .order('created_at', { ascending: false });
   if (error || !data || !data.length) {
-    grid.innerHTML = '<p class="fb-empty" style="grid-column:1/-1;">Aucun avis pour l\'instant — soyez la première !</p>';
+    grid.innerHTML = '<p class="fb-empty" style="grid-column:1/-1;">Aucun avis pour l\'instant — soyez les premiers !</p>';
     return;
   }
   grid.innerHTML = data.map(f => {
