@@ -164,6 +164,41 @@ p { text-wrap: pretty; }
 }
 .quote-section cite { font-size: 13px; color: rgba(255,255,255,0.55); font-style: normal; font-weight: 600; }
 
+/* Feedbacks */
+.fb-section { background:#fff; padding:4rem 1.5rem; }
+.fb-section-inner { max-width:52rem; margin:0 auto; }
+.fb-section-title { font-family:'Playfair Display',serif; font-size:clamp(1.4rem,3vw,1.9rem); font-weight:700; color:#1a1208; text-align:center; margin-bottom:.5rem; }
+.fb-section-sub { font-size:14px; color:#7a6a58; text-align:center; margin-bottom:2.5rem; }
+.fb-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.25rem; margin-bottom:3rem; }
+.fb-card { background:#faf8f5; border-radius:16px; padding:1.25rem 1.5rem; border:1px solid #ede8df; }
+.fb-badge { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 8px; border-radius:20px; margin-bottom:.75rem; }
+.fb-badge.avis { background:#eef0fd; color:#5c5b9e; }
+.fb-badge.idée { background:#e8f5f3; color:#00917c; }
+.fb-badge.bug  { background:#fdeef0; color:#c96b8a; }
+.fb-stars { color:#EFC865; font-size:14px; margin-bottom:.5rem; letter-spacing:1px; }
+.fb-message { font-size:13.5px; color:#3a2f24; line-height:1.7; margin-bottom:.75rem; }
+.fb-auteur { font-size:12px; color:#9e8c7b; font-style:italic; }
+.fb-empty { text-align:center; color:#9e8c7b; font-size:14px; padding:2rem 0; }
+/* Form */
+.fb-form-box { background:#f7f5f2; border-radius:20px; padding:2rem; border:1px solid #ede8df; }
+.fb-form-title { font-size:15px; font-weight:700; color:#1a1208; margin-bottom:1.25rem; }
+.fb-pills { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.25rem; }
+.fb-pill { padding:7px 16px; border-radius:30px; border:1.5px solid #ddd; background:#fff; font-size:13px; font-weight:600; cursor:pointer; color:#7a6a58; transition:all .15s; }
+.fb-pill.active.avis  { border-color:#5c5b9e; background:#eef0fd; color:#5c5b9e; }
+.fb-pill.active.idée  { border-color:#00917c; background:#e8f5f3; color:#00917c; }
+.fb-pill.active.bug   { border-color:#c96b8a; background:#fdeef0; color:#c96b8a; }
+.fb-stars-input { display:none; margin-bottom:1.25rem; }
+.fb-stars-input.visible { display:flex; gap:4px; }
+.fb-star-btn { background:none; border:none; font-size:24px; cursor:pointer; color:#ddd; transition:color .1s; line-height:1; }
+.fb-star-btn.on { color:#EFC865; }
+.fb-input { width:100%; padding:10px 14px; border-radius:12px; border:1.5px solid #e0d8ce; background:#fff; font-family:'DM Sans',sans-serif; font-size:13.5px; color:#1a1208; outline:none; margin-bottom:.75rem; transition:border-color .2s; }
+.fb-input:focus { border-color:#5B9EAD; }
+textarea.fb-input { resize:vertical; min-height:100px; }
+.fb-submit { padding:11px 28px; border-radius:30px; border:none; background:#5B9EAD; color:#fff; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; }
+.fb-submit:hover { background:#4a8a9b; }
+.fb-submit:disabled { opacity:.5; cursor:not-allowed; }
+#fb-msg { font-size:13px; margin-top:.75rem; display:none; }
+
 @media (max-width: 700px) {
   .hero-inner { grid-template-columns: 1fr; }
   .phone-wrap { display: none; }
@@ -320,6 +355,45 @@ p { text-wrap: pretty; }
   <cite>Rapporté par Al-Bukhari</cite>
 </section>
 
+<!-- AVIS & FORMULAIRE -->
+<section class="fb-section">
+  <div class="fb-section-inner">
+
+    <!-- Avis validés -->
+    <p class="fb-section-title">Ce qu'elles en disent</p>
+    <p class="fb-section-sub">Retours d'utilisatrices de Tilawa Tour</p>
+    <div id="fb-grid" class="fb-grid">
+      <p class="fb-empty" style="grid-column:1/-1;">Chargement…</p>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="fb-form-box">
+      <p class="fb-form-title">Partager votre expérience</p>
+
+      <div class="fb-pills">
+        <button class="fb-pill active avis" onclick="setFbType('avis',this)">⭐ Avis</button>
+        <button class="fb-pill idée"        onclick="setFbType('idée',this)">💡 Suggestion</button>
+        <button class="fb-pill bug"         onclick="setFbType('bug',this)">🐛 Bug</button>
+      </div>
+
+      <div id="fb-stars-input" class="fb-stars-input visible">
+        <button class="fb-star-btn on" data-v="1" onclick="setFbNote(1)">★</button>
+        <button class="fb-star-btn on" data-v="2" onclick="setFbNote(2)">★</button>
+        <button class="fb-star-btn on" data-v="3" onclick="setFbNote(3)">★</button>
+        <button class="fb-star-btn"   data-v="4" onclick="setFbNote(4)">★</button>
+        <button class="fb-star-btn"   data-v="5" onclick="setFbNote(5)">★</button>
+      </div>
+
+      <input id="fb-auteur" class="fb-input" type="text" placeholder="Votre prénom (optionnel)">
+      <textarea id="fb-message" class="fb-input" placeholder="Votre message…"></textarea>
+
+      <button id="fb-btn" class="fb-submit" onclick="submitFeedback()">Envoyer</button>
+      <p id="fb-msg"></p>
+    </div>
+
+  </div>
+</section>
+
 <!-- CTA bas -->
 <section class="bottom-cta">
   <h2>Prête à commencer ?</h2>
@@ -388,6 +462,70 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* ---- Feedbacks ---- */
+let _fbType = 'avis', _fbNote = 3;
+
+function setFbType(type, el) {
+  _fbType = type;
+  document.querySelectorAll('.fb-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const stars = document.getElementById('fb-stars-input');
+  stars.classList.toggle('visible', type === 'avis');
+}
+
+function setFbNote(n) {
+  _fbNote = n;
+  document.querySelectorAll('.fb-star-btn').forEach(b => {
+    b.classList.toggle('on', parseInt(b.dataset.v) <= n);
+  });
+}
+
+async function loadFeedbacks() {
+  const grid = document.getElementById('fb-grid');
+  const { data, error } = await _supabase
+    .from('feedbacks')
+    .select('type,message,auteur,note,created_at')
+    .eq('valide', true)
+    .order('created_at', { ascending: false });
+  if (error || !data || !data.length) {
+    grid.innerHTML = '<p class="fb-empty" style="grid-column:1/-1;">Aucun avis pour l\'instant — soyez la première !</p>';
+    return;
+  }
+  grid.innerHTML = data.map(f => {
+    const badge = `<span class="fb-badge ${f.type}">${f.type === 'avis' ? '⭐ Avis' : f.type === 'idée' ? '💡 Suggestion' : '🐛 Bug'}</span>`;
+    const stars = f.type === 'avis' && f.note ? `<div class="fb-stars">${'★'.repeat(f.note)}${'☆'.repeat(5 - f.note)}</div>` : '';
+    const auteur = f.auteur ? `<p class="fb-auteur">— ${f.auteur}</p>` : '';
+    return `<div class="fb-card">${badge}${stars}<p class="fb-message">${f.message}</p>${auteur}</div>`;
+  }).join('');
+}
+
+async function submitFeedback() {
+  const message = document.getElementById('fb-message').value.trim();
+  const auteur  = document.getElementById('fb-auteur').value.trim();
+  const btn = document.getElementById('fb-btn');
+  const msg = document.getElementById('fb-msg');
+  if (!message) { msg.textContent = 'Merci d\'écrire un message.'; msg.style.color = '#c96b8a'; msg.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = '…';
+  const payload = { type: _fbType, message, auteur: auteur || null };
+  if (_fbType === 'avis') payload.note = _fbNote;
+  const { error } = await _supabase.from('feedbacks').insert(payload);
+  if (error) {
+    msg.textContent = 'Une erreur est survenue, réessayez.';
+    msg.style.color = '#c96b8a'; msg.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Envoyer';
+    return;
+  }
+  btn.textContent = 'Envoyer';
+  btn.disabled = false;
+  document.getElementById('fb-message').value = '';
+  document.getElementById('fb-auteur').value = '';
+  msg.textContent = '✓ Merci ! Votre message sera publié après modération.';
+  msg.style.color = '#00917c'; msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 5000);
+}
+
+loadFeedbacks();
 
 async function submitTilawa(e) {
   e.preventDefault();

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedbacks Tilawa Tour — Admin</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=swap" media="print" onload="this.media='all'">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #FAF6F0; color: #1A1208; min-height: 100vh; }
+.ms { font-family: 'Material Symbols Outlined'; font-style: normal; font-size: 18px; line-height: 1; vertical-align: middle; }
+
+/* Header */
+.header { background: #C96B8A; padding: 0 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+.header h1 { color: #fff; font-size: 16px; font-weight: 700; }
+.header a { color: rgba(255,255,255,0.8); font-size: 13px; text-decoration: none; }
+
+/* Main */
+.main { max-width: 56rem; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* Filtres */
+.filters { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid #ddd; background: #fff; font-size: 12px; font-weight: 600; cursor: pointer; color: #7a6a58; transition: all .15s; }
+.filter-btn.active { border-color: #C96B8A; background: #fdeef0; color: #C96B8A; }
+.count { font-size: 13px; color: #9e8c7b; margin-left: auto; }
+
+/* Cards */
+.fb-list { display: flex; flex-direction: column; gap: .75rem; }
+.fb-row { background: #fff; border-radius: 14px; border: 1px solid #ede8df; padding: 1.1rem 1.25rem; display: grid; grid-template-columns: 1fr auto; gap: .75rem; align-items: start; }
+.fb-row.valide { border-left: 4px solid #00917c; }
+.fb-row-left { display: flex; flex-direction: column; gap: .4rem; }
+.fb-row-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+.badge.avis { background: #eef0fd; color: #5c5b9e; }
+.badge.idée { background: #e8f5f3; color: #00917c; }
+.badge.bug  { background: #fdeef0; color: #c96b8a; }
+.badge.ok   { background: #e8f5f3; color: #00917c; }
+.badge.att  { background: #fdf5e8; color: #c49a5a; }
+.fb-stars { color: #EFC865; font-size: 13px; letter-spacing: 1px; }
+.fb-date { font-size: 11px; color: #bbb; }
+.fb-message-text { font-size: 13.5px; color: #3a2f24; line-height: 1.6; }
+.fb-auteur-text { font-size: 12px; color: #9e8c7b; font-style: italic; }
+.fb-actions { display: flex; flex-direction: column; gap: .5rem; align-items: flex-end; }
+.btn-valide   { padding: 6px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: #e8f5f3; color: #00917c; transition: background .15s; white-space: nowrap; }
+.btn-invalide { padding: 6px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: #fdf5e8; color: #c49a5a; transition: background .15s; white-space: nowrap; }
+.btn-delete   { padding: 6px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: #fdeef0; color: #c96b8a; transition: background .15s; }
+.btn-valide:hover   { background: #c5e8e0; }
+.btn-invalide:hover { background: #f5e8c5; }
+.btn-delete:hover   { background: #f5c4cc; }
+
+/* États */
+#auth-check { text-align: center; padding: 4rem 1rem; color: #9e8c7b; }
+.loading { text-align: center; padding: 3rem; color: #bbb; font-size: 14px; }
+.empty { text-align: center; padding: 3rem; color: #9e8c7b; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span class="ms">rate_review</span> Feedbacks Tilawa Tour</h1>
+  <a href="admin.html">← Admin</a>
+</div>
+
+<div id="auth-check">Vérification…</div>
+
+<div id="main-content" class="main" style="display:none;">
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('tous',this)">Tous</button>
+    <button class="filter-btn" onclick="setFilter('avis',this)">⭐ Avis</button>
+    <button class="filter-btn" onclick="setFilter('idée',this)">💡 Suggestions</button>
+    <button class="filter-btn" onclick="setFilter('bug',this)">🐛 Bugs</button>
+    <button class="filter-btn" onclick="setFilter('en_attente',this)">En attente</button>
+    <button class="filter-btn" onclick="setFilter('valide',this)">Validés</button>
+    <span id="count" class="count"></span>
+  </div>
+  <div id="fb-list" class="fb-list">
+    <p class="loading">Chargement…</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js?v=2"></script>
+<script>
+let _allFeedbacks = [];
+let _currentFilter = 'tous';
+
+async function init() {
+  const { data: { user } } = await _supabase.auth.getUser();
+  if (!user) { document.getElementById('auth-check').innerHTML = '<p>Accès réservé à l\'administratrice. <a href="login.html">Se connecter</a></p>'; return; }
+  const { data: profile } = await _supabase.from('profiles').select('role').eq('id', user.id).single();
+  if (!profile || profile.role !== 'admin') { document.getElementById('auth-check').innerHTML = '<p>Accès non autorisé.</p>'; return; }
+  document.getElementById('auth-check').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  await loadFeedbacks();
+}
+
+async function loadFeedbacks() {
+  const { data, error } = await _supabase
+    .from('feedbacks')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) { document.getElementById('fb-list').innerHTML = '<p class="empty">Erreur de chargement.</p>'; return; }
+  _allFeedbacks = data || [];
+  renderList();
+}
+
+function setFilter(f, el) {
+  _currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+function renderList() {
+  const list = document.getElementById('fb-list');
+  let rows = _allFeedbacks;
+  if (_currentFilter === 'avis')      rows = rows.filter(r => r.type === 'avis');
+  else if (_currentFilter === 'idée') rows = rows.filter(r => r.type === 'idée');
+  else if (_currentFilter === 'bug')  rows = rows.filter(r => r.type === 'bug');
+  else if (_currentFilter === 'valide')    rows = rows.filter(r => r.valide);
+  else if (_currentFilter === 'en_attente') rows = rows.filter(r => !r.valide);
+  document.getElementById('count').textContent = rows.length + ' retour' + (rows.length > 1 ? 's' : '');
+  if (!rows.length) { list.innerHTML = '<p class="empty">Aucun retour pour ce filtre.</p>'; return; }
+  list.innerHTML = rows.map(f => {
+    const date = new Date(f.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' });
+    const stars = f.type === 'avis' && f.note ? `<span class="fb-stars">${'★'.repeat(f.note)}${'☆'.repeat(5-f.note)}</span>` : '';
+    const auteur = f.auteur ? `<p class="fb-auteur-text">— ${f.auteur}</p>` : '';
+    const statusBadge = f.valide
+      ? `<span class="badge ok">✓ Publié</span>`
+      : `<span class="badge att">En attente</span>`;
+    const actionBtn = f.valide
+      ? `<button class="btn-invalide" onclick="toggleValide('${f.id}', false)">Dépublier</button>`
+      : `<button class="btn-valide"   onclick="toggleValide('${f.id}', true)">✓ Valider</button>`;
+    return `
+      <div class="fb-row ${f.valide ? 'valide' : ''}" id="row-${f.id}">
+        <div class="fb-row-left">
+          <div class="fb-row-meta">
+            <span class="badge ${f.type}">${f.type === 'avis' ? '⭐ Avis' : f.type === 'idée' ? '💡 Suggestion' : '🐛 Bug'}</span>
+            ${stars}
+            ${statusBadge}
+            <span class="fb-date">${date}</span>
+          </div>
+          <p class="fb-message-text">${f.message}</p>
+          ${auteur}
+        </div>
+        <div class="fb-actions">
+          ${actionBtn}
+          <button class="btn-delete" onclick="deleteFeedback('${f.id}')"><span class="ms">delete</span></button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function toggleValide(id, valide) {
+  const { error } = await _supabase.from('feedbacks').update({ valide }).eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  const item = _allFeedbacks.find(f => f.id === id);
+  if (item) item.valide = valide;
+  renderList();
+}
+
+async function deleteFeedback(id) {
+  if (!confirm('Supprimer ce retour définitivement ?')) return;
+  const { error } = await _supabase.from('feedbacks').delete().eq('id', id);
+  if (error) { alert('Erreur : ' + error.message); return; }
+  _allFeedbacks = _allFeedbacks.filter(f => f.id !== id);
+  renderList();
+}
+
+init();
+</script>
+</body>
+</html>
