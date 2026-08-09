@@ -1056,6 +1056,7 @@ async function loadYouMayAlsoLike() {
     .from('resources')
     .select('id, slug, title, preview_url, price, variantes, gelato_product_id')
     .eq('is_active', true)
+    .eq('visible_boutique', true)
     .eq('type_produit', 'physique')
     .neq('id', produit.id)
     .limit(4);
@@ -1076,6 +1077,7 @@ async function loadCollection() {
     .select('id, slug, title, preview_url, price, variantes, gelato_product_id')
     .eq('collection', produit.collection)
     .eq('is_active', true)
+    .eq('visible_boutique', true)
     .eq('type_produit', 'physique')
     .neq('id', produit.id);
   if (!data?.length) return;

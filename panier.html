@@ -610,6 +610,7 @@ async function loadRelated() {
     .from('resources')
     .select('id, slug, title, preview_url, price, variantes, category, type_produit')
     .eq('is_active', true)
+    .eq('visible_boutique', true)
     .limit(8);
 
   if (categories.length) query = query.in('category', categories);

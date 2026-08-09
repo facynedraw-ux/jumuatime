@@ -80,7 +80,8 @@ Colonnes :
 - `bundle_items` (jsonb[], nullable) — articles d'un bundle : `[{g, p, t, img, rid, vid}]` ; `g: null` = livraison manuelle (pas Gelato)
 - `format` (text, nullable)
 - `gallery_urls` (text[], nullable) — galerie d'images supplémentaires
-- `is_active` (boolean) — visible en boutique si true
+- `is_active` (boolean) — produit actif/commandable
+- `visible_boutique` (boolean, default true) — affiché en boutique et recommandations ; mettre false pour les produits bundle-only
 
 ### Table `commandes_physiques`
 Colonnes :

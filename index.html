@@ -760,7 +760,7 @@ async function loadResources() {
   const [{ data: resVedette }, { data: persoVedette }] = await Promise.all([
     _supabase.from('resources')
       .select('id, slug, title, preview_url, price, category, type_produit, vedette_ordre')
-      .eq('is_active', true).eq('vedette', true).order('vedette_ordre'),
+      .eq('is_active', true).eq('visible_boutique', true).eq('vedette', true).order('vedette_ordre'),
     _supabase.from('produits_perso')
       .select('id, type_key, name, image_url, price_cents, vedette_ordre')
       .eq('actif', true).eq('vedette', true).order('vedette_ordre'),
@@ -777,6 +777,7 @@ async function loadResources() {
       .from('resources')
       .select('id, slug, title, preview_url, price, category, type_produit')
       .eq('is_active', true)
+      .eq('visible_boutique', true)
       .order('created_at', { ascending: false })
       .limit(3);
     items = (recent || []).map(r => ({ ...r, _type: 'resource' }));

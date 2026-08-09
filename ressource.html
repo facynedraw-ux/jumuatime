@@ -593,6 +593,7 @@ async function loadSimilar(r) {
     .from('resources')
     .select('slug, title, preview_url, price, category')
     .eq('is_active', true)
+    .eq('visible_boutique', true)
     .eq('type_produit', 'numerique')
     .neq('id', r.id)
     .limit(4);

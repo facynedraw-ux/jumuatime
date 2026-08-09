@@ -390,6 +390,7 @@ async function init() {
       .from('resources')
       .select('id, slug, title, preview_url, price, category, type_produit, stock, variantes, type_objet, ordre')
       .eq('is_active', true)
+      .eq('visible_boutique', true)
       .order('ordre', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false }),
     _supabase
