@@ -219,12 +219,18 @@ p { text-wrap: pretty; }
     </div>
 
     <div class="phone-wrap">
-      <a href="Images/screen_serenity_dash.png" target="_blank" rel="noopener" class="phone-frame" style="cursor:zoom-in;" title="Voir en grand">
+      <div class="phone-frame" onclick="openLightbox()" style="cursor:zoom-in;" title="Voir en grand">
         <img src="Images/screen_serenity_dash.png" alt="Tilawa Tour — tableau de bord" loading="eager">
-      </a>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;cursor:zoom-out;">
+  <img src="Images/screen_serenity_dash.png" alt="Tilawa Tour — tableau de bord" style="max-height:90vh;max-width:90vw;border-radius:16px;box-shadow:0 40px 80px rgba(0,0,0,0.5);pointer-events:none;">
+  <button onclick="closeLightbox()" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
+</div>
 
 <!-- POUR TOUTE LA FAMILLE -->
 <section style="background:#fff;padding:3rem 1.5rem;text-align:center;border-bottom:1px solid #e9e8f5;">
@@ -372,6 +378,17 @@ p { text-wrap: pretty; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js?v=2"></script>
 <script>
+function openLightbox() {
+  const lb = document.getElementById('lightbox');
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
 async function submitTilawa(e) {
   e.preventDefault();
   const email = document.getElementById('tilawa-email').value.trim().toLowerCase();
