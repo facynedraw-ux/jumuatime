@@ -400,7 +400,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="text-xs text-muted mt-1">Upload depuis ton ordinateur ou colle une URL (mockups Gelato, etc.)</p>
     </div>
 
-    <div class="mb-5">
+    <div id="section-format" class="mb-5">
       <label class="f-label" for="f-format">Format</label>
       <input type="text" id="f-format" class="f-input" placeholder="PDF" value="PDF">
     </div>
@@ -411,9 +411,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="text-xs text-muted mt-1">Nombre entier — les plus petits apparaissent en premier. Laisser vide = dernier.</p>
     </div>
 
-    <div class="mb-5 flex items-center gap-3">
-      <input type="checkbox" id="f-active" checked style="accent-color:#C96B8A;width:15px;height:15px;">
-      <label for="f-active" class="text-sm cursor-pointer">Ressource active (visible dans la boutique)</label>
+    <div class="mb-5" style="display:flex;flex-direction:column;gap:10px;">
+      <div class="flex items-center gap-3">
+        <input type="checkbox" id="f-active" checked style="accent-color:#C96B8A;width:15px;height:15px;">
+        <label for="f-active" class="text-sm cursor-pointer">Produit actif (commandable)</label>
+      </div>
+      <div class="flex items-center gap-3">
+        <input type="checkbox" id="f-visible-boutique" checked style="accent-color:#5B9EAD;width:15px;height:15px;">
+        <label for="f-visible-boutique" class="text-sm cursor-pointer">Visible en boutique et recommandations</label>
+      </div>
     </div>
 
     <div class="f-sep"></div>
@@ -443,6 +449,7 @@ function onTypeProduitChange() {
   document.getElementById('section-stock').style.display    = isPhysique ? '' : 'none';
   document.getElementById('section-delai').style.display    = isPhysique ? '' : 'none';
   document.getElementById('section-bundle').style.display   = isBundle   ? '' : 'none';
+  document.getElementById('section-format').style.display   = (isPhysique || isBundle) ? 'none' : '';
   if (isBundle) loadBundleCandidates();
 }
 
@@ -802,6 +809,7 @@ function editResource(id) {
   document.getElementById('f-format').value = r.format || 'PDF';
   document.getElementById('f-ordre').value = r.ordre ?? '';
   document.getElementById('f-active').checked = r.is_active;
+  document.getElementById('f-visible-boutique').checked = r.visible_boutique !== false;
   document.getElementById('f-stock').value = r.stock ?? '';
   document.getElementById('f-gallery-list').innerHTML = '';
   (r.gallery_urls || []).forEach(url => addGalleryUrl(url));
@@ -858,6 +866,7 @@ function openPanel() {
   document.getElementById('f-format').value = 'PDF';
   document.getElementById('f-ordre').value = '';
   document.getElementById('f-active').checked = true;
+  document.getElementById('f-visible-boutique').checked = true;
   document.getElementById('f-gallery-list').innerHTML = '';
   document.getElementById('r-manuel').checked = true;
   document.getElementById('r-gelato').checked = false;
@@ -1070,9 +1079,12 @@ async function saveResource() {
       ? (document.getElementById('f-mode-livraison').value || 'lettre')
       : null,
     delai_livraison: document.getElementById('f-delai-livraison').value.trim() || null,
-    format: document.getElementById('f-format').value.trim() || 'PDF',
+    format: document.getElementById('f-type-produit').value === 'numerique'
+      ? (document.getElementById('f-format').value.trim() || 'PDF')
+      : null,
     ordre: document.getElementById('f-ordre').value !== '' ? parseInt(document.getElementById('f-ordre').value, 10) : null,
     is_active: document.getElementById('f-active').checked,
+    visible_boutique: document.getElementById('f-visible-boutique').checked,
     stock: document.getElementById('f-type-produit').value === 'physique'
       ? (document.getElementById('f-stock').value !== '' ? parseInt(document.getElementById('f-stock').value, 10) : null)
       : null,
