@@ -676,13 +676,14 @@ async function submitTilawa(e) {
   // Envoyer email de bienvenue via Edge Function
   console.log('[send-email] appel en cours pour:', email);
   try {
-    const res = await fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/send-email', {
+    const res = await fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/swift-function', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       },
-      body: JSON.stringify({ type: 'tilawa_gift', data: { to: email } })
+      body: JSON.stringify({ type: 'tilawa_access', data: { to_email: email } })
     });
     const body = await res.text();
     console.log('[send-email] status:', res.status, body);

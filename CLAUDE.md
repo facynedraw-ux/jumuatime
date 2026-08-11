@@ -233,14 +233,67 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
 ## Pages statiques — notes importantes
 - **Footer** : Instagram handle = `@jumuatime` / `instagram.com/jumuatime` (PAS `jumua_time` avec underscore)
 - **Footer newsletter** : `submitNewsletter(e)` est définie dans `supabase-client.js` — ne pas la redéfinir dans chaque page
-- **tilawatour.html** : landing page Tilawa Tour — hero teal foncé + 6 cartes fonctionnalités (bloom/serenity) + carte Suivi wide avec screenshot `Images/dashboard_bloom.jpg`
+- **a-propos.html** : pas de lien facyne.com — Instagram uniquement. Photo/avatar en bas de page (juste avant footer).
+
+### tilawatour.html — landing page Tilawa Tour
+- Hero : fond teal foncé, phone frame 380px (paysage), image `Images/screen_serenity_dash.png?v=2`, clic → lightbox
+- **Lightbox** : CSS class `#lightbox.is-open { display:flex }` — `openLightbox(src)` / `closeLightbox()` — touche Escape ferme. Override global `img { max-width }` via `#lightbox > img` avec `max-height:90vh; max-width:90vw; width:auto; height:auto`
+- **Avatars cliquables** : femme → `openLightbox('Images/screen1.png')` (Bloom), homme → `openLightbox('Images/screen_serenity.png')` (Serenity)
+- **6 vignettes fonctionnalités** (toutes cliquables vers lightbox) :
+  1. Lecture → `screen_lecteur.png?v=2`
+  2. Suivi → `screen_programme.png?v=2`
+  3. Ramadan → `screen_ramadan.png`
+  4. Thème → `screen_profil.png`
+  5. Tajwid → `screen_lexique.png`
+  6. Khatma → `screen_khatma.png`
+- **Feedbacks section** : table Supabase `feedbacks` (jumuatime project), affiche les validés (valide=true), formulaire type Avis/Suggestion/Bug + note étoiles pour Avis + nom + message
+- **Formulaire inscription** (`submitTilawa`) : INSERT `email_subscribers` + upsert `beta_access` → appel `swift-function` type `tilawa_access` → message "Vérifie ta boîte mail" + lien direct vers l'app
+
+### admin-feedbacks.html
+- Page admin (role='admin') — gestion feedbacks : filtres Tous/Avis/Suggestions/Bugs/En attente/Validés
+- Actions : valider/invalider (UPDATE valide), supprimer (DELETE avec confirm)
+
+## Tilawa Tour — app PWA
+- URL Cloudflare Pages : `https://tilawatour.pages.dev/` (lien dans emails et boutons)
+- URL Workers (ancienne) : `https://tilawatour.jumuaandme.workers.dev/` (encore active)
+- Supabase project séparé : `lekirecmfhewsnozgusm.supabase.co`, anon key = `sb_publishable_9O8kw2OwMKT5Kw4PBlHnew_l44qd46X`
+- Auth : `signInWithOtp` (code 6 chiffres), `shouldCreateUser: true`
+- **profil_bloom.html / profil_serenity.html** : section install PWA (beforeinstallprompt + iOS fallback), lien Assistance → `https://jumuatime.com/tilawatour#avis-section`
+- **send-app-link.mjs** : script Node.js pour envoyer le lien aux inscrits en base (`node send-app-link.mjs` dans D:\DEV\jumuatime)
+
+## Emails — swift-function (Supabase Edge Function)
+Slug : `swift-function` — URL : `/functions/v1/swift-function` — JWT OFF
+Types implémentés :
+| type | usage | données |
+|---|---|---|
+| `tilawa_access` (ou `tilawa_gift`) | Email d'accès Tilawa Tour — déclenché à l'inscription sur index.html ET tilawatour.html | `{ to_email }` |
+| `order_confirmation` | Confirmation commande (non-Stripe) | `{ to, order_id, items, total }` |
+
+Template `tilawa_access` : palette Jumuatime (#FAF6F0 fond, #1A1208 header, #C49A5A bouton, #5B9EAD lien), lien vers `tilawatour.pages.dev`, logo Jumuatime en footer.
+
+**Appel depuis le front** (index.html ET tilawatour.html) :
+```js
+fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/swift-function', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+  body: JSON.stringify({ type: 'tilawa_access', data: { to_email: email } })
+})
+```
+
+## Tables Supabase — nouvelles
+### Table `feedbacks`
+- `id`, `created_at`, `type` (text: 'avis'|'idée'|'bug'), `note` (int 1-5, nullable, pour avis), `nom` (text, nullable), `message` (text), `valide` (bool, default false)
+- RLS : INSERT public (anon), SELECT public (valide=true seulement), ALL admin via profiles.role='admin'
+
+### Table `beta_access`
+- `email` (unique), `source`, `created_at`
+- Remplie via upsert à chaque inscription Tilawa Tour
 
 ## Phase 2 — à faire (non implémenté)
 - Pré-remplissage automatique adresse dans panier depuis `adresses_livraison`
 - Factures Stripe : activer `invoice_creation` dans stripe-checkout.ts + stocker `stripe_customer_id` dans profiles + Edge Function pour récupérer PDFs
-- Screenshots cartes Lecture et Khatma dans tilawatour.html (en attente captures de l'interface)
 
 ## Ecosystème Jumua & Me
 - jumuatime.com — boutique illustrée famille musulmane
-- https://tilawatour.jumuaandme.workers.dev/ — app récitation Coran (Tilawa Tour)
-- facyne.com — portfolio et freelance de Facyne
+- https://tilawatour.pages.dev/ — app récitation Coran (Tilawa Tour), Cloudflare Pages
+- facyne.com — portfolio Facyne (projet séparé, aucun lien depuis jumuatime)
