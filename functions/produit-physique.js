@@ -9,7 +9,7 @@ export async function onRequestGet({ request, env }) {
   const url  = new URL(request.url);
   const slug = url.searchParams.get('slug');
 
-  // Pas de slug → sert le fichier statique normalement
+  // Pas de slug → fichier statique tel quel
   if (!slug) return env.ASSETS.fetch(request);
 
   // Récupère le produit depuis Supabase
@@ -19,18 +19,31 @@ export async function onRequestGet({ request, env }) {
       `${SUPABASE_URL}/rest/v1/resources?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=title,description,preview_url,price`,
       { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
     );
-    const data = await res.json();
-    product = Array.isArray(data) && data.length ? data[0] : null;
+    if (res.ok) {
+      const data = await res.json();
+      product = Array.isArray(data) && data.length ? data[0] : null;
+    }
   } catch {}
 
-  // Récupère le HTML statique
-  const assetReq = new Request(new URL('/produit-physique.html', url.origin));
-  const staticRes = await env.ASSETS.fetch(assetReq);
+  // Récupère le HTML statique — toujours via la requête originale pour éviter les redirects
+  let staticRes;
+  try {
+    // On passe la requête originale mais en retirant le query string pour cibler le fichier HTML
+    staticRes = await env.ASSETS.fetch(new Request(`${url.origin}/produit-physique.html`));
+    if (!staticRes.ok) staticRes = await env.ASSETS.fetch(request);
+  } catch {
+    return env.ASSETS.fetch(request);
+  }
 
-  // Produit introuvable → sert le HTML tel quel
+  // Produit introuvable → HTML statique intact (le JS client prendra le relais)
   if (!product) return staticRes;
 
-  let html = await staticRes.text();
+  let html;
+  try {
+    html = await staticRes.text();
+  } catch {
+    return env.ASSETS.fetch(request);
+  }
 
   const pageUrl = `https://jumuatime.com/produit-physique.html?slug=${encodeURIComponent(slug)}`;
   const title   = `${product.title} — Jumua Time`;
@@ -44,32 +57,27 @@ export async function onRequestGet({ request, env }) {
     `<meta property="og:type" content="product">`,
     `<meta property="og:site_name" content="Jumua Time">`,
     `<meta property="og:title" content="${esc(title)}">`,
-    `<meta property="og:description" content="${esc(desc)}">`,
+    `<meta property="og:description" content="${esc(desc.replace(/\n/g, ' '))}">`,
     image ? `<meta property="og:image" content="${esc(image)}">` : '',
     price ? `<meta property="product:price:amount" content="${price}">` : '',
     price ? `<meta property="product:price:currency" content="EUR">` : '',
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${esc(title)}">`,
-    `<meta name="twitter:description" content="${esc(desc)}">`,
+    `<meta name="twitter:description" content="${esc(desc.replace(/\n/g, ' '))}">`,
     image ? `<meta name="twitter:image" content="${esc(image)}">` : '',
-  ].filter(Boolean).join('\n  ');
+  ].filter(Boolean).join('\n');
 
-  // Injecte dans le <head> avant </head>
-  html = html.replace('</head>', `  ${ogBlock}\n</head>`);
+  // Injection uniquement dans </head> — pas de remplacement regex sur le body ou le titre
+  const injected = html.includes('</head>')
+    ? html.replace('</head>', `${ogBlock}\n</head>`)
+    : html;
 
-  // Met aussi à jour le <title> et la meta description statiques
-  // (visibles par les crawlers qui n'attendent pas le JS)
-  html = html.replace(/<title[^>]*>.*?<\/title>/, `<title>${esc(title)}</title>`);
-  html = html.replace(
-    /(<meta name="description" content=")[^"]*(")/,
-    `$1${esc(desc)}$2`
-  );
-
-  return new Response(html, {
+  return new Response(injected, {
     status: 200,
     headers: {
       'Content-Type': 'text/html;charset=UTF-8',
-      'Cache-Control': 'public, max-age=300, s-maxage=300',
+      // Pas de s-maxage : on laisse Cloudflare CDN ne pas mettre en cache côté edge
+      'Cache-Control': 'no-store',
     },
   });
 }
