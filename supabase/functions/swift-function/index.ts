@@ -56,10 +56,8 @@ serve(async (req) => {
       <table role="presentation" width="100%" style="max-width:560px;background:#FAF6F0;border-radius:16px;overflow:hidden;border:1px solid #E2D4BC;">
 
         <!-- Header -->
-        <tr><td style="background:#FAF6F0;padding:28px 32px 20px;border-bottom:2px solid #00917c;text-align:center;">
-          <img src="https://jumuatime.com/Images/logo_jumuatime.svg" alt="Jumua Time"
-               style="height:36px;max-width:160px;display:block;margin:0 auto 12px;" onerror="this.style.display='none'">
-          <p style="margin:0;color:#00917c;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Tilawa Tour</p>
+        <tr><td style="background:#00917c;padding:24px 32px;text-align:center;">
+          <p style="margin:0;color:#ffffff;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Tilawa Tour</p>
         </td></tr>
 
         <!-- Corps -->
@@ -111,8 +109,10 @@ serve(async (req) => {
           </p>
         </td></tr>
 
-        <!-- Footer -->
-        <tr><td style="background:#FAF6F0;padding:18px 32px;text-align:center;border-top:1px solid #E2D4BC;">
+        <!-- Footer logo -->
+        <tr><td style="background:#FAF6F0;padding:24px 32px 20px;text-align:center;border-top:1px solid #E2D4BC;">
+          <img src="https://jumuatime.com/Images/logo_jumuatime.svg" alt="Jumua Time"
+               style="height:32px;max-width:140px;display:block;margin:0 auto 14px;" onerror="this.style.display='none'">
           <p style="margin:0;color:#aaa;font-size:11px;line-height:1.6;">
             Tu reçois cet email car tu t'es inscrit·e sur jumuatime.com.<br>
             Pour te désinscrire : <a href="mailto:contact@jumuatime.com" style="color:#5B9EAD;text-decoration:none;">contact@jumuatime.com</a>
