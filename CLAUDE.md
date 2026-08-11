@@ -261,9 +261,19 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 - URL Cloudflare Pages : `https://tilawatour.pages.dev/` (lien dans emails et boutons)
 - URL Workers (ancienne) : `https://tilawatour.jumuaandme.workers.dev/` (encore active)
 - Supabase project séparé : `lekirecmfhewsnozgusm.supabase.co`, anon key = `sb_publishable_9O8kw2OwMKT5Kw4PBlHnew_l44qd46X`
+- Repo git : `D:\tilawa-deploy` (git push → Cloudflare Pages auto)
 - Auth : `signInWithOtp` (code 6 chiffres), `shouldCreateUser: true`
 - **profil_bloom.html / profil_serenity.html** : section install PWA (beforeinstallprompt + iOS fallback), lien Assistance → `https://jumuatime.com/tilawatour#avis-section`
 - **send-app-link.mjs** : script Node.js pour envoyer le lien aux inscrits en base (`node send-app-link.mjs` dans D:\DEV\jumuatime)
+
+### Edge Function Tilawa Tour — notify-new-user
+- Fichier : `D:\tilawa-deploy\supabase\functions\notify-new-user\index.ts`
+- Projet Supabase : `lekirecmfhewsnozgusm` — JWT OFF
+- Rôle : envoie un email à `jumuaandme@gmail.com` à chaque nouvelle inscription
+- From : `Tilawa Tour <contact@jumuatime.com>` (domaine jumuatime.com vérifié dans Resend — tilawatour.com non acheté)
+- Secret requis : `RESEND_API_KEY` = clé du compte Resend jumuatime
+- Déclencheur : trigger PostgreSQL `on_auth_user_created` sur `auth.users` — INSERT uniquement (jamais sur UPDATE/reconnexion)
+- Déployer : `npx supabase@2.113.0 functions deploy notify-new-user --project-ref lekirecmfhewsnozgusm --no-verify-jwt`
 
 ## Emails — swift-function (Supabase Edge Function)
 Slug : `swift-function` — URL : `/functions/v1/swift-function` — JWT OFF
