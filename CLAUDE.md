@@ -5,7 +5,7 @@ HTML statique + Tailwind CDN + Vanilla JS
 Supabase (PostgreSQL + Auth + Storage) — project: qsvozaxqeamrdkmujoze.supabase.co
 Stripe mode LIVE (paiements réels)
 Resend (emails transactionnels) — From : contact@jumuatime.com
-Cloudflare Pages — repo: C:\Users\conta\OneDrive\Documents\GitHub\maktaba-tour
+Cloudflare Pages — repo git : D:\DEV\jumuatime (git push → Cloudflare auto)
 Répertoire de travail local : D:\DEV\jumuatime\
 
 ## Palette

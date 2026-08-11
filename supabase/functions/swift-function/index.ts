@@ -50,70 +50,72 @@ serve(async (req) => {
         `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#E8DDD0;font-family:'DM Sans',Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#E8DDD0;padding:32px 16px;">
     <tr><td align="center">
-      <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;">
+      <table role="presentation" width="100%" style="max-width:560px;background:#FAF6F0;border-radius:16px;overflow:hidden;border:1px solid #E2D4BC;">
 
-        <!-- Header doré -->
-        <tr><td style="background:#1A1208;padding:28px 32px;">
-          <p style="margin:0;color:#EFC865;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Jumua Time</p>
+        <!-- Header -->
+        <tr><td style="background:#1A1208;padding:24px 32px;border-bottom:3px solid #EFC865;">
+          <p style="margin:0;color:#EFC865;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">Jumua Time · Tilawa Tour</p>
         </td></tr>
 
         <!-- Corps -->
-        <tr><td style="padding:36px 32px;">
-          <p style="margin:0 0 20px;color:#1A1208;font-size:15px;line-height:1.7;">Salam alaikoum,</p>
-          <p style="margin:0 0 20px;color:#1A1208;font-size:15px;line-height:1.7;">
+        <tr><td style="padding:36px 32px 24px;">
+          <p style="margin:0 0 16px;color:#1A1208;font-size:15px;line-height:1.7;">Salam alaikoum,</p>
+          <p style="margin:0 0 24px;color:#3A2F24;font-size:15px;line-height:1.8;">
             Cher voyageur ou voyageuse, voici ton lien pour accéder à l'application Tilawa Tour,
             notre application de lecture et de révision du Coran.
           </p>
 
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px 0;">
-            <tr><td style="border-radius:30px;background:#EFC865;">
+            <tr><td style="border-radius:30px;background:#C49A5A;">
               <a href="https://tilawatour.pages.dev/"
-                 style="display:inline-block;padding:14px 32px;color:#1A1208;text-decoration:none;font-weight:700;font-size:15px;">
+                 style="display:inline-block;padding:14px 32px;color:#1A1208;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:0.01em;">
                 Accéder à Tilawa Tour →
               </a>
             </td></tr>
           </table>
 
-          <p style="margin:0 0 20px;color:#444444;font-size:14px;line-height:1.8;">
+          <p style="margin:0 0 20px;color:#5A4030;font-size:14px;line-height:1.8;">
             Un lien pour la télécharger sur ton téléphone va s'afficher au bout de quelques minutes
             d'utilisation pour plus de facilité, mais tu peux aussi la garder sur ordinateur et y accéder
             grâce à ce lien avec le même email que celui avec lequel tu te seras loggué·e la première fois.
           </p>
 
-          <p style="margin:0 0 8px;color:#444444;font-size:14px;line-height:1.8;">
+          <p style="margin:0 0 8px;color:#5A4030;font-size:14px;line-height:1.8;">
             Cette application débute son aventure et il se peut que tu trouves des améliorations à suggérer,
             des bugs éventuels ou d'autres choses pertinentes à partager, je t'invite à les consigner
             dans la section avis en bas de cette page :
           </p>
           <p style="margin:0 0 28px;">
-            <a href="https://jumuatime.com/tilawatour" style="color:#5B9EAD;font-size:14px;">https://jumuatime.com/tilawatour</a>
+            <a href="https://jumuatime.com/tilawatour" style="color:#5B9EAD;font-size:14px;text-decoration:none;font-weight:600;">https://jumuatime.com/tilawatour</a>
           </p>
 
-          <p style="margin:0 0 28px;color:#1A1208;font-size:15px;line-height:1.7;font-style:italic;">
+          <p style="margin:0 0 28px;color:#1A1208;font-size:15px;line-height:1.7;font-style:italic;border-left:3px solid #EFC865;padding-left:16px;">
             Cheminez avec le Coran, mois après mois.
           </p>
 
-          <p style="margin:0;color:#444444;font-size:14px;line-height:1.7;">
+          <p style="margin:0;color:#3A2F24;font-size:14px;line-height:1.7;">
             Fraternellement,<br>
-            <strong>L'équipe Jumua Time</strong>
+            <strong style="color:#1A1208;">L'équipe Jumua Time</strong>
           </p>
         </td></tr>
 
         <!-- Note réponse -->
-        <tr><td style="padding:0 32px 24px;color:#888888;font-size:12px;line-height:1.6;">
-          Si tu as la moindre question, n'hésite pas à nous écrire en réponse à cet email.
+        <tr><td style="padding:0 32px 28px;border-top:1px solid #E2D4BC;padding-top:20px;">
+          <p style="margin:0;color:#8B7A5A;font-size:12px;line-height:1.6;">
+            Si tu as la moindre question, n'hésite pas à nous écrire en réponse à cet email.
+          </p>
         </td></tr>
 
         <!-- Footer logo -->
-        <tr><td style="background:#1A1208;padding:20px 32px;text-align:center;border-top:3px solid #EFC865;">
+        <tr><td style="background:#1A1208;padding:22px 32px;text-align:center;">
           <img src="https://jumuatime.com/Images/logo_jumuatime.svg" alt="Jumua Time"
-               style="height:36px;max-width:160px;" onerror="this.style.display='none'">
-          <p style="margin:8px 0 0;color:#8B7A5A;font-size:11px;">
+               style="height:34px;max-width:150px;display:block;margin:0 auto 10px;" onerror="this.style.display='none'">
+          <p style="margin:0;color:#7A6A58;font-size:11px;line-height:1.6;">
             Tu reçois cet email car tu t'es inscrit·e sur jumuatime.com.<br>
-            Pour te désinscrire : <a href="mailto:contact@jumuatime.com" style="color:#EFC865;">contact@jumuatime.com</a>
+            Pour te désinscrire : <a href="mailto:contact@jumuatime.com" style="color:#EFC865;text-decoration:none;">contact@jumuatime.com</a>
           </p>
         </td></tr>
 
