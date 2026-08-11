@@ -1,4 +1,4 @@
-const CACHE = 'maktaba-v3';
+const CACHE = 'maktaba-v4';
 
 const PRECACHE = [
   '/',
@@ -32,6 +32,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = e.request.url;
+  // Pages produit dynamiques : laisser le navigateur gérer (contenu Supabase + UTM params)
+  if (url.includes('/produit-physique') || url.includes('/ressource.html') ||
+      url.includes('/ressources.html')) return;
   // Ne jamais mettre en cache les appels Supabase, Stripe, Google Fonts, CDN
   if (url.includes('supabase.co') || url.includes('stripe.com') ||
       url.includes('fonts.googleapis') || url.includes('fonts.gstatic') ||
