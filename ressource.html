@@ -385,6 +385,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="cart.js"></script>
 
 <script>
+// ── Open Graph + canonical (Pinterest, réseaux sociaux) ──
+function setOgMeta(title, description, imageUrl, pageUrl, priceEuros) {
+  const set = (prop, val, attr) => {
+    let el = document.querySelector(`meta[${attr}="${prop}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute(attr, prop); document.head.appendChild(el); }
+    el.content = val || '';
+  };
+  let can = document.querySelector('link[rel="canonical"]');
+  if (!can) { can = document.createElement('link'); can.rel = 'canonical'; document.head.appendChild(can); }
+  can.href = pageUrl;
+  set('og:url',         pageUrl,                                    'property');
+  set('og:type',        'product',                                  'property');
+  set('og:site_name',   'Jumua Time',                               'property');
+  set('og:title',       title,                                      'property');
+  set('og:description', (description || '').slice(0, 200),          'property');
+  if (imageUrl) set('og:image', imageUrl,                           'property');
+  if (priceEuros != null) {
+    set('product:price:amount',   Number(priceEuros).toFixed(2),    'property');
+    set('product:price:currency', 'EUR',                            'property');
+  }
+  set('twitter:card',        'summary_large_image',                 'name');
+  set('twitter:title',       title,                                 'name');
+  set('twitter:description', (description || '').slice(0, 200),     'name');
+  if (imageUrl) set('twitter:image', imageUrl,                      'name');
+}
+
 const CAT_STYLES = {
   enfants:      { bg:'#EBF5F7', color:'#3D7A8A', label:'Enfants' },
   spiritualite: { bg:'#F5EDE0', color:'#8B6230', label:'Spiritualité' },
@@ -506,9 +532,17 @@ function showNotFound() {
 
 function renderResource(r) {
   document.title = `${r.title} — Jumua Time`;
-  document.querySelector('meta[name="description"]').content = r.description
+  const metaDesc = r.description
     ? r.description.slice(0,150) + '…'
     : `${r.title} — Ressource pédagogique Jumua Time`;
+  document.querySelector('meta[name="description"]').content = metaDesc;
+  setOgMeta(
+    r.title,
+    metaDesc,
+    r.preview_url || '',
+    `https://jumuatime.com/ressource.html?slug=${encodeURIComponent(new URLSearchParams(location.search).get('slug') || '')}`,
+    r.price
+  );
   document.getElementById('bc-title').textContent = r.title;
 
   // Image principale + galerie
