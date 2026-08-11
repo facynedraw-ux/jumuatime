@@ -269,7 +269,7 @@ Types implémentés :
 | `tilawa_access` (ou `tilawa_gift`) | Email d'accès Tilawa Tour — déclenché à l'inscription sur index.html ET tilawatour.html | `{ to_email }` |
 | `order_confirmation` | Confirmation commande (non-Stripe) | `{ to, order_id, items, total }` |
 
-Template `tilawa_access` : palette Jumuatime (#FAF6F0 fond, #1A1208 header, #C49A5A bouton, #5B9EAD lien), lien vers `tilawatour.pages.dev`, logo Jumuatime en footer.
+Template `tilawa_access` : fond crème (#FAF6F0), accents émeraude Tilawa Tour (#00917c — bouton, bordure italique, ligne sous header), texte foncé (#1A1A1A), liens teal (#5B9EAD). PAS de bandeau sombre. Lien vers `tilawatour.pages.dev`, logo en header sur fond clair.
 
 **Appel depuis le front** (index.html ET tilawatour.html) :
 ```js
