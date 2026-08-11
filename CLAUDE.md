@@ -178,6 +178,10 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
 | `swift-function.js` | `/api/swift-function` | Webhook Stripe → Gelato + emails confirmation |
 | `physique-checkout.js` | `/api/physique-checkout` | Checkout produit physique simple |
 | `email-expedition.js` | `/api/email-expedition` | Email suivi expédition (appelé depuis admin-commandes) |
+| `produit-physique.js` | `/produit-physique` | Injection OG tags server-side pour Pinterest/crawlers |
+
+⚠️ **Règle obligatoire — Cloudflare Functions retournant du HTML dynamique** :
+Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `s-maxage` ou `public` sur du HTML généré dynamiquement : Cloudflare CDN mettrait la réponse en cache et la servirait à tous les slugs/URLs suivants, causant une régression globale (toutes les fiches produit affichent le même contenu ou une page vide).
 
 ## Variables d'environnement Cloudflare
 - `STRIPE_SECRET_KEY`
