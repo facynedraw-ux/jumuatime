@@ -550,11 +550,26 @@ async function submitTilawa(e) {
     return;
   }
 
+  /* Envoi de l'email d'accès via swift-function (Resend) */
+  fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/swift-function', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzdm96YXhxZWFtcmRrbXVqb3plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMzgyMDUsImV4cCI6MjA5NTcxNDIwNX0.3n6D7gfxb7qNi24brfxc59qwG-g4cT0s0kRq5fbSE-o',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzdm96YXhxZWFtcmRrbXVqb3plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMzgyMDUsImV4cCI6MjA5NTcxNDIwNX0.3n6D7gfxb7qNi24brfxc59qwG-g4cT0s0kRq5fbSE-o'
+    },
+    body: JSON.stringify({ type: 'tilawa_access', data: { to_email: email } })
+  }).catch(() => {}); /* fire-and-forget — ne bloque pas l'UI */
+
   document.getElementById('tilawa-form').innerHTML = `
     <div style="text-align:center;padding:1rem 0;">
-      <span class="ms" style="font-size:44px;color:#EFC865;display:block;margin-bottom:.75rem;">check_circle</span>
-      <p style="color:white;font-weight:600;margin-bottom:.25rem;">Merci ! Vérifiez votre boîte mail.</p>
-      <p style="font-size:12px;color:rgba(255,255,255,0.6);">Votre lien d'accès vous a été envoyé.</p>
+      <span class="ms" style="font-size:44px;color:#EFC865;display:block;margin-bottom:.75rem;">mark_email_read</span>
+      <p style="color:white;font-weight:600;margin-bottom:.25rem;">Vérifie ta boîte mail !</p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:1rem;">Ton lien d'accès t'a été envoyé.</p>
+      <a href="https://tilawatour.pages.dev/"
+         style="display:inline-block;padding:10px 24px;background:#EFC865;color:#1A1208;border-radius:30px;font-weight:700;font-size:13px;text-decoration:none;">
+        Ouvrir Tilawa Tour →
+      </a>
     </div>`;
 }
 </script>
