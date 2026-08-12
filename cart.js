@@ -2,7 +2,7 @@
   const KEY             = 'jt_panier';
   const SHIPPING_LETTRE = 200;   // 2,00 € — petits objets (marque-pages, cartes)
   const SHIPPING_COLIS  = 490;   // 4,90 € — colis (mugs, grands formats)
-  const SHIPPING_FREE   = 4500;  // 45,00 € — livraison offerte sur produits manuels
+  const SHIPPING_FREE   = 4900;  // 49,00 € — livraison offerte sur produits manuels
 
   window.Cart = {
     get() {

@@ -787,7 +787,8 @@ function renderProduit() {
   const _isGelato = !produit.mode_livraison && !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
   const _isLettre = produit.mode_livraison === 'lettre';
   const _delaiDef = _isGelato ? '5 à 7 jours ouvrés' : (_isLettre ? '3 jours ouvrés' : '3 à 5 jours ouvrés');
-  const delai = produit.delai_livraison || _delaiDef;
+  const rawDelai = produit.delai_livraison || '';
+  const delai = /\d|jour|semaine/i.test(rawDelai) ? rawDelai : _delaiDef;
   document.getElementById('product-delay-badge').textContent = `⏱ ${delai}`;
 
   // Description
@@ -921,12 +922,12 @@ function updatePrix(prixProduit) {
   } else {
     const modeLivr  = (produit.variantes || []).find(v => v.id === varianteChoisie)?.mode_livraison
                     || produit.mode_livraison || 'colis';
-    const shipCents = modeLivr === 'lettre' ? 200 : 490;
-    const shipFmt   = (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
-    document.getElementById('recap-livraison').textContent = shipFmt;
+    const shipCents = prixProduit >= 4900 ? 0 : (modeLivr === 'lettre' ? 200 : 490);
+    document.getElementById('recap-livraison').textContent =
+      shipCents === 0 ? 'Offerte 🎁' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     document.getElementById('recap-total').textContent =
       ((prixProduit + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
-    infoEl.textContent = 'Livraison offerte à partir de 45 € d\'achat';
+    infoEl.textContent = 'Livraison colissimo 4,90 € · Gratuite au delà de 49 €';
     const hint = document.getElementById('checkout-hint');
     if (hint) hint.textContent = 'Paiement sécurisé par Stripe';
   }
