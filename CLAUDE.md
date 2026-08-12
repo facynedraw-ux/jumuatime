@@ -164,9 +164,10 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
 
 ## Livraison
 - Seuil livraison offerte produits manuels : **49 € minimum** (`SHIPPING_FREE = 4900` dans cart.js)
-- Livraison lettre : 2,00 € (`SHIPPING_LETTRE = 200`)
-- Livraison colis : 4,90 € (`SHIPPING_COLIS = 490`)
-- Produits Gelato : livraison calculée par Gelato à l'étape panier
+- Livraison **lettre suivie** : 2,00 € (`SHIPPING_LETTRE = 200`) — cartes, marque-pages — délai 3 à 4 jours ouvrés
+- Livraison **Colissimo** : 4,90 € (`SHIPPING_COLIS = 490`) — mugs, grands formats — délai 3 à 5 jours ouvrés
+- Produits Gelato : livraison calculée par Gelato à l'étape panier — délai 5 à 7 jours ouvrés
+- `mode_livraison` en DB : `'lettre'` pour lettre suivie, `'colis'` (ou null) pour Colissimo
 
 ## Stripe
 - Mode LIVE (vraie carte) — NE JAMAIS passer en mode TEST
