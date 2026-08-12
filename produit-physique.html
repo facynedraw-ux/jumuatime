@@ -638,13 +638,13 @@ async function renderBundle() {
     const infoEl = document.getElementById('recap-livraison-info');
     if (infoEl) infoEl.textContent = 'Frais de livraison calculés à l\'étape suivante';
   } else {
-    const shipCents = 490;
+    const shipCents = bundlePriceCents >= 4900 ? 0 : 490;
     document.getElementById('recap-livraison').textContent =
-      (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+      shipCents === 0 ? 'Offerte 🎁' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     document.getElementById('recap-total').textContent =
       ((bundlePriceCents + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     const infoEl = document.getElementById('recap-livraison-info');
-    if (infoEl) infoEl.textContent = 'Livraison colissimo 4,90 €';
+    if (infoEl) infoEl.textContent = 'Livraison colissimo 4,90 € · Gratuite au delà de 49 €';
   }
 
   // Colonne gauche : image principale du bundle
