@@ -33,6 +33,7 @@ Répertoire de travail local : D:\DEV\jumuatime\
 Pages principales :
 - index.html
 - ressources.html — boutique (filtres JS, pas de rechargement)
+- personnalisation.html — commandes personnalisées (produits chargés depuis `produits_perso`, formulaire dynamique par type)
 - a-propos.html
 
 Fiches produit :
@@ -50,13 +51,17 @@ Pages admin (noindex) :
 - admin.html — tableau de bord principal (stats, achats récents, abonnés)
 - admin-commandes.html — gestion commandes physiques + achats numériques
 - admin-ressources.html — ajout/édition des produits en boutique
+- admin-perso.html — fiches personnalisation (créer, modifier, dupliquer, supprimer, galerie multi-images)
+- admin-stock.html — gestion du stock
+- admin-feedbacks.html — gestion des feedbacks/avis Tilawa Tour
 
 Pages légales :
-- cgv.html, mentions.html, confidentialite.html, personnalisation.html
+- cgv.html, mentions.html, confidentialite.html
 
 Autres :
 - supabase-client.js — client Supabase partagé (NE JAMAIS re-déclarer _supabase)
 - cart.js — panier localStorage (clé `jt_panier`) — Cart.add/remove/setQty/clear/count/subtotal/shipping/total
+- protect.js — protection images : bloque clic droit, drag, long-press iOS (`-webkit-touch-callout`) — inclus dans index, ressources, ressource, produit-physique, personnalisation, tilawatour
 - sw.js — service worker
 - media-picker.js
 - functions/api/ — Edge Functions Cloudflare Pages
@@ -208,6 +213,24 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 - Déclenche email expédition automatiquement quand statut passe à "expedie"
 - Bouton "+ Nouvelle commande" : INSERT manuel avec stripe_session_id = 'MANUEL-' + Date.now()
 
+## Admin — personnalisation (admin-perso.html)
+- Grille de fiches depuis `produits_perso` (ordonnées par `ordre`)
+- Bouton "Nouvelle fiche" → panel création (name, type_key dropdown, prix, description, actif)
+- Clic sur une carte → panel édition : photo principale, modèles, galerie multi-images, prix, description, actif, options par type
+- Boutons panel : Enregistrer (→ ferme le panel) / Dupliquer (copie inactif) / Supprimer (confirm)
+- Upload images : bucket Supabase Storage `perso-covers`
+  - Photo principale : `{type_key}/cover-{timestamp}.{ext}` → colonne `image_url`
+  - Modèles : `{type_key}/modele-{timestamp}.{ext}` → `options.modeles[]` (image + label éditable)
+  - Galerie : `{type_key}/gallery-{timestamp}.{ext}` → `options.gallery[]`
+  - Fonds calligraphie arabe : `calligraphie-arabe/fond-{timestamp}.{ext}` → `options.fonds[]`
+- **RLS Storage** (à appliquer si le bucket est nouveau) :
+  ```sql
+  CREATE POLICY "Public read perso-covers" ON storage.objects FOR SELECT USING (bucket_id = 'perso-covers');
+  CREATE POLICY "Auth insert perso-covers" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'perso-covers' AND auth.role() = 'authenticated');
+  CREATE POLICY "Auth update perso-covers" ON storage.objects FOR UPDATE USING (bucket_id = 'perso-covers' AND auth.role() = 'authenticated');
+  CREATE POLICY "Auth delete perso-covers" ON storage.objects FOR DELETE USING (bucket_id = 'perso-covers' AND auth.role() = 'authenticated');
+  ```
+
 ## Admin — ressources (admin-ressources.html)
 - Bouton corbeille rouge sur chaque produit → confirm() + DELETE resources (RLS admin_delete requis)
 - "Voir la fiche" route vers produit-physique.html pour type_produit = 'physique' OU 'bundle'
@@ -219,6 +242,18 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 - `_manualPhysical()` dans cart.js inclut les bundles sans gelato_product_id
 - `stripe-checkout` : manualPhysical inclut bundles sans gelato_product_id → port 4,90 € calculé
 - Bundle "Coffret 4 Mugs Les 4 saisons" : g=null en DB depuis 2026-08-08 → livraison manuelle
+
+## Protocole obligatoire avant chaque git push (PRODUCTION LIVE)
+
+Avant de dire "déployé" ou de faire `git push`, vérifier systématiquement :
+
+1. **Accolades JS** — après toute modification d'un bloc JS (`if`, `function`, template literal), recompter manuellement les `{` et `}` dans la zone modifiée. Une accolade manquante casse tout le script silencieusement.
+2. **Template literals imbriquées** — les backticks `` ` `` dans un template literal doivent être échappés ou remplacés par `'`. Vérifier les `${}` dans les `.map()` imbriquées.
+3. **Variables utilisées avant déclaration** — si une fonction appelle `escHtml`, `showToast`, etc., vérifier qu'elles sont définies dans la page.
+4. **Test en conditions réelles** — ouvrir la page concernée après déploiement Cloudflare (1-2 min) et vérifier visuellement la fonctionnalité modifiée avant de marquer la tâche comme terminée. Si la page est blanche ou un chargement ne se fait plus → ouvrir la console (F12) et lire l'erreur exacte.
+5. **Fichiers dépendants** — si un fichier partagé (supabase-client.js, cart.js) est modifié, tester toutes les pages qui l'importent.
+
+⚠️ Ce site est en production LIVE (Stripe réel, vraies clientes). Tester avant de déclarer une tâche terminée.
 
 ## Règles importantes
 - NE JAMAIS utiliser balise <form> → event handlers JS uniquement
@@ -263,6 +298,7 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 - Supabase project séparé : `lekirecmfhewsnozgusm.supabase.co`, anon key = `sb_publishable_9O8kw2OwMKT5Kw4PBlHnew_l44qd46X`
 - Repo git : `D:\tilawa-deploy` (git push → Cloudflare Pages auto)
 - Auth : `signInWithOtp` (code 6 chiffres), `shouldCreateUser: true`
+- **SMTP Auth email** : configuré avec Resend, From = `contact@jumuatime.com` (jumuatime.com vérifié) — ⚠️ NE PAS remettre contact@tilawatour.com (domaine non possédé → 403 Resend)
 - **profil_bloom.html / profil_serenity.html** : section install PWA (beforeinstallprompt + iOS fallback), lien Assistance → `https://jumuatime.com/tilawatour#avis-section`
 - **send-app-link.mjs** : script Node.js pour envoyer le lien aux inscrits en base (`node send-app-link.mjs` dans D:\DEV\jumuatime)
 
@@ -302,6 +338,27 @@ fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/swift-function', {
 ### Table `beta_access`
 - `email` (unique), `source`, `created_at`
 - Remplie via upsert à chaque inscription Tilawa Tour
+
+### Table `produits_perso`
+Gère les fiches de commande personnalisée (pochons, calligraphies, cadres…)
+- `id` (uuid)
+- `name` (text) — nom affiché
+- `type_key` (text) — identifiant type : `pochon` | `calligraphie-latine` | `calligraphie-arabe` | `cadre-argile` | tout autre slug
+- `description` (text, nullable)
+- `price_cents` (integer, centimes) — 0 = "Prix à définir", produit non commandable
+- `actif` (boolean) — visible sur personnalisation.html (uniquement si actif ET price_cents > 0)
+- `image_url` (text, nullable) — photo principale (cover) affichée dans le dropdown et la carte
+- `options` (jsonb) — données spécifiques au type :
+  - `colors` (array) — couleurs disponibles (pochon)
+  - `tailles`, `couleurs`, `versions` (arrays) — options cadre argile
+  - `fonds` (array {url, label}) — fonds calligraphie arabe (affichés côté client)
+  - `gallery` (array {url, label}) — galerie multi-images (admin + miniatures sur personnalisation.html)
+  - `modeles` (array {url, label}) — variantes visuelles que le client sélectionne (picker portrait sur personnalisation.html, sélection obligatoire si non vide)
+- `ordre` (integer) — ordre d'affichage dans la grille
+- `vedette` (boolean), `vedette_ordre` (integer 1-3)
+- `updated_at` (timestamp)
+
+⚠️ Le `type_key` est utilisé dans `personnalisation.html` → `getFormFields(key)` pour rendre les champs dynamiques. Un type_key inconnu affiche une section vide (formulaire de base uniquement).
 
 ## Phase 2 — à faire (non implémenté)
 - Pré-remplissage automatique adresse dans panier depuis `adresses_livraison`
