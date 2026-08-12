@@ -614,6 +614,7 @@ async function renderBundle() {
   );
 
   const items = produit.bundle_items || [];
+  const hasGelato = items.some(b => b.g);
   const totalIndiv = items.reduce((s, b) => s + (b.p || 0), 0);
   const bundlePriceCents = Math.round(produit.price * 100);
   const saving = totalIndiv - bundlePriceCents;
@@ -621,14 +622,27 @@ async function renderBundle() {
   // Prix
   document.getElementById('product-price-display').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
-  document.getElementById('product-delay-badge').textContent = '⏱ 5 à 7 jours ouvrés';
+  const delaiEl = document.getElementById('product-delay-badge');
+  if (delaiEl) delaiEl.textContent = hasGelato ? '⏱ 5 à 7 jours ouvrés' : '⏱ 3 à 5 jours ouvrés';
 
   // Récap
   document.getElementById('recap-produit').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
-  document.getElementById('recap-livraison').textContent = 'Via Gelato';
-  document.getElementById('recap-total').textContent =
-    (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
+  if (hasGelato) {
+    document.getElementById('recap-livraison').textContent = '—';
+    document.getElementById('recap-total').textContent =
+      (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
+    const infoEl = document.getElementById('recap-livraison-info');
+    if (infoEl) infoEl.textContent = 'Frais de livraison calculés à l\'étape suivante';
+  } else {
+    const shipCents = 490;
+    document.getElementById('recap-livraison').textContent =
+      (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+    document.getElementById('recap-total').textContent =
+      ((bundlePriceCents + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+    const infoEl = document.getElementById('recap-livraison-info');
+    if (infoEl) infoEl.textContent = 'Livraison colissimo 4,90 €';
+  }
 
   // Colonne gauche : image principale du bundle
   if (produit.preview_url) {
@@ -653,8 +667,12 @@ async function renderBundle() {
   details.innerHTML = `
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">inventory_2</span> <strong>Ce coffret contient 4 articles :</strong></div>
     ${items.map(b => `<div class="flex items-center gap-2 pl-6"><span class="ms" style="font-size:14px;color:#C49A5A;">check</span> ${esc(b.t)}</div>`).join('')}
-    <div class="flex items-center gap-2 mt-1"><span class="ms" style="font-size:16px;color:#5B9EAD;">local_shipping</span> Impression et livraison par Gelato</div>
-    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">workspace_premium</span> Fabrication professionnelle à la demande</div>`;
+    ${hasGelato
+      ? `<div class="flex items-center gap-2 mt-1"><span class="ms" style="font-size:16px;color:#5B9EAD;">local_shipping</span> Impression et livraison par Gelato</div>
+         <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">workspace_premium</span> Fabrication professionnelle à la demande</div>`
+      : `<div class="flex items-center gap-2 mt-1"><span class="ms" style="font-size:16px;color:#5B9EAD;">local_shipping</span> Préparé et envoyé à la main par Facyne</div>
+         <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">workspace_premium</span> Fabrication artisanale soignée</div>`
+    }`;
 
   // Activer le bouton panier
   document.getElementById('add-cart-btn').disabled = false;
