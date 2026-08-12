@@ -204,7 +204,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <select id="product-select" class="field-input field-select" onchange="onProductSelectChange(this.value)">
         <option value="">Chargement…</option>
       </select>
-      <div id="product-image-wrap" class="hidden mt-3 rounded-xl overflow-hidden mx-auto" style="aspect-ratio:3/4;max-width:280px;">
+      <div id="product-image-wrap" class="hidden mt-3 rounded-xl overflow-hidden mx-auto" style="aspect-ratio:3/4;max-width:280px;cursor:zoom-in;" onclick="openImgLightbox(document.getElementById('product-image').src)">
         <img id="product-image" src="" alt="" class="w-full h-full object-cover">
       </div>
       <div id="product-gallery-thumbs" class="hidden mt-2 flex gap-2 justify-center flex-wrap"></div>
@@ -396,12 +396,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div id="toast" role="alert" aria-live="polite"></div>
 
+<div id="img-lightbox" onclick="closeImgLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;">
+  <img id="img-lightbox-img" src="" alt="" style="max-height:90vh;max-width:90vw;border-radius:10px;object-fit:contain;box-shadow:0 8px 40px rgba(0,0,0,0.5);">
+</div>
+
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js?v=2"></script>
 
 <script>
 const escHtml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function openImgLightbox(src) {
+  const lb = document.getElementById('img-lightbox');
+  document.getElementById('img-lightbox-img').src = src;
+  lb.style.display = 'flex';
+}
+function closeImgLightbox() {
+  document.getElementById('img-lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImgLightbox(); });
 
 // ── État ──
 let selectedProduct = null;
