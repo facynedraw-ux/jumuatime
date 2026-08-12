@@ -859,8 +859,8 @@ async function saveProduct() {
   if (idx !== -1) allProduits[idx] = { ...currentProduit };
   renderGrid();
 
-  showPanelMsg('pnl-msg', '✓ Enregistré', '#207040');
-  setTimeout(() => { const m = document.getElementById('pnl-msg'); if (m) m.classList.add('hidden'); }, 3000);
+  showToast('Fiche enregistrée', 'success');
+  setTimeout(() => closePanel(), 400);
 }
 
 // ── Helpers ──
