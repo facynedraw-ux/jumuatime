@@ -611,7 +611,7 @@ async function renderBundle() {
     produit.title,
     produit.description || `${produit.title} — Jumua Time`,
     produit.preview_url || '',
-    `https://jumuatime.com/produit-physique.html?slug=${encodeURIComponent(produitSlug)}`,
+    `https://jumuatime.com/produit-physique.html?slug=${encodeURIComponent(new URLSearchParams(location.search).get('slug') || '')}`,
     produit.price
   );
 
