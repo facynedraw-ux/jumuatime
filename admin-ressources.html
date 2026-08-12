@@ -450,21 +450,28 @@ function onTypeProduitChange() {
   document.getElementById('section-delai').style.display    = isPhysique ? '' : 'none';
   document.getElementById('section-bundle').style.display   = isBundle   ? '' : 'none';
   document.getElementById('section-format').style.display   = (isPhysique || isBundle) ? 'none' : '';
-  if (isBundle) loadBundleCandidates();
+  if (isBundle) {
+    const tok = ++_bundleRenderToken;
+    loadBundleCandidates().then(() => { if (_bundleRenderToken === tok) renderBundleSlots(); });
+  }
 }
 
 // ── Bundle helpers ──
 let _bundleCandidates = [];
+let _bundleLoadPromise = null;
+let _bundleRenderToken = 0;
 
 async function loadBundleCandidates() {
-  if (_bundleCandidates.length) { renderBundleSlots(); return; }
-  const { data } = await _supabase
-    .from('resources')
-    .select('id, title, price, preview_url, variantes, gelato_product_id')
-    .eq('type_produit', 'physique')
-    .order('title');
-  _bundleCandidates = data || [];
-  renderBundleSlots();
+  if (_bundleCandidates.length) return;
+  if (!_bundleLoadPromise) {
+    _bundleLoadPromise = _supabase
+      .from('resources')
+      .select('id, title, price, preview_url, variantes, gelato_product_id')
+      .eq('type_produit', 'physique')
+      .order('title')
+      .then(({ data }) => { _bundleCandidates = data || []; _bundleLoadPromise = null; });
+  }
+  await _bundleLoadPromise;
 }
 
 function renderBundleSlots() {
@@ -544,20 +551,21 @@ function getBundleItems() {
 }
 
 async function setBundleItems(items) {
+  const tok = ++_bundleRenderToken; // annule le rendu pendant de onTypeProduitChange
+  await loadBundleCandidates();
+  if (_bundleRenderToken !== tok) return; // une autre invocation a pris le relais
+  renderBundleSlots();
   if (!items?.length) return;
-  if (!_bundleCandidates.length) await loadBundleCandidates();
   items.forEach((item, i) => {
     const resSel = document.getElementById(`bundle-res-${i}`);
     if (!resSel) return;
     resSel.value = item.rid || '';
-    onBundleResChange(i);
-    requestAnimationFrame(() => {
-      const varSel = document.getElementById(`bundle-var-${i}`);
-      if (varSel && item.vid) varSel.value = item.vid;
-      if (item.g) document.getElementById(`bundle-g-${i}`).value = item.g;
-      if (item.p) document.getElementById(`bundle-p-${i}`).value = item.p;
-      if (item.vid) document.getElementById(`bundle-vid-${i}`).value = item.vid;
-    });
+    onBundleResChange(i); // synchrone — remplit les options variante
+    const varSel = document.getElementById(`bundle-var-${i}`);
+    if (varSel && item.vid) varSel.value = item.vid;
+    if (item.g) document.getElementById(`bundle-g-${i}`).value = item.g;
+    if (item.p) document.getElementById(`bundle-p-${i}`).value = item.p;
+    if (item.vid) document.getElementById(`bundle-vid-${i}`).value = item.vid;
   });
 }
 
@@ -872,6 +880,7 @@ function openPanel() {
   document.getElementById('r-gelato').checked = false;
   document.getElementById('f-stock').value = '';
   _bundleCandidates = [];
+  _bundleLoadPromise = null;
   onTypeProduitChange();
   onExpeditionChange();
   gelatoVariantes = [];
