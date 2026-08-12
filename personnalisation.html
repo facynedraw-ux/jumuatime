@@ -214,6 +214,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+    <!-- Sélecteur de modèle (affiché dynamiquement si modèles définis) -->
+    <div id="modele-picker" class="hidden mb-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span style="width:20px;height:20px;border-radius:50%;background:#5B9EAD;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;">↳</span>
+        <p class="font-semibold text-sm" style="color:#3D7A8A;">Choisissez un modèle</p>
+      </div>
+      <div id="modele-grid" class="grid gap-3" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr));"></div>
+      <p id="modele-required-msg" class="hidden text-xs mt-2" style="color:#B91C1C;">Veuillez sélectionner un modèle pour continuer.</p>
+    </div>
+
     <!-- ÉTAPE 2 — Options -->
     <div class="mb-6">
       <div class="flex items-center gap-3 mb-4">
@@ -391,9 +401,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="supabase-client.js?v=2"></script>
 
 <script>
+const escHtml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
 // ── État ──
 let selectedProduct = null;
 let selectedFond    = null;
+let selectedModele  = null;
 let dbProduits      = {}; // type_key → ligne produits_perso
 
 // ── Init — chargement depuis Supabase ──
@@ -593,6 +606,7 @@ function getFormFields(key, options = {}) {
 function selectProduct(key) {
   selectedProduct = key;
   selectedFond    = null;
+  selectedModele  = null;
 
   const produit = dbProduits[key];
   if (!produit) return;
@@ -626,6 +640,28 @@ function selectProduct(key) {
       } else {
         thumbsEl.innerHTML = '';
         thumbsEl.classList.add('hidden');
+      }
+    // Sélecteur de modèles
+    const pickerEl    = document.getElementById('modele-picker');
+    const modeleGrid  = document.getElementById('modele-grid');
+    const modeleMsg   = document.getElementById('modele-required-msg');
+    if (pickerEl && modeleGrid) {
+      const modeles = produit.options?.modeles || [];
+      if (modeles.length > 0) {
+        modeleGrid.innerHTML = modeles.map((m, i) => `
+          <div class="modele-card" data-idx="${i}" onclick="selectModele(${i})"
+            style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid #E8DDD0;transition:border-color 0.18s;background:#fff;">
+            <div style="aspect-ratio:3/4;overflow:hidden;">
+              <img src="${escHtml(m.url)}" alt="${escHtml(m.label || 'Modèle')}"
+                style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            </div>
+            <p style="font-size:11px;font-weight:600;text-align:center;padding:5px 4px 6px;color:#4A3728;line-height:1.3;">${escHtml(m.label || 'Modèle')}</p>
+          </div>`).join('');
+        pickerEl.classList.remove('hidden');
+        if (modeleMsg) modeleMsg.classList.add('hidden');
+      } else {
+        modeleGrid.innerHTML = '';
+        pickerEl.classList.add('hidden');
       }
     }
   }
@@ -673,6 +709,21 @@ function setPersoMainImg(thumb) {
   thumb.classList.add('active');
 }
 
+function selectModele(index) {
+  const produit = dbProduits[selectedProduct];
+  if (!produit) return;
+  const modeles = produit.options?.modeles || [];
+  if (!modeles[index]) return;
+  selectedModele = modeles[index];
+  const imgEl = document.getElementById('product-image');
+  if (imgEl) imgEl.src = selectedModele.url;
+  document.querySelectorAll('.modele-card').forEach((c, i) => {
+    c.style.borderColor = i === index ? '#5B9EAD' : '#E8DDD0';
+  });
+  const msg = document.getElementById('modele-required-msg');
+  if (msg) msg.classList.add('hidden');
+}
+
 function selectFond(fond) {
   selectedFond = fond;
   document.querySelectorAll('.fond-card').forEach(c => c.classList.remove('selected'));
@@ -685,6 +736,14 @@ function validateForm() {
   if (!selectedProduct) { showToast('Veuillez sélectionner un produit.', 'error'); return false; }
 
   const produit = dbProduits[selectedProduct];
+
+  const modeles = produit.options?.modeles || [];
+  if (modeles.length && !selectedModele) {
+    const msg = document.getElementById('modele-required-msg');
+    if (msg) msg.classList.remove('hidden');
+    showToast('Veuillez choisir un modèle.', 'error');
+    return false;
+  }
   if (!produit || produit.price_cents === 0) {
     showToast('Ce produit n\'est pas encore ouvert à la commande. Revenez bientôt !', 'error');
     return false;
@@ -716,32 +775,35 @@ function validateForm() {
 
 // ── Personnalisation selon le type ──
 function buildCustomization() {
-  const prenom = document.getElementById('prenom-input')?.value.trim() || '';
+  const prenom     = document.getElementById('prenom-input')?.value.trim() || '';
+  const modeleInfo = selectedModele ? ` | Modèle : ${selectedModele.label}` : '';
 
   if (selectedProduct === 'pochon') {
     const taille         = document.getElementById('taille-pochon')?.value || '';
     const couleur_pochon = document.getElementById('couleur-pochon')?.value || '';
     const couleur        = document.getElementById('couleur')?.value || '';
     const langue         = document.querySelector('input[name="langue_prenom"]:checked')?.value || 'fr';
-    return { type: 'pochon', prenom, taille, couleur_pochon, couleur, langue_prenom: langue,
-      customization: `Taille : ${taille.toUpperCase()} | Pochon : ${couleur_pochon} | Motif : ${couleur} | Prénom : ${prenom} (${langue === 'ar' ? 'Arabe' : 'Français'})` };
+    return { type: 'pochon', prenom, taille, couleur_pochon, couleur, langue_prenom: langue, modele: selectedModele?.label || '',
+      customization: `Taille : ${taille.toUpperCase()} | Pochon : ${couleur_pochon} | Motif : ${couleur} | Prénom : ${prenom} (${langue === 'ar' ? 'Arabe' : 'Français'})${modeleInfo}` };
   }
   if (selectedProduct === 'calligraphie-latine') {
-    return { type: 'calligraphie-latine', prenom,
-      customization: `Prénom : ${prenom}` };
+    return { type: 'calligraphie-latine', prenom, modele: selectedModele?.label || '',
+      customization: `Prénom : ${prenom}${modeleInfo}` };
   }
   if (selectedProduct === 'calligraphie-arabe') {
-    return { type: 'calligraphie-arabe', mot_arabe: prenom, fond: selectedFond || '',
-      customization: `Mot/prénom : ${prenom} | Fond : ${selectedFond || ''}` };
+    return { type: 'calligraphie-arabe', mot_arabe: prenom, fond: selectedFond || '', modele: selectedModele?.label || '',
+      customization: `Mot/prénom : ${prenom} | Fond : ${selectedFond || ''}${modeleInfo}` };
   }
   if (selectedProduct === 'cadre-argile') {
     const taille  = document.getElementById('taille')?.value || '';
     const couleur = document.getElementById('couleur')?.value || '';
     const version = document.querySelector('input[name="version_cadre"]:checked')?.value || 'standard';
-    return { type: 'cadre-argile', prenom, taille_cadre: taille, couleur_cadre: couleur, version,
-      customization: `Prénom : ${prenom} | Taille : ${taille} | Couleur : ${couleur} | Version : ${version}` };
+    return { type: 'cadre-argile', prenom, taille_cadre: taille, couleur_cadre: couleur, version, modele: selectedModele?.label || '',
+      customization: `Prénom : ${prenom} | Taille : ${taille} | Couleur : ${couleur} | Version : ${version}${modeleInfo}` };
   }
-  return {};
+  // Type générique
+  return { type: selectedProduct, modele: selectedModele?.label || '',
+    customization: `${selectedModele ? 'Modèle : ' + selectedModele.label : ''}` };
 }
 
 // ── Checkout Stripe ──

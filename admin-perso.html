@@ -28,6 +28,10 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 .btn-primary:disabled { opacity:0.5;cursor:not-allowed; }
 .btn-sm { background:#F5E8F0;color:#C96B8A;border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:background 0.15s; }
 .btn-sm:hover { background:#FACDD8; }
+.btn-ghost { background:none;color:#7A5A6A;border:1.5px solid #E8D5DC;border-radius:10px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all 0.15s; }
+.btn-ghost:hover { border-color:#C96B8A;color:#C96B8A; }
+.btn-danger { background:none;color:#C0392B;border:1.5px solid #F5C6C0;border-radius:10px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all 0.15s; }
+.btn-danger:hover { background:#FFF0EE;border-color:#C0392B; }
 
 .panel-overlay { position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.4);display:flex;justify-content:flex-end; }
 .panel-overlay.hidden { display:none; }
@@ -37,6 +41,7 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 .f-label { display:block;font-size:11px;font-weight:700;color:#7A5A6A;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px; }
 .f-input { width:100%;padding:9px 12px;border:1.5px solid #E8D5DC;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#3D1F2D;background:white;outline:none;transition:border-color 0.2s;box-sizing:border-box; }
 .f-input:focus { border-color:#C96B8A; }
+.f-select { appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A5A6A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px; }
 .f-textarea { width:100%;padding:9px 12px;border:1.5px solid #E8D5DC;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#3D1F2D;background:white;outline:none;resize:vertical;box-sizing:border-box; }
 .f-textarea:focus { border-color:#C96B8A; }
 .f-sep { height:1px;background:#E8D5DC;margin:16px 0; }
@@ -46,12 +51,12 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 .perso-card:hover { border-color:#C96B8A;box-shadow:0 4px 16px rgba(201,107,138,0.12); }
 .perso-card-img { height:160px;overflow:hidden;display:flex;align-items:center;justify-content:center; }
 
-/* Fonds */
-.fond-admin-card { position:relative; }
-.fond-admin-card img { width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block; }
-.fond-delete-btn { position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;padding:0; }
-.fond-add-card { border:2px dashed #E8D5DC;border-radius:10px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s;color:#7A5A6A;font-size:12px;gap:4px; }
-.fond-add-card:hover { border-color:#C96B8A;color:#C96B8A; }
+/* Grille images (fonds + galerie) */
+.img-admin-card { position:relative; }
+.img-admin-card img { width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block; }
+.img-delete-btn { position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;padding:0; }
+.img-add-card { border:2px dashed #E8D5DC;border-radius:10px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s;color:#7A5A6A;font-size:12px;gap:4px; }
+.img-add-card:hover { border-color:#C96B8A;color:#C96B8A; }
 
 /* Toggle */
 .toggle { position:relative;display:inline-block;width:44px;height:24px; }
@@ -66,6 +71,11 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 .skeleton::after { content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite; }
 @keyframes shimmer { to { transform:translateX(100%); } }
 @media (prefers-reduced-motion:reduce) { .skeleton::after { animation:none !important; } }
+
+/* Toast */
+#toast { position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#3D1F2D;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all 0.3s;z-index:300;pointer-events:none;white-space:nowrap; }
+#toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+#toast.error { background:#C0392B; }
 </style>
 </head>
 <body>
@@ -78,11 +88,11 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
       <span class="font-display font-bold text-base" style="color:#3D1F2D;">Admin</span>
     </a>
     <nav class="space-y-1 flex-1">
-      <a href="admin.html"          class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
-      <a href="admin-commandes.html"class="admin-nav-link"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
+      <a href="admin.html"           class="admin-nav-link"><span class="ms" style="font-size:18px;">dashboard</span> Tableau de bord</a>
+      <a href="admin-commandes.html" class="admin-nav-link"><span class="ms" style="font-size:18px;">local_shipping</span> Commandes</a>
       <a href="admin-ressources.html"class="admin-nav-link"><span class="ms" style="font-size:18px;">shopping_bag</span> Ressources</a>
-      <a href="admin-stock.html"    class="admin-nav-link"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
-      <a href="admin-perso.html"    class="admin-nav-link active"><span class="ms" style="font-size:18px;">brush</span> Personnalisation</a>
+      <a href="admin-stock.html"     class="admin-nav-link"><span class="ms" style="font-size:18px;">inventory_2</span> Stock</a>
+      <a href="admin-perso.html"     class="admin-nav-link active"><span class="ms" style="font-size:18px;">brush</span> Personnalisation</a>
     </nav>
     <button onclick="signOut()" class="admin-nav-link mt-4 border-0 bg-transparent cursor-pointer text-left">
       <span class="ms" style="font-size:18px;">logout</span> Déconnexion
@@ -114,7 +124,10 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
         <h1 class="font-display font-bold text-xl" style="color:#3D1F2D;">Fiches personnalisation</h1>
         <p class="text-xs mt-0.5" style="color:#7A5A6A;">Photo, prix, options et visibilité de chaque type de création.</p>
       </div>
-      <button onclick="loadAll()" class="btn-sm"><span class="ms" style="font-size:16px;">refresh</span> Actualiser</button>
+      <div class="flex items-center gap-2">
+        <button onclick="loadAll()" class="btn-sm"><span class="ms" style="font-size:16px;">refresh</span> Actualiser</button>
+        <button onclick="openCreatePanel()" class="btn-primary"><span class="ms" style="font-size:16px;">add</span> Nouvelle fiche</button>
+      </div>
     </div>
 
     <!-- Grid des fiches -->
@@ -137,15 +150,20 @@ body { font-family:'DM Sans',sans-serif; background:#FFF5F7; color:#3D1F2D; marg
 </div>
 
 <!-- Inputs fichier cachés -->
-<input type="file" id="img-main-input"  accept="image/*" class="hidden" onchange="handleMainImageUpload(event)">
-<input type="file" id="img-fond-input"  accept="image/*" class="hidden" onchange="handleFondUpload(event)">
+<input type="file" id="img-main-input"    accept="image/*" class="hidden" onchange="handleMainImageUpload(event)">
+<input type="file" id="img-fond-input"    accept="image/*" class="hidden" onchange="handleFondUpload(event)">
+<input type="file" id="img-gallery-input" accept="image/*" class="hidden" onchange="handleGalleryUpload(event)">
+<input type="file" id="img-modele-input"  accept="image/*" class="hidden" onchange="handleModeleUpload(event)">
+
+<div id="toast" role="alert" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js?v=2"></script>
 <script>
 
-let allProduits   = [];
+let allProduits    = [];
 let currentProduit = null;
+let isCreating     = false;
 
 const STORAGE_BUCKET = 'perso-covers';
 
@@ -155,6 +173,14 @@ const TYPE_META = {
   'calligraphie-arabe':  { icon:'brush',        bg:'#EBF5F7', color:'#5B9EAD' },
   'cadre-argile':        { icon:'texture',      bg:'#F7EDE8', color:'#C96B8A' },
 };
+
+const TYPE_OPTIONS = [
+  { value:'pochon',              label:'Pochon lin' },
+  { value:'calligraphie-latine', label:'Calligraphie (alphabet latin)' },
+  { value:'calligraphie-arabe',  label:'Calligraphie (arabe)' },
+  { value:'cadre-argile',        label:'Cadre argile' },
+  { value:'autre',               label:'Autre — saisir ci-dessous' },
+];
 
 // ── Démarrage ──
 (async () => {
@@ -179,7 +205,7 @@ function renderGrid() {
   if (!allProduits.length) {
     grid.innerHTML = `<div class="col-span-2 py-16 text-center" style="color:#7A5A6A;">
       <span class="ms" style="font-size:40px;display:block;margin-bottom:12px;color:#E8D5DC;">category</span>
-      Aucune fiche. Avez-vous exécuté le SQL d'initialisation dans Supabase&nbsp;?
+      Aucune fiche. Cliquez sur "Nouvelle fiche" pour commencer.
     </div>`;
     return;
   }
@@ -221,9 +247,10 @@ function renderGrid() {
   }).join('');
 }
 
-// ── Panel ──
+// ── Panel édition ──
 function openPanel(id) {
   currentProduit = allProduits.find(p => p.id === id);
+  isCreating = false;
   if (!currentProduit) return;
   renderPanel(currentProduit);
   document.getElementById('panel-overlay').classList.remove('hidden');
@@ -237,23 +264,43 @@ function maybeClosePanel(e) {
 function closePanel() {
   document.getElementById('panel-overlay').classList.add('hidden');
   document.body.style.overflow = '';
+  currentProduit = null;
+  isCreating = false;
 }
 
 function renderPanel(p) {
   const prixVal = p.price_cents > 0 ? (p.price_cents / 100).toFixed(2).replace('.', ',') : '';
   const opts    = p.options || {};
 
+  // Section modèles (variantes choisies par le client)
+  const modeles = opts.modeles || [];
+  const modelesSection = `
+    <div class="f-sep" style="margin-top:4px;"></div>
+    <p class="f-label mb-1">Modèles disponibles</p>
+    <p class="text-xs mb-3" style="color:#7A5A6A;">Chaque modèle a son image et son nom. Le client sélectionne un modèle avant de commander.</p>
+    <div class="grid grid-cols-2 gap-3 mb-2" id="modeles-grid">
+      ${renderModelesGrid(modeles)}
+    </div>`;
+
+  // Section galerie (toutes fiches)
+  const gallery = opts.gallery || [];
+  const gallerySection = `
+    <div class="f-sep" style="margin-top:4px;"></div>
+    <p class="f-label mb-1">Galerie de photos</p>
+    <p class="text-xs mb-3" style="color:#7A5A6A;">Photos supplémentaires : autres angles, détails, emballage…</p>
+    <div class="grid grid-cols-3 gap-3 mb-4" id="gallery-grid">
+      ${renderGalleryGrid(gallery)}
+    </div>`;
+
   // Section options spécifiques par type
   let optSection = '';
-
   if (p.type_key === 'pochon') {
     optSection = `
     <div class="f-sep"></div>
     <label class="f-label" for="opt-colors">Couleurs disponibles</label>
     <input id="opt-colors" type="text" class="f-input" value="${escHtml((opts.colors||[]).join(', '))}" placeholder="Noir, Or, Blanc">
-    <p class="text-xs mt-1.5" style="color:#7A5A6A;">Séparées par virgule — apparaissent dans le menu de sélection.</p>`;
+    <p class="text-xs mt-1.5 mb-4" style="color:#7A5A6A;">Séparées par virgule — apparaissent dans le menu de sélection.</p>`;
   }
-
   if (p.type_key === 'cadre-argile') {
     optSection = `
     <div class="f-sep"></div>
@@ -262,24 +309,23 @@ function renderPanel(p) {
     <label class="f-label" for="opt-couleurs">Couleurs du cadre</label>
     <input id="opt-couleurs" type="text" class="f-input mb-3" value="${escHtml((opts.couleurs||[]).join(', '))}" placeholder="Blanc, Noir">
     <label class="f-label" for="opt-versions">Versions</label>
-    <input id="opt-versions" type="text" class="f-input" value="${escHtml((opts.versions||[]).join(', '))}" placeholder="standard, premium">
-    <p class="text-xs mt-1.5" style="color:#7A5A6A;">Chaque champ : valeurs séparées par virgule.</p>`;
+    <input id="opt-versions" type="text" class="f-input mb-1" value="${escHtml((opts.versions||[]).join(', '))}" placeholder="standard, premium">
+    <p class="text-xs mt-1.5 mb-4" style="color:#7A5A6A;">Chaque champ : valeurs séparées par virgule.</p>`;
   }
-
   if (p.type_key === 'calligraphie-arabe') {
     const fonds = opts.fonds || [];
     optSection = `
     <div class="f-sep"></div>
     <p class="f-label">Galerie de fonds</p>
     <p class="text-xs mb-3" style="color:#7A5A6A;">Ces images s'affichent dans le sélecteur de fond sur la page personnalisation.</p>
-    <div class="grid grid-cols-3 gap-3 mb-2" id="fonds-grid">
+    <div class="grid grid-cols-3 gap-3 mb-4" id="fonds-grid">
       ${renderFondsGrid(fonds)}
     </div>`;
   }
 
   document.getElementById('panel-content').innerHTML = `
     <div class="flex items-start justify-between mb-5">
-      <p class="text-xs font-semibold uppercase tracking-wider" style="color:#9B7FA6;">Fiche produit</p>
+      <p class="text-xs font-semibold uppercase tracking-wider" style="color:#9B7FA6;">Modifier la fiche</p>
       <button onclick="closePanel()" style="background:none;border:none;cursor:pointer;padding:4px;color:#7A5A6A;">
         <span class="ms" style="font-size:22px;">close</span>
       </button>
@@ -290,7 +336,7 @@ function renderPanel(p) {
     <input id="pnl-name" type="text" class="f-input mb-5" value="${escHtml(p.name)}" placeholder="Ex : Pochon coton — Eid Mubarak">
 
     <!-- Photo principale -->
-    <p class="f-label mb-2">Photo du produit</p>
+    <p class="f-label mb-2">Photo principale (cover)</p>
     <div class="relative mb-1 rounded-xl overflow-hidden" style="height:180px;background:#F5E8F0;">
       ${p.image_url
         ? `<img id="preview-main" src="${escHtml(p.image_url)}" class="w-full h-full object-cover">`
@@ -303,13 +349,16 @@ function renderPanel(p) {
         <span class="ms" style="font-size:15px;">upload</span> Changer
       </button>
     </div>
-    <p id="upload-status" class="text-xs mb-4 hidden" style="color:#7A5A6A;"></p>
+    <p id="upload-status" class="text-xs mb-1 hidden" style="color:#7A5A6A;"></p>
+
+    ${modelesSection}
+
+    ${gallerySection}
 
     <!-- Prix -->
-    <div class="f-sep" style="margin-top:0;"></div>
     <label class="f-label" for="pnl-prix">Prix (€)</label>
     <input id="pnl-prix" type="text" class="f-input mb-1" placeholder="Ex : 6,00" value="${escHtml(prixVal)}" inputmode="decimal">
-    <p class="text-xs mb-4" style="color:#7A5A6A;">Vide = "Bientôt" affiché sur la carte, commande impossible.</p>
+    <p class="text-xs mb-4" style="color:#7A5A6A;">Vide = "Prix à définir" affiché, commande impossible.</p>
 
     <!-- Description -->
     <label class="f-label" for="pnl-desc">Description</label>
@@ -333,25 +382,176 @@ function renderPanel(p) {
   `;
 
   document.getElementById('panel-actions').innerHTML = `
-    <button onclick="saveProduct()" class="btn-primary w-full justify-center">
+    <button onclick="saveProduct()" class="btn-primary w-full justify-center mb-3">
       <span class="ms" style="font-size:17px;">save</span> Enregistrer
+    </button>
+    <div class="flex gap-2">
+      <button onclick="duplicateProduct()" class="btn-ghost flex-1 justify-center">
+        <span class="ms" style="font-size:15px;">content_copy</span> Dupliquer
+      </button>
+      <button onclick="deleteProduct('${p.id}')" class="btn-danger flex-1 justify-center">
+        <span class="ms" style="font-size:15px;">delete</span> Supprimer
+      </button>
+    </div>`;
+}
+
+// ── Panel création ──
+function openCreatePanel() {
+  currentProduit = null;
+  isCreating = true;
+  renderCreatePanel();
+  document.getElementById('panel-overlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderCreatePanel() {
+  document.getElementById('panel-content').innerHTML = `
+    <div class="flex items-start justify-between mb-5">
+      <p class="text-xs font-semibold uppercase tracking-wider" style="color:#9B7FA6;">Nouvelle fiche</p>
+      <button onclick="closePanel()" style="background:none;border:none;cursor:pointer;padding:4px;color:#7A5A6A;">
+        <span class="ms" style="font-size:22px;">close</span>
+      </button>
+    </div>
+
+    <label class="f-label" for="create-name">Nom du produit *</label>
+    <input id="create-name" type="text" class="f-input mb-5" placeholder="Ex : Tote bag personnalisé">
+
+    <label class="f-label" for="create-type">Type de produit</label>
+    <select id="create-type" class="f-input f-select mb-2" onchange="onCreateTypeChange(this.value)">
+      ${TYPE_OPTIONS.map(t => `<option value="${t.value}">${t.label}</option>`).join('')}
+    </select>
+    <div id="create-type-custom" class="hidden mb-4">
+      <label class="f-label" for="create-type-input">Identifiant unique</label>
+      <input id="create-type-input" type="text" class="f-input" placeholder="Ex : totebag-prenom">
+      <p class="text-xs mt-1" style="color:#7A5A6A;">Minuscules et tirets uniquement.</p>
+    </div>
+    <div id="create-type-spacer" class="mb-4"></div>
+
+    <div class="f-sep" style="margin-top:0;"></div>
+
+    <label class="f-label" for="create-prix">Prix (€)</label>
+    <input id="create-prix" type="text" class="f-input mb-1" placeholder="Ex : 12,00" inputmode="decimal">
+    <p class="text-xs mb-4" style="color:#7A5A6A;">Vide = "Prix à définir", pas de commande possible.</p>
+
+    <label class="f-label" for="create-desc">Description</label>
+    <textarea id="create-desc" class="f-textarea mb-4" rows="3"></textarea>
+
+    <div class="flex items-center justify-between p-3 rounded-xl" style="background:#FFF5F7;border:1px solid #E8D5DC;">
+      <div>
+        <p class="text-sm font-semibold" style="color:#3D1F2D;">Visible sur la boutique</p>
+        <p class="text-xs mt-0.5" style="color:#7A5A6A;">À activer après avoir ajouté photo et prix.</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="create-actif">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div id="create-msg" class="text-xs text-center mt-4 hidden"></div>
+  `;
+
+  document.getElementById('panel-actions').innerHTML = `
+    <button onclick="saveNewProduct()" class="btn-primary w-full justify-center">
+      <span class="ms" style="font-size:17px;">add</span> Créer la fiche
     </button>`;
 }
 
-function renderFondsGrid(fonds) {
-  return fonds.map((f, i) => `
-    <div class="fond-admin-card">
-      <img src="${escHtml(f.url)}" alt="${escHtml(f.label)}"
-           onerror="this.style.opacity='0.3'" style="border-radius:10px;">
-      <button class="fond-delete-btn" onclick="deleteFond(${i})" title="Supprimer">
-        <span class="ms" style="font-size:14px;">close</span>
-      </button>
-      <p class="text-xs text-center mt-1" style="color:#7A5A6A;">${escHtml(f.label)}</p>
-    </div>`).join('') +
-  `<div class="fond-add-card" onclick="document.getElementById('img-fond-input').click()">
-    <span class="ms" style="font-size:24px;">add_photo_alternate</span>
-    <span>Ajouter</span>
-  </div>`;
+function onCreateTypeChange(val) {
+  document.getElementById('create-type-custom').classList.toggle('hidden', val !== 'autre');
+  document.getElementById('create-type-spacer').classList.toggle('hidden', val === 'autre');
+}
+
+async function saveNewProduct() {
+  const btn = document.querySelector('#panel-actions .btn-primary');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ms" style="font-size:17px;">hourglass_top</span> Création…';
+
+  const name = document.getElementById('create-name').value.trim();
+  if (!name) {
+    showPanelMsg('create-msg', 'Nom requis.', '#C96B8A');
+    btn.disabled = false; btn.innerHTML = '<span class="ms" style="font-size:17px;">add</span> Créer la fiche';
+    return;
+  }
+
+  const typeVal = document.getElementById('create-type').value;
+  const typeKey = typeVal === 'autre'
+    ? (document.getElementById('create-type-input')?.value.trim().toLowerCase().replace(/\s+/g,'-') || '')
+    : typeVal;
+  if (!typeKey) {
+    showPanelMsg('create-msg', 'Identifiant de type requis.', '#C96B8A');
+    btn.disabled = false; btn.innerHTML = '<span class="ms" style="font-size:17px;">add</span> Créer la fiche';
+    return;
+  }
+
+  const prixStr   = (document.getElementById('create-prix').value || '').trim().replace(',', '.');
+  const prixCents = prixStr ? Math.round(parseFloat(prixStr) * 100) : 0;
+  const desc      = document.getElementById('create-desc').value.trim();
+  const actif     = document.getElementById('create-actif').checked;
+  const ordre     = allProduits.length ? Math.max(...allProduits.map(p => p.ordre || 0)) + 1 : 1;
+
+  const { data, error } = await _supabase.from('produits_perso').insert({
+    name,
+    type_key:    typeKey,
+    description: desc,
+    price_cents: isNaN(prixCents) ? 0 : prixCents,
+    actif,
+    ordre,
+    options:      {},
+    vedette:      false,
+    vedette_ordre: 0,
+    updated_at:  new Date().toISOString(),
+  }).select().single();
+
+  btn.disabled = false;
+  btn.innerHTML = '<span class="ms" style="font-size:17px;">add</span> Créer la fiche';
+
+  if (error) { showPanelMsg('create-msg', 'Erreur : ' + error.message, '#C96B8A'); return; }
+
+  allProduits.push(data);
+  renderGrid();
+  closePanel();
+  showToast('Fiche créée ✓');
+}
+
+// ── Dupliquer ──
+async function duplicateProduct() {
+  if (!currentProduit) return;
+  const p = currentProduit;
+  const ordre = allProduits.length ? Math.max(...allProduits.map(x => x.ordre || 0)) + 1 : 1;
+
+  const { data, error } = await _supabase.from('produits_perso').insert({
+    name:         p.name + ' (copie)',
+    type_key:     p.type_key,
+    description:  p.description,
+    price_cents:  p.price_cents,
+    actif:        false,
+    ordre,
+    options:      p.options || {},
+    vedette:      false,
+    vedette_ordre: 0,
+    updated_at:   new Date().toISOString(),
+  }).select().single();
+
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  allProduits.push(data);
+  renderGrid();
+  closePanel();
+  showToast('Fiche dupliquée ✓ — pensez à la renommer.');
+}
+
+// ── Supprimer ──
+async function deleteProduct(id) {
+  const p = allProduits.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Supprimer "${p.name}" ? Cette action est irréversible.`)) return;
+
+  const { error } = await _supabase.from('produits_perso').delete().eq('id', id);
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+
+  allProduits = allProduits.filter(x => x.id !== id);
+  renderGrid();
+  closePanel();
+  showToast('Fiche supprimée.');
 }
 
 // ── Upload photo principale ──
@@ -374,24 +574,18 @@ async function handleMainImageUpload(event) {
       .upload(path, file, { upsert: true, contentType: file.type });
     if (upErr) throw upErr;
 
-    const { data: { publicUrl } } = _supabase.storage
-      .from(STORAGE_BUCKET)
-      .getPublicUrl(path);
+    const { data: { publicUrl } } = _supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
 
-    // Aperçu immédiat
     const prev = document.getElementById('preview-main');
     if (prev.tagName === 'IMG') {
       prev.src = publicUrl;
     } else {
       const img = document.createElement('img');
-      img.id = 'preview-main';
-      img.src = publicUrl;
-      img.className = 'w-full h-full object-cover';
+      img.id = 'preview-main'; img.src = publicUrl; img.className = 'w-full h-full object-cover';
       prev.replaceWith(img);
     }
 
-    const { error: dbErr } = await _supabase
-      .from('produits_perso')
+    const { error: dbErr } = await _supabase.from('produits_perso')
       .update({ image_url: publicUrl, updated_at: new Date().toISOString() })
       .eq('id', currentProduit.id);
     if (dbErr) throw dbErr;
@@ -410,7 +604,154 @@ async function handleMainImageUpload(event) {
   }
 }
 
-// ── Upload fond (calligraphie arabe) ──
+// ── Galerie multi-images ──
+function renderGalleryGrid(gallery) {
+  return (gallery || []).map((img, i) => `
+    <div class="img-admin-card">
+      <img src="${escHtml(img.url)}" alt="${escHtml(img.label || '')}"
+           onerror="this.style.opacity='0.3'" style="border-radius:10px;width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+      <button class="img-delete-btn" onclick="deleteGalleryImg(${i})" title="Supprimer">
+        <span class="ms" style="font-size:14px;">close</span>
+      </button>
+    </div>`).join('') +
+  `<div class="img-add-card" onclick="document.getElementById('img-gallery-input').click()">
+    <span class="ms" style="font-size:24px;">add_photo_alternate</span>
+    <span>Ajouter</span>
+  </div>`;
+}
+
+async function handleGalleryUpload(event) {
+  const file = event.target.files[0];
+  if (!file || !currentProduit) return;
+  event.target.value = '';
+
+  try {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `${currentProduit.type_key}/gallery-${Date.now()}.${ext}`;
+
+    const { error: upErr } = await _supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) throw upErr;
+
+    const { data: { publicUrl } } = _supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+
+    const n = (currentProduit.options?.gallery || []).length + 1;
+    const gallery = [...(currentProduit.options?.gallery || []), { label: `Photo ${n}`, url: publicUrl }];
+    await persistGallery(gallery);
+  } catch (err) {
+    showToast('Erreur upload : ' + (err.message || 'réessayez'), 'error');
+  }
+}
+
+async function deleteGalleryImg(index) {
+  if (!currentProduit) return;
+  const gallery = [...(currentProduit.options?.gallery || [])];
+  gallery.splice(index, 1);
+  await persistGallery(gallery);
+}
+
+async function persistGallery(gallery) {
+  const opts = { ...(currentProduit.options || {}), gallery };
+  const { error } = await _supabase.from('produits_perso')
+    .update({ options: opts, updated_at: new Date().toISOString() })
+    .eq('id', currentProduit.id);
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  currentProduit.options = opts;
+  const idx = allProduits.findIndex(p => p.id === currentProduit.id);
+  if (idx !== -1) allProduits[idx].options = opts;
+  const grid = document.getElementById('gallery-grid');
+  if (grid) grid.innerHTML = renderGalleryGrid(gallery);
+}
+
+// ── Modèles (variantes clientes) ──
+function renderModelesGrid(modeles) {
+  return (modeles || []).map((m, i) => `
+    <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid #E8DDD0;background:#FAF6F0;">
+      <div style="aspect-ratio:3/4;overflow:hidden;">
+        <img src="${escHtml(m.url)}" alt="${escHtml(m.label || '')}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div style="padding:6px;">
+        <input type="text" value="${escHtml(m.label || '')}" placeholder="Nom du modèle"
+          style="width:100%;border:1px solid #E8DDD0;border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;background:#fff;color:#1A1208;"
+          onchange="updateModeleLabel(${i}, this.value)">
+      </div>
+      <button onclick="deleteModele(${i})" class="img-delete-btn">
+        <span class="ms" style="font-size:14px;">delete</span>
+      </button>
+    </div>`).join('') +
+  `<div class="img-add-card" onclick="document.getElementById('img-modele-input').click()">
+    <span class="ms" style="font-size:24px;">add_photo_alternate</span>
+    <span>Ajouter un modèle</span>
+  </div>`;
+}
+
+async function handleModeleUpload(event) {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file || !currentProduit) return;
+  showToast('Upload en cours…', 'default');
+  try {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `${currentProduit.type_key}/modele-${Date.now()}.${ext}`;
+    const { error: upErr } = await _supabase.storage.from(STORAGE_BUCKET).upload(path, file, { upsert: true });
+    if (upErr) throw upErr;
+    const { data: { publicUrl } } = _supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+    const n = (currentProduit.options?.modeles || []).length + 1;
+    const modeles = [...(currentProduit.options?.modeles || []), { label: `Modèle ${n}`, url: publicUrl }];
+    await persistModeles(modeles);
+    showToast('Modèle ajouté', 'success');
+  } catch (err) {
+    showToast('Erreur upload : ' + (err.message || 'réessayez'), 'error');
+  }
+}
+
+async function deleteModele(index) {
+  if (!currentProduit) return;
+  const modeles = [...(currentProduit.options?.modeles || [])];
+  modeles.splice(index, 1);
+  await persistModeles(modeles);
+  showToast('Modèle supprimé', 'success');
+}
+
+async function updateModeleLabel(index, value) {
+  if (!currentProduit) return;
+  const modeles = [...(currentProduit.options?.modeles || [])];
+  if (!modeles[index]) return;
+  modeles[index].label = value;
+  await persistModeles(modeles);
+}
+
+async function persistModeles(modeles) {
+  const opts = { ...(currentProduit.options || {}), modeles };
+  const { error } = await _supabase.from('produits_perso')
+    .update({ options: opts, updated_at: new Date().toISOString() })
+    .eq('id', currentProduit.id);
+  if (error) { showToast('Erreur sauvegarde : ' + error.message, 'error'); return; }
+  currentProduit.options = opts;
+  const idx = allProduits.findIndex(p => p.id === currentProduit.id);
+  if (idx !== -1) allProduits[idx].options = opts;
+  const grid = document.getElementById('modeles-grid');
+  if (grid) grid.innerHTML = renderModelesGrid(modeles);
+}
+
+// ── Fonds (calligraphie arabe) ──
+function renderFondsGrid(fonds) {
+  return (fonds || []).map((f, i) => `
+    <div class="img-admin-card">
+      <img src="${escHtml(f.url)}" alt="${escHtml(f.label)}"
+           onerror="this.style.opacity='0.3'" style="border-radius:10px;width:100%;aspect-ratio:1;object-fit:cover;display:block;">
+      <button class="img-delete-btn" onclick="deleteFond(${i})" title="Supprimer">
+        <span class="ms" style="font-size:14px;">close</span>
+      </button>
+      <p class="text-xs text-center mt-1" style="color:#7A5A6A;">${escHtml(f.label)}</p>
+    </div>`).join('') +
+  `<div class="img-add-card" onclick="document.getElementById('img-fond-input').click()">
+    <span class="ms" style="font-size:24px;">add_photo_alternate</span>
+    <span>Ajouter</span>
+  </div>`;
+}
+
 async function handleFondUpload(event) {
   const file = event.target.files[0];
   if (!file || !currentProduit) return;
@@ -425,15 +766,13 @@ async function handleFondUpload(event) {
       .upload(path, file, { upsert: true, contentType: file.type });
     if (upErr) throw upErr;
 
-    const { data: { publicUrl } } = _supabase.storage
-      .from(STORAGE_BUCKET)
-      .getPublicUrl(path);
+    const { data: { publicUrl } } = _supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
 
     const n     = (currentProduit.options?.fonds || []).length + 1;
     const fonds = [...(currentProduit.options?.fonds || []), { label: `Fond ${n}`, url: publicUrl }];
     await persistFonds(fonds);
   } catch (err) {
-    alert('Erreur upload : ' + (err.message || 'réessayez'));
+    showToast('Erreur upload : ' + (err.message || 'réessayez'), 'error');
   }
 }
 
@@ -446,11 +785,10 @@ async function deleteFond(index) {
 
 async function persistFonds(fonds) {
   const opts = { ...(currentProduit.options || {}), fonds };
-  const { error } = await _supabase
-    .from('produits_perso')
+  const { error } = await _supabase.from('produits_perso')
     .update({ options: opts, updated_at: new Date().toISOString() })
     .eq('id', currentProduit.id);
-  if (error) { alert('Erreur : ' + error.message); return; }
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
   currentProduit.options = opts;
   const idx = allProduits.findIndex(p => p.id === currentProduit.id);
   if (idx !== -1) allProduits[idx].options = opts;
@@ -463,10 +801,7 @@ async function toggleVedettePerso(id, current) {
   let ordre = 0;
   if (!current) {
     const starred = allProduits.filter(p => p.vedette);
-    if (starred.length >= 3) {
-      showToast('3 produits en vedette max — retirez-en un d\'abord.', 'error');
-      return;
-    }
+    if (starred.length >= 3) { showToast('3 produits en vedette max — retirez-en un d\'abord.', 'error'); return; }
     const used = starred.map(p => p.vedette_ordre);
     ordre = [1, 2, 3].find(n => !used.includes(n)) || 1;
   }
@@ -475,13 +810,13 @@ async function toggleVedettePerso(id, current) {
   if (error) { showToast('Erreur', 'error'); return; }
   const p = allProduits.find(p => p.id === id);
   if (p) { p.vedette = !current; p.vedette_ordre = ordre; }
-  showToast(current ? 'Retiré de la vedette' : `Mis en vedette · position ${ordre} ✓`, 'info');
+  showToast(current ? 'Retiré de la vedette' : `Mis en vedette · position ${ordre} ✓`);
   renderGrid();
 }
 
-// ── Enregistrer ──
+// ── Enregistrer (édition) ──
 async function saveProduct() {
-  if (!currentProduit) return;
+  if (!currentProduit || isCreating) return;
   const btn = document.querySelector('#panel-actions .btn-primary');
   btn.disabled = true;
   btn.innerHTML = '<span class="ms" style="font-size:17px;">hourglass_top</span> Enregistrement…';
@@ -514,11 +849,8 @@ async function saveProduct() {
   btn.disabled = false;
   btn.innerHTML = '<span class="ms" style="font-size:17px;">save</span> Enregistrer';
 
-  const msg = document.getElementById('pnl-msg');
   if (error) {
-    msg.textContent = 'Erreur : ' + error.message;
-    msg.style.color = '#C96B8A';
-    msg.classList.remove('hidden');
+    showPanelMsg('pnl-msg', 'Erreur : ' + error.message, '#C96B8A');
     return;
   }
 
@@ -527,13 +859,29 @@ async function saveProduct() {
   if (idx !== -1) allProduits[idx] = { ...currentProduit };
   renderGrid();
 
-  msg.textContent = '✓ Enregistré';
-  msg.style.color = '#207040';
-  msg.classList.remove('hidden');
-  setTimeout(() => msg.classList.add('hidden'), 3000);
+  showPanelMsg('pnl-msg', '✓ Enregistré', '#207040');
+  setTimeout(() => { const m = document.getElementById('pnl-msg'); if (m) m.classList.add('hidden'); }, 3000);
 }
 
-// ── Auth ──
+// ── Helpers ──
+function showPanelMsg(id, text, color) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = color;
+  el.classList.remove('hidden');
+}
+
+let toastTimer;
+function showToast(msg, type = 'default') {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  clearTimeout(toastTimer);
+  t.textContent = msg;
+  t.className = type === 'error' ? 'show error' : 'show';
+  toastTimer = setTimeout(() => { t.className = ''; }, 3500);
+}
+
 async function signOut() {
   await _supabase.auth.signOut();
   window.location.href = 'login.html';
