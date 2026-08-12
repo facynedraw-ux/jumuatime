@@ -605,6 +605,8 @@ async function renderBundle() {
   document.title = `${produit.title} — Jumua Time`;
   document.getElementById('page-title').textContent = `${produit.title} — Jumua Time`;
   document.getElementById('product-title').textContent = produit.title;
+
+  try {
   setOgMeta(
     produit.title,
     produit.description || `${produit.title} — Jumua Time`,
@@ -613,10 +615,11 @@ async function renderBundle() {
     produit.price
   );
 
-  const items = produit.bundle_items || [];
-  const hasGelato = items.some(b => b.g);
-  const totalIndiv = items.reduce((s, b) => s + (b.p || 0), 0);
-  const bundlePriceCents = Math.round(produit.price * 100);
+  const rawItems = produit.bundle_items;
+  const items = Array.isArray(rawItems) ? rawItems : [];
+  const hasGelato = items.some(b => b && b.g);
+  const totalIndiv = items.reduce((s, b) => s + ((b && b.p) || 0), 0);
+  const bundlePriceCents = Math.round((Number(produit.price) || 0) * 100);
   const saving = totalIndiv - bundlePriceCents;
 
   // Prix
@@ -698,8 +701,23 @@ async function renderBundle() {
     acc.style.display = 'none';
   }
 
-
   loadYouMayAlsoLike();
+
+  } catch(e) {
+    console.error('[renderBundle] erreur:', e);
+    // Afficher au moins le prix même si le rendu a crashé
+    const pCents = Math.round((Number(produit.price) || 0) * 100);
+    const pEl = document.getElementById('product-price-display');
+    if (pEl && !pEl.textContent) pEl.textContent = (pCents / 100).toFixed(2).replace('.', ',') + ' €';
+  } finally {
+    // Toujours activer les boutons pour que la cliente puisse commander
+    const cartBtn = document.getElementById('add-cart-btn');
+    const orderBtn = document.getElementById('order-btn');
+    if (cartBtn) cartBtn.disabled = false;
+    if (orderBtn) orderBtn.disabled = false;
+    const hint = document.getElementById('checkout-hint');
+    if (hint) hint.textContent = 'Paiement sécurisé par Stripe';
+  }
 }
 
 function addBundleToCart() {
