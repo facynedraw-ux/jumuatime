@@ -432,7 +432,7 @@ function renderPanel(o) {
 
   const livraison  = o.montant_livraison || 0;
   const total      = o.montant_total;
-  const sousTotal  = (total && livraison) ? total - livraison : (prod.price || 0);
+  const sousTotal  = o.montant_produit != null ? o.montant_produit : (total != null ? total - livraison : null);
 
   // Adresse
   const adrParts = [adr.line1, adr.line2, [adr.postal_code, adr.city].filter(Boolean).join(' '), adr.country].filter(Boolean);
