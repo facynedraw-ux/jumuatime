@@ -545,8 +545,8 @@ function getBundleItems() {
     const img = document.getElementById(`bundle-img-${i}`)?.value || '';
     const p   = parseInt(document.getElementById(`bundle-p-${i}`)?.value || '0', 10);
     const vid = document.getElementById(`bundle-vid-${i}`)?.value || '';
-    if (!rid || !g) return null;
-    return { rid, vid: vid || null, g, t, img, p };
+    if (!rid) return null;
+    return { rid, vid: vid || null, g: g || null, t, img, p };
   }).filter(Boolean);
 }
 
