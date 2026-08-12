@@ -560,8 +560,6 @@ async function saveOrder() {
   currentCmd.numero_suivi = suivi || null;
   currentCmd.notes_admin  = notes || null;
   renderList();
-  document.querySelector('#panel-content .flex.items-center.gap-3 div').innerHTML =
-    `<div class="text-xs text-muted mb-1">Statut actuel</div>${statusBadge(statut)}`;
 
   // Email expédition — uniquement si on passe à "expedie" (pas si c'était déjà expedie)
   if (nowExpedie && !wasExpedie) {
@@ -571,30 +569,15 @@ async function saveOrder() {
     const prod  = currentCmd.resources || {};
 
     if (email) {
-      msg.textContent = '✓ Enregistré · envoi email expédition…';
-      msg.style.color = '#207040';
-      msg.classList.remove('hidden');
-
       fetch('/api/email-expedition', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, name, produit: prod.title || '', tracking: suivi }),
-      })
-      .then(r => r.json())
-      .then(r => {
-        msg.textContent = r.sent ? '✓ Enregistré · email expédition envoyé ✉️' : `✓ Enregistré · (email: ${r.error || 'erreur'})`;
-      })
-      .catch(() => { msg.textContent = '✓ Enregistré · email non envoyé (erreur réseau)'; });
-
-      setTimeout(() => msg.classList.add('hidden'), 5000);
-      return;
+      }).catch(() => {});
     }
   }
 
-  msg.textContent = '✓ Enregistré avec succès';
-  msg.style.color = '#207040';
-  msg.classList.remove('hidden');
-  setTimeout(() => msg.classList.add('hidden'), 4000);
+  closePanel();
 }
 
 // ── Sélection / Suppression ──
