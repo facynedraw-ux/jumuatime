@@ -207,6 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="product-image-wrap" class="hidden mt-3 rounded-xl overflow-hidden mx-auto" style="aspect-ratio:3/4;max-width:280px;">
         <img id="product-image" src="" alt="" class="w-full h-full object-cover">
       </div>
+      <div id="product-gallery-thumbs" class="hidden mt-2 flex gap-2 justify-center flex-wrap"></div>
       <div class="flex items-center justify-between mt-2 hidden" id="product-price-line">
         <span class="text-sm" style="color:#8B7A5A;">Prix unitaire</span>
         <span class="font-semibold" style="color:#5B9EAD;" id="product-price-display">—</span>
@@ -596,9 +597,10 @@ function selectProduct(key) {
   const produit = dbProduits[key];
   if (!produit) return;
 
-  // Image produit
-  const imgWrap = document.getElementById('product-image-wrap');
-  const imgEl   = document.getElementById('product-image');
+  // Image produit + galerie
+  const imgWrap   = document.getElementById('product-image-wrap');
+  const imgEl     = document.getElementById('product-image');
+  const thumbsEl  = document.getElementById('product-gallery-thumbs');
   if (imgWrap && imgEl) {
     if (produit.image_url) {
       imgEl.src = produit.image_url;
@@ -606,6 +608,25 @@ function selectProduct(key) {
       imgWrap.classList.remove('hidden');
     } else {
       imgWrap.classList.add('hidden');
+    }
+    // Miniatures galerie
+    if (thumbsEl) {
+      const gallery = produit.options?.gallery || [];
+      const allImgs = produit.image_url
+        ? [produit.image_url, ...gallery.map(g => g.url)]
+        : gallery.map(g => g.url);
+      if (allImgs.length > 1) {
+        thumbsEl.innerHTML = allImgs.map((url, i) =>
+          `<div class="perso-thumb${i === 0 ? ' active' : ''}" data-url="${url}" onclick="setPersoMainImg(this)" style="width:52px;height:68px;border-radius:8px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid ${i === 0 ? '#3D7A8A' : '#e0d6cc'};">
+             <img src="${url}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+           </div>`
+        ).join('');
+        thumbsEl.classList.remove('hidden');
+        thumbsEl.style.display = 'flex';
+      } else {
+        thumbsEl.innerHTML = '';
+        thumbsEl.classList.add('hidden');
+      }
     }
   }
 
@@ -642,6 +663,16 @@ function selectProduct(key) {
 }
 
 // ── Sélection fond (calligraphie arabe) ──
+function setPersoMainImg(thumb) {
+  document.getElementById('product-image').src = thumb.dataset.url;
+  document.querySelectorAll('.perso-thumb').forEach(t => {
+    t.style.borderColor = '#e0d6cc';
+    t.classList.remove('active');
+  });
+  thumb.style.borderColor = '#3D7A8A';
+  thumb.classList.add('active');
+}
+
 function selectFond(fond) {
   selectedFond = fond;
   document.querySelectorAll('.fond-card').forEach(c => c.classList.remove('selected'));
