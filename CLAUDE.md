@@ -159,7 +159,14 @@ RLS : les clientes lisent leurs propres achats via `user_id = auth.uid()`
 | Carte simple (unité) | 4,50 € |
 | Set de cartes | 12,90 € |
 | Bundle 4 saisons | 34,90 € |
+| Coffret 4 Mugs Les 4 Saisons | 49,90 € |
 | Carte/affiche physique (Gelato) | 12,00 € |
+
+## Livraison
+- Seuil livraison offerte produits manuels : **49 € minimum** (`SHIPPING_FREE = 4900` dans cart.js)
+- Livraison lettre : 2,00 € (`SHIPPING_LETTRE = 200`)
+- Livraison colis : 4,90 € (`SHIPPING_COLIS = 490`)
+- Produits Gelato : livraison calculée par Gelato à l'étape panier
 
 ## Stripe
 - Mode LIVE (vraie carte) — NE JAMAIS passer en mode TEST
@@ -209,9 +216,10 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 - Onglet Physiques : liste commandes_physiques avec filtres statut
 - Onglet Numériques : liste purchases (lecture seule)
 - Panel glissant : détails commande + adresse + changement statut + numéro de suivi + notes internes
-- Sauvegarde : UPDATE commandes_physiques (statut, numero_suivi, notes_admin)
-- Déclenche email expédition automatiquement quand statut passe à "expedie"
+- Sauvegarde : UPDATE commandes_physiques (statut, numero_suivi, notes_admin) → panel se ferme automatiquement après succès
+- Déclenche email expédition automatiquement quand statut passe à "expedie" (fire-and-forget, pas de confirmation dans le panel)
 - Bouton "+ Nouvelle commande" : INSERT manuel avec stripe_session_id = 'MANUEL-' + Date.now()
+- Récapitulatif montants : utilise `o.montant_produit` directement (centimes) — ne pas recalculer depuis `total - livraison` car `livraison = 0` est falsy
 
 ## Admin — personnalisation (admin-perso.html)
 - Grille de fiches depuis `produits_perso` (ordonnées par `ordre`)
@@ -242,6 +250,7 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 - `_manualPhysical()` dans cart.js inclut les bundles sans gelato_product_id
 - `stripe-checkout` : manualPhysical inclut bundles sans gelato_product_id → port 4,90 € calculé
 - Bundle "Coffret 4 Mugs Les 4 saisons" : g=null en DB depuis 2026-08-08 → livraison manuelle
+- Bundles mugs fabriqués par **Realisaprint** (pas Gelato, pas à la main par Facyne) → fiche produit affiche "Fabriqué par Realisaprint, imprimeur partenaire"
 
 ## Protocole obligatoire avant chaque git push (PRODUCTION LIVE)
 
@@ -258,6 +267,8 @@ Avant de dire "déployé" ou de faire `git push`, vérifier systématiquement :
 ## Règles importantes
 - NE JAMAIS utiliser balise <form> → event handlers JS uniquement
 - Les prix sont en CENTIMES dans Supabase, affichés en euros dans le HTML
+- `resources.price` est en **euros** (ex: 49.9) — `variantes[*].prix` est en **centimes** — ne pas confondre
+- `delai_livraison` peut contenir une valeur invalide (ex: 'numérique') si mal saisie dans admin → la regex `/\d|jour|semaine/i` la filtre dans produit-physique.html ; corriger aussi la fiche dans admin-ressources.html
 - NE JAMAIS modifier Stripe en mode TEST (on est en LIVE)
 - NE JAMAIS supprimer de données Supabase sans confirmation explicite
 - Toujours RLS activé sur les nouvelles tables
