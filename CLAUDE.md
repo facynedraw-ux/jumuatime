@@ -104,6 +104,7 @@ Colonnes :
 - `montant_livraison` (integer, centimes)
 - `montant_total` (integer, centimes, nullable)
 - `numero_suivi` (text, nullable)
+- `transporteur` (text, nullable, default 'colissimo') — `colissimo` | `dpd` | `chronopost` | `mondialrelay`
 - `notes_admin` (text, nullable)
 
 RLS policies actives :
@@ -216,9 +217,10 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 ## Admin — commandes (admin-commandes.html)
 - Onglet Physiques : liste commandes_physiques avec filtres statut
 - Onglet Numériques : liste purchases (lecture seule)
-- Panel glissant : détails commande + adresse + changement statut + numéro de suivi + notes internes
-- Sauvegarde : UPDATE commandes_physiques (statut, numero_suivi, notes_admin) → panel se ferme automatiquement après succès
-- Déclenche email expédition automatiquement quand statut passe à "expedie" (fire-and-forget, pas de confirmation dans le panel)
+- Panel glissant : détails commande + adresse + changement statut + numéro de suivi + transporteur + notes internes
+- Sauvegarde : UPDATE commandes_physiques (statut, numero_suivi, notes_admin, transporteur) → panel se ferme automatiquement après succès
+- **Email expédition** : bouton "Envoyer l'email de suivi au client" (indépendant du statut) — utilise `email_client` (priorité) puis `adresse_livraison.email` en fallback
+- Transporteurs supportés : Colissimo, DPD (`trace.dpd.fr`), Chronopost, Mondial Relay — lien de suivi dans l'email selon le transporteur choisi
 - Bouton "+ Nouvelle commande" : INSERT manuel avec stripe_session_id = 'MANUEL-' + Date.now()
 - Récapitulatif montants : utilise `o.montant_produit` directement (centimes) — ne pas recalculer depuis `total - livraison` car `livraison = 0` est falsy
 
