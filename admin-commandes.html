@@ -512,10 +512,10 @@ function renderPanel(o) {
 
     <label class="f-label" for="pnl-transporteur">Transporteur</label>
     <select id="pnl-transporteur" class="f-select mb-4">
-      <option value="colissimo">🟡 Colissimo (La Poste)</option>
-      <option value="dpd">🔴 DPD</option>
-      <option value="chronopost">🟣 Chronopost</option>
-      <option value="mondialrelay">🟢 Mondial Relay</option>
+      <option value="colissimo"   ${(o.transporteur||'colissimo')==='colissimo'   ?'selected':''}>🟡 Colissimo (La Poste)</option>
+      <option value="dpd"         ${o.transporteur==='dpd'                        ?'selected':''}>🔴 DPD</option>
+      <option value="chronopost"  ${o.transporteur==='chronopost'                 ?'selected':''}>🟣 Chronopost</option>
+      <option value="mondialrelay"${o.transporteur==='mondialrelay'               ?'selected':''}>🟢 Mondial Relay</option>
     </select>
 
     <label class="f-label" for="pnl-notes">Notes internes</label>
@@ -532,6 +532,9 @@ function renderPanel(o) {
         <span class="ms" style="font-size:17px;">delete</span>
       </button>
     </div>
+    <button id="send-email-btn" onclick="sendExpeditionEmail()" style="margin-top:8px;width:100%;background:#EBF5F7;color:#2D6E7E;border:1px solid #5B9EAD;border-radius:12px;padding:10px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+      <span class="ms" style="font-size:16px;">mail</span> Envoyer l'email de suivi au client
+    </button>
   `;
 }
 
@@ -541,6 +544,7 @@ async function saveOrder() {
   const statut      = document.getElementById('pnl-statut').value;
   const suivi       = document.getElementById('pnl-suivi').value.trim();
   const notes       = document.getElementById('pnl-notes').value.trim();
+  const carrier     = document.getElementById('pnl-transporteur')?.value || 'colissimo';
   const msg         = document.getElementById('pnl-msg');
   const wasExpedie  = currentCmd.statut === 'expedie';
   const nowExpedie  = statut === 'expedie';
@@ -550,7 +554,7 @@ async function saveOrder() {
 
   const { error } = await _supabase
     .from('commandes_physiques')
-    .update({ statut, numero_suivi: suivi || null, notes_admin: notes || null })
+    .update({ statut, numero_suivi: suivi || null, notes_admin: notes || null, transporteur: carrier })
     .eq('id', currentCmd.id);
 
   btn.disabled = false;
@@ -567,26 +571,44 @@ async function saveOrder() {
   currentCmd.statut       = statut;
   currentCmd.numero_suivi = suivi || null;
   currentCmd.notes_admin  = notes || null;
+  currentCmd.transporteur = carrier;
   renderList();
 
-  // Email expédition — uniquement si on passe à "expedie" (pas si c'était déjà expedie)
-  if (nowExpedie && !wasExpedie) {
-    const adr        = currentCmd.adresse_livraison || {};
-    const email      = currentCmd.email_client || adr.email || '';
-    const name       = currentCmd.nom_client   || adr.name  || adr.full_name || '';
-    const prod       = currentCmd.resources    || {};
-    const carrier    = document.getElementById('pnl-transporteur')?.value || 'colissimo';
+  closePanel();
+}
 
-    if (email) {
-      fetch('/api/email-expedition', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, produit: prod.title || '', tracking: suivi, carrier }),
-      }).catch(() => {});
-    }
+async function sendExpeditionEmail() {
+  if (!currentCmd) return;
+  const btn     = document.getElementById('send-email-btn');
+  const suivi   = document.getElementById('pnl-suivi').value.trim();
+  const carrier = document.getElementById('pnl-transporteur')?.value || 'colissimo';
+  const adr     = currentCmd.adresse_livraison || {};
+  const email   = currentCmd.email_client || adr.email || '';
+  const name    = currentCmd.nom_client   || adr.name  || adr.full_name || '';
+  const prod    = currentCmd.resources    || {};
+
+  if (!email) {
+    if (btn) btn.textContent = '❌ Email client introuvable';
+    setTimeout(() => { if (btn) { btn.disabled = false; btn.innerHTML = '<span class="ms" style="font-size:16px;">mail</span> Envoyer l\'email de suivi au client'; } }, 3000);
+    return;
   }
 
-  closePanel();
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="ms" style="font-size:16px;">hourglass_top</span> Envoi en cours…'; }
+
+  try {
+    const r    = await fetch('/api/email-expedition', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email, name, produit: prod.title || '', tracking: suivi, carrier }),
+    });
+    const data = await r.json();
+    if (btn) btn.innerHTML = data.sent ? '✅ Email envoyé !' : '❌ Erreur : ' + (data.error || '?');
+  } catch (e) {
+    if (btn) btn.innerHTML = '❌ Erreur réseau';
+  }
+  setTimeout(() => {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span class="ms" style="font-size:16px;">mail</span> Envoyer l\'email de suivi au client'; }
+  }, 4000);
 }
 
 // ── Sélection / Suppression ──
