@@ -8,10 +8,20 @@ function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...corsHeaders, 'Content-Type':'application/json' } });
 }
 
-function emailExpedition({ name, produit, tracking, email }) {
+function trackingUrl(tracking, carrier) {
+  const t = encodeURIComponent(tracking);
+  switch (carrier) {
+    case 'dpd':         return `https://trace.dpd.fr/fr/trace/${t}`;
+    case 'chronopost':  return `https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=${t}`;
+    case 'mondialrelay':return `https://www.mondialrelay.fr/suivi-de-colis/?NumeroExpedition=${t}`;
+    default:            return `https://www.laposte.fr/outils/suivre-vos-envois?code=${t}`;
+  }
+}
+
+function emailExpedition({ name, produit, tracking, carrier, email }) {
   const trackingHtml = tracking
     ? `<div style="margin:20px 0;text-align:center;">
-        <a href="https://www.laposte.fr/outils/suivre-vos-envois?code=${encodeURIComponent(tracking)}"
+        <a href="${trackingUrl(tracking, carrier)}"
            style="display:inline-block;background:#5B9EAD;color:white;text-decoration:none;padding:12px 28px;border-radius:12px;font-weight:700;font-size:14px;">
           Suivre ma commande →
         </a>
@@ -61,7 +71,7 @@ export async function onRequestPost(context) {
     const resendApiKey = context.env.RESEND_API_KEY;
     if (!resendApiKey) return jsonResponse({ error: 'RESEND_API_KEY manquant' }, 500);
 
-    const { email, name, produit, tracking } = await context.request.json();
+    const { email, name, produit, tracking, carrier } = await context.request.json();
 
     if (!email) return jsonResponse({ error: 'email requis' }, 400);
 
@@ -72,7 +82,7 @@ export async function onRequestPost(context) {
         from: 'Jumua Time <contact@jumuatime.com>',
         to: [email],
         subject: 'Ta commande Jumua Time est en route !',
-        html: emailExpedition({ name, produit, tracking, email }),
+        html: emailExpedition({ name, produit, tracking, carrier, email }),
       }),
     });
 

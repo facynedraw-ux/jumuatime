@@ -510,6 +510,14 @@ function renderPanel(o) {
     <label class="f-label" for="pnl-suivi">Numéro de suivi</label>
     <input id="pnl-suivi" type="text" class="f-input mb-4" placeholder="Ex : 1Z999AA10123456784" value="${escHtml(o.numero_suivi || '')}">
 
+    <label class="f-label" for="pnl-transporteur">Transporteur</label>
+    <select id="pnl-transporteur" class="f-select mb-4">
+      <option value="colissimo">🟡 Colissimo (La Poste)</option>
+      <option value="dpd">🔴 DPD</option>
+      <option value="chronopost">🟣 Chronopost</option>
+      <option value="mondialrelay">🟢 Mondial Relay</option>
+    </select>
+
     <label class="f-label" for="pnl-notes">Notes internes</label>
     <textarea id="pnl-notes" class="f-textarea mb-2" rows="3" placeholder="Mémo visible uniquement par vous…">${escHtml(o.notes_admin || '')}</textarea>
     <div id="pnl-msg" class="text-xs text-center mb-3 hidden"></div>
@@ -563,16 +571,17 @@ async function saveOrder() {
 
   // Email expédition — uniquement si on passe à "expedie" (pas si c'était déjà expedie)
   if (nowExpedie && !wasExpedie) {
-    const adr   = currentCmd.adresse_livraison || {};
-    const email = adr.email || '';
-    const name  = adr.name || adr.full_name || '';
-    const prod  = currentCmd.resources || {};
+    const adr        = currentCmd.adresse_livraison || {};
+    const email      = currentCmd.email_client || adr.email || '';
+    const name       = currentCmd.nom_client   || adr.name  || adr.full_name || '';
+    const prod       = currentCmd.resources    || {};
+    const carrier    = document.getElementById('pnl-transporteur')?.value || 'colissimo';
 
     if (email) {
       fetch('/api/email-expedition', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, produit: prod.title || '', tracking: suivi }),
+        body: JSON.stringify({ email, name, produit: prod.title || '', tracking: suivi, carrier }),
       }).catch(() => {});
     }
   }
