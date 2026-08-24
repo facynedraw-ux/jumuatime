@@ -1,0 +1,715 @@
+<title>Guide d'autonomie — jumuatime.com</title>
+<style>
+  :root {
+    --teal: #5B9EAD;
+    --teal-dark: #2D5A66;
+    --gold: #C49A5A;
+    --rose: #C96B8A;
+    --green: #00917c;
+    --red: #B91C1C;
+    --red-bg: #FEF2F2;
+    --blue-bg: #EFF8FA;
+    --green-bg: #F0FAF8;
+    --gold-bg: #FDF8EF;
+    --bg: #FAF6F0;
+    --surface: #FFFFFF;
+    --border: #E8DDD0;
+    --text: #1A1A1A;
+    --muted: #7A6A58;
+    --sidebar-w: 240px;
+    --code-bg: #F4F0EB;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1A1714;
+      --surface: #242019;
+      --border: #3A342C;
+      --text: #EDE8E0;
+      --muted: #9A8E7E;
+      --code-bg: #2E2921;
+      --blue-bg: #1A2830;
+      --green-bg: #152420;
+      --red-bg: #2A1414;
+      --gold-bg: #24200F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1A1714;
+    --surface: #242019;
+    --border: #3A342C;
+    --text: #EDE8E0;
+    --muted: #9A8E7E;
+    --code-bg: #2E2921;
+    --blue-bg: #1A2830;
+    --green-bg: #152420;
+    --red-bg: #2A1414;
+    --gold-bg: #24200F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.6; color: var(--text); background: var(--bg); }
+
+  /* Layout */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
+    background: var(--teal-dark);
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    padding: 24px 0;
+  }
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px; }
+  .sidebar-logo strong { display: block; color: #fff; font-size: 15px; font-family: Georgia, serif; }
+  .sidebar-logo span { color: rgba(255,255,255,0.55); font-size: 12px; }
+  .sidebar nav a {
+    display: block; padding: 7px 20px; color: rgba(255,255,255,0.75);
+    text-decoration: none; font-size: 13px; border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .sidebar nav a:hover, .sidebar nav a.active { color: #fff; border-left-color: var(--gold); background: rgba(255,255,255,0.06); }
+  .sidebar nav .nav-section { padding: 12px 20px 4px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); font-weight: 600; }
+
+  .main { flex: 1; min-width: 0; padding: 40px 48px 80px; max-width: 860px; }
+
+  /* Typography */
+  h1 { font-family: Georgia, serif; font-size: 28px; font-weight: normal; color: var(--teal-dark); margin-bottom: 8px; }
+  h2 { font-family: Georgia, serif; font-size: 22px; font-weight: normal; color: var(--teal-dark); margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 15px; font-weight: 700; color: var(--text); margin: 24px 0 8px; }
+  p { margin-bottom: 12px; color: var(--text); }
+  a { color: var(--teal); }
+
+  /* Intro */
+  .intro { background: var(--teal-dark); color: rgba(255,255,255,0.9); padding: 20px 24px; border-radius: 12px; margin-bottom: 32px; font-size: 14px; line-height: 1.6; }
+  .intro strong { color: #fff; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
+  .card-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .card-sub { font-size: 13px; color: var(--muted); }
+
+  /* File grid */
+  .file-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .file-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .file-name { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+  .file-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .file-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 4px; margin-bottom: 6px; }
+  .tag-page { background: var(--blue-bg); color: var(--teal-dark); }
+  .tag-admin { background: #FDF0F4; color: var(--rose); }
+  .tag-js { background: var(--gold-bg); color: #7A5A20; }
+  .tag-api { background: var(--green-bg); color: var(--green); }
+  .tag-legal { background: #F5F5F5; color: #555; }
+
+  /* How-to steps */
+  .steps { counter-reset: step; }
+  .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+  .step-num {
+    counter-increment: step;
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--teal); color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-body { flex: 1; padding-top: 4px; }
+
+  /* Code / path */
+  code { background: var(--code-bg); font-family: monospace; font-size: 12.5px; padding: 2px 6px; border-radius: 4px; color: var(--teal-dark); word-break: break-all; }
+  .code-block { background: var(--code-bg); border-radius: 8px; padding: 14px 16px; font-family: monospace; font-size: 12.5px; line-height: 1.7; overflow-x: auto; margin: 8px 0 12px; color: var(--text); }
+
+  /* Alert boxes */
+  .alert { border-radius: 10px; padding: 14px 18px; margin: 12px 0; font-size: 14px; line-height: 1.6; }
+  .alert-red { background: var(--red-bg); border-left: 3px solid var(--red); }
+  .alert-red strong { color: var(--red); }
+  .alert-green { background: var(--green-bg); border-left: 3px solid var(--green); }
+  .alert-green strong { color: var(--green); }
+  .alert-blue { background: var(--blue-bg); border-left: 3px solid var(--teal); }
+  .alert-blue strong { color: var(--teal-dark); }
+  .alert-gold { background: var(--gold-bg); border-left: 3px solid var(--gold); }
+  .alert-gold strong { color: #7A5A20; }
+
+  /* Table */
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+  .ref-table th { text-align: left; padding: 8px 12px; background: var(--code-bg); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .ref-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table tr:hover td { background: var(--bg); }
+  .overflow-x { overflow-x: auto; }
+
+  /* Chips */
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .chip-green { background: var(--green-bg); color: var(--green); }
+  .chip-red { background: var(--red-bg); color: var(--red); }
+  .chip-blue { background: var(--blue-bg); color: var(--teal); }
+
+  /* Section anchor */
+  section { scroll-margin-top: 24px; }
+
+  /* Howto task card */
+  .task { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; }
+  .task-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+  .task-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .task-icon-teal { background: var(--blue-bg); }
+  .task-icon-rose { background: #FDF0F4; }
+  .task-icon-gold { background: var(--gold-bg); }
+  .task-icon-green { background: var(--green-bg); }
+  .task h3 { margin: 0 0 2px; }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    .main { padding: 24px 20px 60px; }
+    .file-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <strong>jumuatime.com</strong>
+      <span>Guide d'autonomie</span>
+    </div>
+    <nav>
+      <div class="nav-section">Référence</div>
+      <a href="#architecture">Architecture</a>
+      <a href="#fichiers">Fichiers</a>
+      <a href="#supabase">Tables Supabase</a>
+
+      <div class="nav-section">Tâches</div>
+      <a href="#produits">Gérer les produits</a>
+      <a href="#commandes">Gérer les commandes</a>
+      <a href="#textes">Modifier les textes</a>
+      <a href="#footer">Footer & navigation</a>
+      <a href="#faq-edit">Modifier la FAQ</a>
+      <a href="#emails">Emails transactionnels</a>
+
+      <div class="nav-section">Sécurité</div>
+      <a href="#danger">Zones dangereuses</a>
+      <a href="#debug">Dépannage rapide</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <h1>Guide d'autonomie — jumuatime.com</h1>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">Référence complète pour gérer et modifier ton site sans Claude</p>
+
+    <div class="intro">
+      <strong>Comment utiliser ce guide</strong><br>
+      Tout le code source est dans <strong>D:\DEV\jumuatime\</strong> sur ton ordinateur. Les fichiers s'ouvrent dans VS Code. Pour mettre en ligne : ouvre un terminal dans VS Code (Ctrl+ù), tape <strong>git add -A && git commit -m "description" && git push</strong> — Cloudflare Pages déploie automatiquement en 1–2 minutes.
+    </div>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture">
+      <h2>Architecture du site</h2>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+          <div>
+            <div class="card-title">🖥️ Front-end</div>
+            <p class="card-sub">Pages HTML statiques + JavaScript vanilla. Tailwind CSS CDN pour les classes utilitaires. Hébergé sur <strong>Cloudflare Pages</strong>.</p>
+          </div>
+          <div>
+            <div class="card-title">🗄️ Base de données</div>
+            <p class="card-sub"><strong>Supabase</strong> (PostgreSQL). Stocke produits, commandes, utilisatrices, abonnées. Accessible depuis <a href="https://supabase.com/dashboard" target="_blank">supabase.com/dashboard</a> → projet Jumuatime.</p>
+          </div>
+          <div>
+            <div class="card-title">💳 Paiements</div>
+            <p class="card-sub"><strong>Stripe LIVE</strong> — vrais paiements. Ne jamais toucher au mode test. Dashboard sur <a href="https://dashboard.stripe.com" target="_blank">dashboard.stripe.com</a>.</p>
+          </div>
+          <div>
+            <div class="card-title">📦 Impression</div>
+            <p class="card-sub"><strong>Gelato</strong> — impression et envoi automatique des produits physiques Gelato (cartes, affiches). Les mugs bundle sont envoyés manuellement.</p>
+          </div>
+          <div>
+            <div class="card-title">📧 Emails</div>
+            <p class="card-sub"><strong>Resend</strong> — emails transactionnels (confirmation commande, expédition). From : contact@jumuatime.com.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-blue">
+        <strong>Flux d'une commande physique :</strong> Cliente paie → Stripe → webhook Cloudflare → Gelato (si Gelato) ou toi (si manuel) → tu changes le statut en "expedie" dans l'admin → email suivi envoyé automatiquement.
+      </div>
+    </section>
+
+    <!-- FICHIERS -->
+    <section id="fichiers">
+      <h2>Fichiers — ce que fait chacun</h2>
+
+      <h3>Pages clientes (ouvertes par les visiteuses)</h3>
+      <div class="file-grid">
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">index.html</div>
+          <div class="file-desc">Page d'accueil. Hero, produits vedettes, section Tilawa Tour, newsletter. Modifier ici : slogan, accroche, produits mis en avant.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">ressources.html</div>
+          <div class="file-desc">La boutique. Affiche tous les produits actifs et visibles. Les filtres (catégorie, type) sont en JS — pas besoin de modifier.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">ressource.html</div>
+          <div class="file-desc">Fiche produit numérique (PDF, affiche digitale). URL : <code>ressource.html?slug=...</code></div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">produit-physique.html</div>
+          <div class="file-desc">Fiche produit physique ET bundle (mugs, cartes, coffrets). URL : <code>produit-physique.html?slug=...</code></div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">panier.html</div>
+          <div class="file-desc">Le panier. Affiche les articles, formulaire adresse Gelato, récapitulatif. Section "Vous aimerez aussi".</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">personnalisation.html</div>
+          <div class="file-desc">Commandes personnalisées. Formulaire de demande (prénom, message, type de création).</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">compte.html</div>
+          <div class="file-desc">Espace client (accès réservé aux connectées). Historique achats numériques, commandes physiques, adresses sauvegardées.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">faq.html</div>
+          <div class="file-desc">FAQ. Questions/réponses en accordéon. Modifiable directement en HTML (voir section "Modifier la FAQ").</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">tilawatour.html</div>
+          <div class="file-desc">Landing page de l'application Tilawa Tour. Formulaire de capture email pour l'accès bêta.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-page">Page</div>
+          <div class="file-name">a-propos.html</div>
+          <div class="file-desc">Page À propos. Texte libre — modifier directement le HTML.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-legal">Légal</div>
+          <div class="file-name">cgv.html</div>
+          <div class="file-desc">Conditions générales de vente. Modifier si les tarifs ou conditions changent.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-legal">Légal</div>
+          <div class="file-name">mentions.html / confidentialite.html</div>
+          <div class="file-desc">Mentions légales et politique de confidentialité.</div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px;">Pages admin (toi seule)</h3>
+      <div class="file-grid">
+        <div class="file-card">
+          <div class="file-tag tag-admin">Admin</div>
+          <div class="file-name">admin.html</div>
+          <div class="file-desc">Tableau de bord. Stats (produits actifs, commandes, abonnées), achats récents, abonnées newsletter.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-admin">Admin</div>
+          <div class="file-name">admin-commandes.html</div>
+          <div class="file-desc"><strong>Le plus important.</strong> Gestion commandes physiques et achats numériques. Changer statut, ajouter numéro de suivi, créer une commande manuelle.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-admin">Admin</div>
+          <div class="file-name">admin-ressources.html</div>
+          <div class="file-desc">Catalogue produits. Ajouter, modifier, activer/désactiver, supprimer un produit. Gérer l'ordre d'affichage.</div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px;">Fichiers JS partagés</h3>
+      <div class="file-grid">
+        <div class="file-card">
+          <div class="file-tag tag-js">JS</div>
+          <div class="file-name">supabase-client.js</div>
+          <div class="file-desc"><strong>Ne jamais modifier.</strong> Connexion à Supabase. Contient aussi <code>submitNewsletter()</code> utilisé par toutes les pages.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-js">JS</div>
+          <div class="file-name">cart.js</div>
+          <div class="file-desc">Logique du panier (localStorage). Fonctions Cart.add / remove / get / total. Ne pas modifier sauf avec Claude.</div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px;">Fonctions serveur (Cloudflare)</h3>
+      <div class="file-grid">
+        <div class="file-card">
+          <div class="file-tag tag-api">API</div>
+          <div class="file-name">functions/api/email-expedition.js</div>
+          <div class="file-desc">Envoie l'email de suivi avec le numéro de suivi. Déclenché depuis admin-commandes quand statut → "expedie". Modifiable : objet du mail, texte du corps.</div>
+        </div>
+        <div class="file-card">
+          <div class="file-tag tag-api">API</div>
+          <div class="file-name">functions/api/swift-function.js</div>
+          <div class="file-desc">Webhook Stripe → Gelato + email confirmation. Ne pas modifier sans Claude.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUPABASE -->
+    <section id="supabase">
+      <h2>Tables Supabase — référence</h2>
+      <p style="font-size:14px;color:var(--muted);">Accès : <a href="https://supabase.com/dashboard" target="_blank">supabase.com/dashboard</a> → Jumuatime → Table Editor (ou SQL Editor)</p>
+
+      <h3>Table <code>resources</code> — catalogue produits</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Colonne</th><th>Type</th><th>Ce que c'est</th><th>Modifier ?</th></tr></thead>
+          <tbody>
+            <tr><td><code>title</code></td><td>texte</td><td>Nom du produit affiché en boutique</td><td><span class="chip chip-green">✓ Table Editor</span></td></tr>
+            <tr><td><code>slug</code></td><td>texte</td><td>Identifiant URL (ex: <code>marque-page-iqra-lis</code>). Ne pas changer après publication.</td><td><span class="chip chip-red">⚠ Attention</span></td></tr>
+            <tr><td><code>price</code></td><td>nombre (euros)</td><td>Prix en euros (ex: 3.9 pour 3,90 €). Pas en centimes.</td><td><span class="chip chip-green">✓ Admin</span></td></tr>
+            <tr><td><code>description</code></td><td>texte</td><td>Description affichée sur la fiche produit</td><td><span class="chip chip-green">✓ Admin</span></td></tr>
+            <tr><td><code>preview_url</code></td><td>URL</td><td>Image principale du produit (jamais <code>cover_url</code>)</td><td><span class="chip chip-green">✓ Admin</span></td></tr>
+            <tr><td><code>is_active</code></td><td>booléen</td><td>Produit actif = peut être commandé</td><td><span class="chip chip-green">✓ Admin</span></td></tr>
+            <tr><td><code>visible_boutique</code></td><td>booléen</td><td>Affiché en boutique et recommandations. <code>false</code> = caché (ex: mugs bundle-only)</td><td><span class="chip chip-green">✓ Admin</span></td></tr>
+            <tr><td><code>type_produit</code></td><td>texte</td><td><code>numerique</code> | <code>physique</code> | <code>bundle</code></td><td><span class="chip chip-blue">Admin</span></td></tr>
+            <tr><td><code>category</code></td><td>texte</td><td><code>enfants</code> | <code>spiritualite</code> | <code>decoration</code> | <code>cadeaux</code></td><td><span class="chip chip-green">✓ Admin</span></td></tr>
+            <tr><td><code>gelato_product_id</code></td><td>texte/null</td><td>ID Gelato si impression automatique. Null = envoi manuel.</td><td><span class="chip chip-red">⚠ Prudence</span></td></tr>
+            <tr><td><code>bundle_items</code></td><td>JSON</td><td>Articles du coffret. Tableau <code>[{g, p, t, img, rid, vid}]</code>. <code>g:null</code> = livraison manuelle.</td><td><span class="chip chip-red">⚠ Admin</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Table <code>commandes_physiques</code> — commandes</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Colonne</th><th>Ce que c'est</th><th>Modifier ?</th></tr></thead>
+          <tbody>
+            <tr><td><code>statut</code></td><td><code>en_attente</code> → <code>en_preparation</code> → <code>expedie</code> → <code>livre</code> | <code>annule</code></td><td><span class="chip chip-green">✓ Admin commandes</span></td></tr>
+            <tr><td><code>numero_suivi</code></td><td>Numéro de suivi La Poste — déclenche l'email d'expédition quand statut = expedie</td><td><span class="chip chip-green">✓ Admin commandes</span></td></tr>
+            <tr><td><code>notes_admin</code></td><td>Notes internes (pas visibles par la cliente)</td><td><span class="chip chip-green">✓ Admin commandes</span></td></tr>
+            <tr><td><code>adresse_livraison</code></td><td>JSON avec nom, rue, ville, code_postal, pays</td><td><span class="chip chip-red">⚠ SQL seulement</span></td></tr>
+            <tr><td><code>email_client</code></td><td>Email de la cliente</td><td><span class="chip chip-red">Ne pas modifier</span></td></tr>
+            <tr><td><code>montant_produit</code></td><td>Prix produit en centimes (ex: 3490 = 34,90 €)</td><td><span class="chip chip-red">Ne pas modifier</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Autres tables utiles</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Table</th><th>Ce qu'elle contient</th><th>Utilité</th></tr></thead>
+          <tbody>
+            <tr><td><code>email_subscribers</code></td><td>Abonnées newsletter (email, source, created_at)</td><td>Voir la liste des abonnées, exporter</td></tr>
+            <tr><td><code>purchases</code></td><td>Achats numériques (user_id, resource_id, download_token)</td><td>Vérifier qu'une cliente a accès à son téléchargement</td></tr>
+            <tr><td><code>profiles</code></td><td>Profils utilisatrices (role = 'admin' pour toi)</td><td>Vérifier/changer le rôle admin si besoin</td></tr>
+            <tr><td><code>adresses_livraison</code></td><td>Adresses sauvegardées des clientes</td><td>Consultation seulement</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRODUITS -->
+    <section id="produits">
+      <h2>Gérer les produits</h2>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-teal">➕</div>
+          <div><h3>Ajouter un nouveau produit</h3><p class="card-sub">Via l'interface admin — pas besoin de toucher au code</p></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Va sur <code>jumuatime.com/admin-ressources.html</code> (connectée en tant qu'admin)</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Clique sur <strong>"+ Nouveau produit"</strong> (bouton rose en haut)</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Remplis : titre, slug (URL automatique ou personnalisé), catégorie, type de produit, prix en euros (ex: 4.9 pour 4,90 €)</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Upload l'image principale. Pour les numériques : upload aussi le PDF.</div></div>
+          <div class="step"><div class="step-num">5</div><div class="step-body">Coche "Produit actif" et "Visible en boutique" selon ton besoin</div></div>
+          <div class="step"><div class="step-num">6</div><div class="step-body">Clique <strong>Enregistrer</strong> — le produit apparaît immédiatement en boutique</div></div>
+        </div>
+        <div class="alert alert-gold"><strong>Prix :</strong> Saisi en euros (3.9, pas 390). Le site fait la conversion en centimes automatiquement pour Stripe.</div>
+      </div>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-rose">🙈</div>
+          <div><h3>Masquer un produit temporairement</h3><p class="card-sub">Sans le supprimer</p></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Admin ressources → trouve le produit → clique l'icône <strong>œil</strong> (👁) à droite</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Le statut passe à "Inactif" — le produit disparaît de la boutique immédiatement. Reclique pour réactiver.</div></div>
+        </div>
+        <div class="alert alert-blue"><strong>Différence actif / visible boutique :</strong> "Actif" = commandable. "Visible boutique" = apparaît dans les listes. Un produit peut être actif mais caché (ex : mugs bundle-only). Les deux cases se cochent dans le formulaire produit.</div>
+      </div>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-gold">✏️</div>
+          <div><h3>Modifier le prix d'un produit</h3></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Admin ressources → clique le crayon ✏️ sur le produit</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Modifie le champ Prix (en euros, ex: 12.9)</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Enregistrer → le nouveau prix s'applique aux <strong>nouveaux</strong> ajouts au panier (les paniers existants gardent l'ancien prix)</div></div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-rose">🗑️</div>
+          <div><h3>Supprimer définitivement un produit</h3></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Admin ressources → bouton corbeille rouge 🗑 sur le produit</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Confirme dans la boîte de dialogue — la suppression est <strong>irréversible</strong></div></div>
+        </div>
+        <div class="alert alert-red"><strong>Attention :</strong> Si des clientes ont acheté ce produit et ont des commandes actives, la suppression ne les efface pas mais peut casser les liens. Préférer "désactiver" plutôt que supprimer.</div>
+      </div>
+    </section>
+
+    <!-- COMMANDES -->
+    <section id="commandes">
+      <h2>Gérer les commandes</h2>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-teal">📦</div>
+          <div><h3>Marquer une commande comme expédiée</h3><p class="card-sub">Envoie automatiquement l'email de suivi à la cliente</p></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Admin commandes → onglet <strong>Physiques</strong> → clique sur la commande</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Dans le panel latéral : colle le <strong>numéro de suivi La Poste</strong> dans le champ dédié</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Change le statut en <strong>"expedie"</strong></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Clique <strong>Sauvegarder</strong> → l'email de suivi part automatiquement avec le lien La Poste</div></div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-gold">✍️</div>
+          <div><h3>Créer une commande manuellement</h3><p class="card-sub">Pour les commandes hors site (message DM, etc.)</p></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Admin commandes → bouton <strong>"+ Nouvelle commande"</strong></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Remplis : email cliente, nom, produit, montant, adresse de livraison</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Statut initial : <code>en_preparation</code> (tu l'as déjà reçue/payée hors site)</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Enregistrer → la commande apparaît dans ta liste. Passe-la en "expedie" quand tu l'envoies.</div></div>
+        </div>
+      </div>
+
+      <h3>Statuts de commande — ce qu'ils signifient</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Statut</th><th>Signification</th><th>Action suivante</th></tr></thead>
+          <tbody>
+            <tr><td><code>en_attente</code></td><td>Paiement reçu, commande créée automatiquement</td><td>Passer en <code>en_preparation</code></td></tr>
+            <tr><td><code>en_creation</code></td><td>Commande Gelato en cours de création</td><td>Gelato gère automatiquement</td></tr>
+            <tr><td><code>commande_gelato</code></td><td>Gelato a reçu la commande, impression en cours</td><td>Attendre — Gelato envoie directement</td></tr>
+            <tr><td><code>en_preparation</code></td><td>Tu prépares le colis manuellement</td><td>Passer en <code>expedie</code> + numéro suivi</td></tr>
+            <tr><td><code>expedie</code></td><td>Envoyé — email de suivi automatique envoyé</td><td>Attendre réception</td></tr>
+            <tr><td><code>livre</code></td><td>Reçu (info manuelle)</td><td>—</td></tr>
+            <tr><td><code>annule</code></td><td>Commande annulée</td><td>Rembourser manuellement dans Stripe si nécessaire</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TEXTES -->
+    <section id="textes">
+      <h2>Modifier les textes du site</h2>
+
+      <div class="alert alert-blue">
+        <strong>Méthode universelle dans VS Code :</strong> Ouvre le fichier → <strong>Ctrl+F</strong> → tape le texte exact que tu vois sur le site → trouve-le dans le code → modifie. Enregistre (Ctrl+S) → git push pour mettre en ligne.
+      </div>
+
+      <div class="task">
+        <div class="task-header">
+          <div class="task-icon task-icon-teal">🔍</div>
+          <div><h3>Trouver et modifier un texte dans le HTML</h3></div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-body">Dans VS Code : <strong>Ctrl+Shift+F</strong> pour chercher dans tous les fichiers à la fois</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-body">Tape le texte exact que tu vois sur le site (3–4 mots suffisent)</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-body">Clique sur le résultat → VS Code ouvre le fichier à la bonne ligne</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-body">Modifie entre les balises HTML (entre <code>&lt;p&gt;</code> et <code>&lt;/p&gt;</code>, ou <code>&lt;h2&gt;</code> et <code>&lt;/h2&gt;</code>, etc.)</div></div>
+          <div class="step"><div class="step-num">5</div><div class="step-body">Ctrl+S → terminal → <code>git add -A && git commit -m "maj texte" && git push</code></div></div>
+        </div>
+      </div>
+
+      <h3>Où se trouvent les textes principaux</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Texte</th><th>Fichier</th><th>Chercher</th></tr></thead>
+          <tbody>
+            <tr><td>Slogan homepage</td><td><code>index.html</code></td><td>"Pensées avec du sens"</td></tr>
+            <tr><td>Description boutique</td><td><code>ressources.html</code></td><td>titre de la section boutique</td></tr>
+            <tr><td>Description À propos</td><td><code>a-propos.html</code></td><td>texte libre dans le body</td></tr>
+            <tr><td>Texte page Tilawa Tour</td><td><code>tilawatour.html</code></td><td>section hero ou cartes</td></tr>
+            <tr><td>Questions/réponses FAQ</td><td><code>faq.html</code></td><td>balises <code>&lt;details&gt;</code></td></tr>
+            <tr><td>CGV</td><td><code>cgv.html</code></td><td>texte dans les sections</td></tr>
+            <tr><td>Objet email expédition</td><td><code>functions/api/email-expedition.js</code></td><td>"en route"</td></tr>
+            <tr><td>Corps email expédition</td><td><code>functions/api/email-expedition.js</code></td><td>variable <code>html</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section id="footer">
+      <h2>Footer et navigation</h2>
+
+      <div class="alert alert-gold">
+        <strong>Règle importante :</strong> Le footer existe dans chaque fichier HTML séparément — il n'y a pas de composant partagé. Si tu modifies le footer dans <code>index.html</code>, tu dois faire la même modification dans chaque autre page manuellement.
+      </div>
+
+      <h3>Modifier un lien dans le footer</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Dans VS Code, Ctrl+Shift+F → cherche le texte du lien (ex: "Tilawa Tour") dans le fichier concerné</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Trouve la balise <code>&lt;a href="..."&gt;Tilawa Tour&lt;/a&gt;</code></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Modifie l'attribut <code>href</code> pour changer l'URL, ou le texte entre les balises</div></div>
+      </div>
+
+      <h3>Liens importants dans le footer (vérifier dans chaque page)</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Lien</th><th>Doit pointer vers</th></tr></thead>
+          <tbody>
+            <tr><td>Tilawa Tour</td><td><code>tilawatour.html</code> (PAS l'URL app externe)</td></tr>
+            <tr><td>FAQ</td><td><code>faq.html</code></td></tr>
+            <tr><td>Instagram</td><td><code>instagram.com/jumuatime</code> (PAS <code>jumua_time</code>)</td></tr>
+            <tr><td>Boutique</td><td><code>ressources.html</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq-edit">
+      <h2>Modifier la FAQ</h2>
+      <p>La FAQ utilise des balises <code>&lt;details&gt;</code> HTML natives — pas de JavaScript. Chaque question est une balise <code>&lt;details&gt;</code> avec un <code>&lt;summary&gt;</code>.</p>
+
+      <h3>Ajouter une question</h3>
+      <p>Dans <code>faq.html</code>, dans la bonne section <code>&lt;div class="faq-section"&gt;</code>, ajoute :</p>
+      <div class="code-block">&lt;details class="faq-item"&gt;
+  &lt;summary&gt;
+    Ta nouvelle question ?
+    &lt;span class="ms chevron"&gt;expand_more&lt;/span&gt;
+  &lt;/summary&gt;
+  &lt;div class="faq-body"&gt;
+    &lt;p&gt;La réponse à ta question ici.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/details&gt;</div>
+
+      <h3>Modifier une réponse existante</h3>
+      <p>Ctrl+F → cherche le texte de la question → trouve le <code>&lt;div class="faq-body"&gt;</code> juste en dessous → modifie le texte.</p>
+
+      <h3>Sections de la FAQ</h3>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Section</th><th>Chercher dans faq.html</th></tr></thead>
+          <tbody>
+            <tr><td>Commandes & livraison</td><td>premier <code>&lt;div class="faq-section"&gt;</code></td></tr>
+            <tr><td>Produits numériques</td><td>deuxième section</td></tr>
+            <tr><td>Retours & SAV</td><td>troisième section</td></tr>
+            <tr><td>Mon compte</td><td>quatrième section</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- EMAILS -->
+    <section id="emails">
+      <h2>Emails transactionnels</h2>
+
+      <h3>Email d'expédition (le seul modifiable facilement)</h3>
+      <p>Fichier : <code>functions/api/email-expedition.js</code></p>
+      <div class="overflow-x">
+        <table class="ref-table">
+          <thead><tr><th>Ce que tu veux modifier</th><th>Chercher dans le fichier</th><th>Modifier</th></tr></thead>
+          <tbody>
+            <tr><td>Objet de l'email</td><td><code>subject:</code></td><td>La valeur entre guillemets</td></tr>
+            <tr><td>Titre principal (h1)</td><td><code>&lt;h1&gt;</code></td><td>Le texte entre les balises</td></tr>
+            <tr><td>Texte du corps</td><td>Variable <code>html</code>, les balises <code>&lt;p&gt;</code></td><td>Les paragraphes de texte</td></tr>
+            <tr><td>Logo de l'email</td><td><code>logo_version_white.png</code></td><td>L'URL de l'image src</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert alert-blue"><strong>Note :</strong> Après modification de ce fichier, il faut faire un git push. Cloudflare redéploie automatiquement la fonction.</div>
+
+      <h3>Autres emails (confirmation commande, etc.)</h3>
+      <p>Ces emails sont dans <code>functions/api/swift-function.js</code> — plus complexe à modifier. À faire avec Claude.</p>
+    </section>
+
+    <!-- DANGER -->
+    <section id="danger">
+      <h2>Zones dangereuses — ne pas toucher seule</h2>
+
+      <div class="alert alert-red">
+        <strong>🚨 JAMAIS :</strong>
+        <ul style="margin-top:8px;margin-left:20px;line-height:2;">
+          <li><strong>Modifier Stripe en mode TEST</strong> — on est en LIVE (vrais paiements). Ne pas changer le mode.</li>
+          <li><strong>Supprimer une table Supabase</strong> (resources, commandes_physiques, purchases...) — irréversible.</li>
+          <li><strong>Modifier supabase-client.js</strong> — casse toutes les pages du site.</li>
+          <li><strong>Modifier les Edge Functions Supabase</strong> (stripe-checkout, stripe-webhook, swift-function) — nécessite Claude.</li>
+          <li><strong>Changer un slug déjà publié</strong> — casse les liens Google et les URL partagées.</li>
+          <li><strong>Utiliser une balise <code>&lt;form&gt;</code></strong> dans le HTML — tout doit passer par des event handlers JS.</li>
+        </ul>
+      </div>
+
+      <div class="alert alert-gold">
+        <strong>⚠️ Prudence :</strong>
+        <ul style="margin-top:8px;margin-left:20px;line-height:2;">
+          <li><strong>Modifier bundle_items</strong> en JSON brut dans Supabase — utiliser l'interface admin si possible.</li>
+          <li><strong>Modifier gelato_product_id</strong> — vérifier l'ID exact dans ton catalogue Gelato avant.</li>
+          <li><strong>Supprimer un produit avec commandes actives</strong> — préférer "désactiver".</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DEBUG -->
+    <section id="debug">
+      <h2>Dépannage rapide</h2>
+
+      <h3>Un produit n'apparaît pas en boutique</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Vérifie dans admin-ressources : le produit est-il <strong>Actif</strong> (œil non barré) ? <strong>Visible boutique</strong> cochée ?</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Vérifie dans Supabase table <code>resources</code> : <code>is_active = true</code> ET <code>visible_boutique = true</code></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Vide le cache du navigateur (Ctrl+Shift+R) — Cloudflare cache parfois les pages</div></div>
+      </div>
+
+      <h3>Une page affiche une erreur ou est blanche</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Appuie sur <strong>F12</strong> dans Chrome → onglet <strong>Console</strong> → lis l'erreur en rouge</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">L'erreur mentionne un fichier et une ligne — note-les</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Si l'erreur dit <em>"is not defined"</em> : une fonction JS est manquante ou mal orthographiée</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body">Partage le message d'erreur exact avec Claude au prochain message</div></div>
+      </div>
+
+      <h3>Le site n'est pas mis à jour après un git push</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Va sur <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → Pages → jumuatime → Deployments</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Vérifie que le dernier déploiement est en <strong>Success</strong> (vert). S'il est en échec (rouge) : lis l'erreur de build.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Si Success mais le site n'est pas à jour : Ctrl+Shift+R pour vider le cache navigateur</div></div>
+      </div>
+
+      <h3>L'email de suivi n'est pas parti</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body">Vérifie dans admin-commandes que le statut est bien passé à <strong>expedie</strong> (et non juste sauvegardé)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body">Vérifie sur <a href="https://resend.com/dashboard" target="_blank">resend.com/dashboard</a> que l'email a bien été envoyé (onglet Emails)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body">Si erreur dans Resend : note le message et partage-le avec Claude</div></div>
+      </div>
+
+      <h3>Commande arrivée mais sans email de confirmation cliente</h3>
+      <p>Va dans <a href="https://resend.com/dashboard" target="_blank">Resend → Emails</a> et cherche par l'email de la cliente. S'il n'y est pas, le webhook Stripe n'a pas fonctionné. Crée une commande manuelle dans admin-commandes pour garder la trace, et envoie un email personnalisé à la cliente.</p>
+
+      <div class="alert alert-green" style="margin-top:24px;">
+        <strong>✓ Raccourcis VS Code utiles :</strong>
+        <ul style="margin-top:8px;margin-left:20px;line-height:2;">
+          <li><strong>Ctrl+F</strong> : chercher dans le fichier actuel</li>
+          <li><strong>Ctrl+Shift+F</strong> : chercher dans tous les fichiers</li>
+          <li><strong>Ctrl+S</strong> : enregistrer</li>
+          <li><strong>Ctrl+Z</strong> : annuler la dernière modification</li>
+          <li><strong>Ctrl+ù</strong> : ouvrir le terminal intégré</li>
+          <li><strong>F12</strong> (dans Chrome) : ouvrir les DevTools pour voir les erreurs JS</li>
+        </ul>
+      </div>
+
+      <div class="alert alert-blue" style="margin-top:16px;">
+        <strong>Commande git minimale pour publier une modification :</strong>
+        <div class="code-block" style="margin-top:8px;">git add -A
+git commit -m "description de ce que tu as changé"
+git push</div>
+        À taper dans le terminal VS Code (Ctrl+ù), depuis le dossier <code>D:\DEV\jumuatime\</code>
+      </div>
+    </section>
+
+  </main>
+</div>
