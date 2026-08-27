@@ -9,7 +9,7 @@ function jsonResponse(data, status = 200) {
 }
 
 function emailAlphabet({ email }) {
-  const downloadUrl = 'https://jumuatime.com/downloads/alphabet-arabe.pdf';
+  const downloadUrl = 'https://jumuatime.com/assets/gabarit_210x297_alphabet_arabe.pdf';
 
   const content = `
     <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;color:#1A1208;">Votre affiche Alphabet Arabe est prête !</h1>
@@ -76,6 +76,18 @@ export async function onRequestPost(context) {
       const err = await res.text();
       return jsonResponse({ error: err }, 502);
     }
+
+    // Notification à Facyne (fire-and-forget)
+    fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${resendApiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Jumua Time <contact@jumuatime.com>',
+        to: ['facyne.draw@gmail.com'],
+        subject: '📥 Nouveau téléchargement — Alphabet Arabe',
+        html: `<p style="font-family:Arial,sans-serif;color:#1A1208;">Un nouveau visiteur a récupéré l'affiche Alphabet Arabe.</p><p style="color:#8B7A5A;">Email : <strong>${email}</strong></p>`,
+      }),
+    }).catch(() => {});
 
     return jsonResponse({ sent: true });
 
