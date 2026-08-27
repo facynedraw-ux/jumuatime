@@ -357,47 +357,70 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ═══════════════════════════════════
      CADEAU PDF — ALPHABET ARABE
 ════════════════════════════════════ -->
-<section class="relative overflow-hidden py-16 px-4" style="background:#F2C4B2;">
+<section class="relative overflow-hidden" style="background:linear-gradient(150deg,#2D5A66 0%,#3D7A8A 55%,#4A8A9C 100%);">
 
   <!-- Cercles décoratifs -->
-  <div class="absolute top-0 right-0 w-72 h-72 rounded-full pointer-events-none"
-       style="border:1.5px solid rgba(196,154,90,0.25);transform:translate(35%,-35%);"></div>
-  <div class="absolute bottom-0 left-0 w-40 h-40 rounded-full pointer-events-none"
-       style="border:1px solid rgba(28,53,64,0.1);transform:translate(-30%,30%);"></div>
+  <div class="absolute top-0 right-0 pointer-events-none" style="width:400px;height:400px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);transform:translate(40%,-40%);"></div>
+  <div class="absolute bottom-0 left-0 pointer-events-none" style="width:240px;height:240px;border-radius:50%;border:1px solid rgba(255,255,255,0.06);transform:translate(-40%,40%);"></div>
 
-  <div class="relative max-w-xl mx-auto text-center">
+  <div class="relative max-w-4xl mx-auto px-6 py-14 flex flex-col md:flex-row items-center gap-10 md:gap-14">
 
-    <!-- Tag -->
-    <p class="mb-4" style="font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#1C3540;">
-      CADEAU OFFERT
-    </p>
-
-    <!-- Titre -->
-    <h2 class="font-display font-bold mb-3" style="color:#1A1208;font-size:clamp(1.5rem,4vw,2rem);">
-      Affiche A4 Alphabet Arabe <em style="color:#8B6230;font-style:italic;">pour chambre d'enfant</em>
-    </h2>
-
-    <!-- Sous-titre -->
-    <p class="mb-7 leading-relaxed" style="color:#5A4030;font-weight:300;font-size:15px;">
-      Un cadeau illustré à imprimer chez vous — entrez votre email et recevez le PDF gratuitement.
-    </p>
-
-    <!-- Champ email + bouton -->
-    <div class="flex gap-2 max-w-sm mx-auto">
-      <label for="alphabet-email" class="sr-only">Votre adresse email</label>
-      <input id="alphabet-email" type="email" placeholder="votre@email.com"
-             class="email-input flex-1 min-w-0">
-      <button id="alphabet-btn" onclick="submitAlphabetGift()" class="btn-gold flex-shrink-0" style="padding:12px 18px;border-radius:16px;">
-        Recevoir →
-      </button>
+    <!-- Mockup affiche A4 -->
+    <div class="flex-shrink-0 flex justify-center" style="perspective:800px;">
+      <div style="position:relative;width:min(190px,42vw);">
+        <!-- Ombre portée -->
+        <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:75%;height:18px;background:rgba(0,0,0,0.25);filter:blur(12px);border-radius:50%;"></div>
+        <!-- Carte A4 -->
+        <div style="aspect-ratio:210/297;border-radius:6px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,0.3),0 6px 14px rgba(0,0,0,0.15);transform:rotate(2deg);background:white;">
+          <img src="Images/mockup-alphabet.jpg" alt="Affiche Alphabet Arabe A4"
+               style="width:100%;height:100%;object-fit:cover;display:block;"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <!-- Placeholder visuel (caché si l'image charge) -->
+          <div style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:18px;background:linear-gradient(160deg,#EBF5F7 0%,#FAF6F0 100%);">
+            <p style="font-size:28px;color:#5B9EAD;margin:0 0 6px;line-height:1;">أ ب ت</p>
+            <div style="width:32px;height:2px;background:#C49A5A;border-radius:2px;margin-bottom:10px;"></div>
+            <p style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;color:#1A1208;text-align:center;letter-spacing:1px;text-transform:uppercase;margin:0 0 14px;">Alphabet Arabe</p>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:90%;">
+              <div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div>
+              <div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div><div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div><div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div><div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div><div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div><div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div><div style="aspect-ratio:1;background:#F5EDE0;border-radius:3px;"></div>
+              <div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div><div style="aspect-ratio:1;background:#EBF5F7;border-radius:3px;"></div>
+            </div>
+            <p style="font-size:8px;color:#C49A5A;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:10px 0 0;">Jumua Time</p>
+          </div>
+        </div>
+        <!-- Badge -->
+        <div style="position:absolute;top:12px;left:-10px;background:#C49A5A;color:white;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:0 20px 20px 0;box-shadow:0 2px 8px rgba(0,0,0,0.2);">PDF gratuit</div>
+      </div>
     </div>
 
-    <p id="alphabet-msg" class="mt-4 text-sm hidden" style="color:#1C3540;font-weight:500;"></p>
+    <!-- Texte + formulaire -->
+    <div class="flex-1 text-center md:text-left">
+      <p style="font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:10px;">✦ Cadeau offert</p>
+      <h2 class="font-display font-bold mb-4" style="color:white;font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.15;">
+        Affiche <span style="color:#EFC865;">Alphabet Arabe</span><br>
+        <em style="font-style:italic;font-size:0.75em;color:rgba(255,255,255,0.75);">pour chambre d'enfant — A4 à imprimer</em>
+      </h2>
+      <p style="color:rgba(255,255,255,0.75);font-size:15px;line-height:1.65;margin-bottom:28px;">
+        Une illustration pédagogique créée par Facyne.<br>Entrez votre email et recevez le PDF gratuitement.
+      </p>
 
-    <p class="mt-4 text-xs leading-relaxed" style="color:rgba(28,53,64,0.88);">
-      En soumettant votre email, vous acceptez de recevoir ce PDF et d'être contactée à ce sujet.
-      Pour être retirée de la liste à tout moment : <a href="mailto:contact@jumuatime.com" style="color:#4A2808;text-decoration:underline;">contact@jumuatime.com</a>
-    </p>
+      <div class="flex gap-2 max-w-sm mx-auto md:mx-0">
+        <label for="alphabet-email" class="sr-only">Votre adresse email</label>
+        <input id="alphabet-email" type="email" placeholder="votre@email.com"
+               style="flex:1;min-width:0;padding:12px 16px;border-radius:16px;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.12);color:white;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;backdrop-filter:blur(4px);"
+               onfocus="this.style.borderColor='rgba(255,255,255,0.6)'" onblur="this.style.borderColor='rgba(255,255,255,0.25)'">
+        <button id="alphabet-btn" onclick="submitAlphabetGift()" class="btn-gold flex-shrink-0" style="padding:12px 20px;border-radius:16px;">
+          Recevoir →
+        </button>
+      </div>
+
+      <p id="alphabet-msg" class="mt-4 text-sm hidden" style="font-weight:600;"></p>
+
+      <p style="margin-top:14px;font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">
+        En soumettant votre email, vous acceptez de recevoir ce PDF.
+        Pour être retirée : <a href="mailto:contact@jumuatime.com" style="color:rgba(255,255,255,0.6);text-decoration:underline;">contact@jumuatime.com</a>
+      </p>
+    </div>
 
   </div>
 </section>
@@ -699,7 +722,7 @@ async function submitAlphabetGift() {
   } catch(err) { console.error('[email-alphabet]', err); }
 
   msg.textContent = '✦ Parfait ! Vérifiez votre boîte mail, l\'affiche vous y attend.';
-  msg.style.color = '#1C3540';
+  msg.style.color = 'white';
   msg.classList.remove('hidden');
   emailEl.value = '';
   btn.disabled = false;
