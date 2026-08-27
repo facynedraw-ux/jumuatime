@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -355,7 +355,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <!-- ═══════════════════════════════════
-     CAPTURE EMAIL — TILAWA TOUR
+     CADEAU PDF — ALPHABET ARABE
 ════════════════════════════════════ -->
 <section class="relative overflow-hidden py-16 px-4" style="background:#F2C4B2;">
 
@@ -374,29 +374,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Titre -->
     <h2 class="font-display font-bold mb-3" style="color:#1A1208;font-size:clamp(1.5rem,4vw,2rem);">
-      Tilawa Tour — <em style="color:#8B6230;font-style:italic;">gratuit pour vous</em>
+      Affiche Alphabet Arabe — <em style="color:#8B6230;font-style:italic;">gratuit pour vous</em>
     </h2>
 
     <!-- Sous-titre -->
     <p class="mb-7 leading-relaxed" style="color:#5A4030;font-weight:300;font-size:15px;">
-      Notre application de lecture et de révision du Coran.<br>
-      Cheminez avec le Coran, mois après mois.
+      Recevez notre affiche A4 illustrée de l'alphabet arabe en PDF, prête à imprimer.<br>
+      Un outil pédagogique offert par Jumua Time.
     </p>
 
-    <!-- Formulaire -->
-    <form id="tilawa-form" onsubmit="submitTilawa(event)" class="flex gap-2 max-w-sm mx-auto">
-      <label for="tilawa-email" class="sr-only">Votre adresse email</label>
-      <input id="tilawa-email" type="email" required placeholder="votre@email.com"
+    <!-- Champ email + bouton -->
+    <div class="flex gap-2 max-w-sm mx-auto">
+      <label for="alphabet-email" class="sr-only">Votre adresse email</label>
+      <input id="alphabet-email" type="email" placeholder="votre@email.com"
              class="email-input flex-1 min-w-0">
-      <button type="submit" id="tilawa-btn" class="btn-gold flex-shrink-0" style="padding:12px 18px;border-radius:16px;">
+      <button id="alphabet-btn" onclick="submitAlphabetGift()" class="btn-gold flex-shrink-0" style="padding:12px 18px;border-radius:16px;">
         Recevoir →
       </button>
-    </form>
+    </div>
 
-    <p id="tilawa-msg" class="mt-4 text-sm hidden" style="color:#1C3540;font-weight:500;"></p>
+    <p id="alphabet-msg" class="mt-4 text-sm hidden" style="color:#1C3540;font-weight:500;"></p>
 
     <p class="mt-4 text-xs leading-relaxed" style="color:rgba(28,53,64,0.88);">
-      En soumettant votre email, vous acceptez de recevoir l'accès à Tilawa Tour et d'être contactée à ce sujet.
+      En soumettant votre email, vous acceptez de recevoir ce PDF et d'être contactée à ce sujet.
       Pour être retirée de la liste à tout moment : <a href="mailto:contact@jumuatime.com" style="color:#4A2808;text-decoration:underline;">contact@jumuatime.com</a>
     </p>
 
@@ -571,7 +571,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <ul class="space-y-2 list-none p-0 m-0">
           <li><a href="ressources.html" class="footer-link">Boutique</a></li>
           <li><a href="personnalisation.html" class="footer-link">Personnalisation</a></li>
-          <li><a href="tilawatour.html" class="footer-link">Tilawa Tour</a></li>
           <li><a href="a-propos.html" class="footer-link">À propos</a></li>
           <li><a href="contact.html" class="footer-link">Contact</a></li>
           <li><a href="faq.html" class="footer-link">FAQ</a></li>
@@ -663,24 +662,26 @@ function toggleMenu() {
   btn.setAttribute('aria-expanded', String(!open));
 }
 
-// ── Tilawa — email capture ──
-async function submitTilawa(e) {
-  e.preventDefault();
-  const email = document.getElementById('tilawa-email').value.trim().toLowerCase();
-  const msg   = document.getElementById('tilawa-msg');
-  const btn   = document.getElementById('tilawa-btn');
+// ── Alphabet arabe — cadeau PDF ──
+async function submitAlphabetGift() {
+  const emailEl = document.getElementById('alphabet-email');
+  const msg     = document.getElementById('alphabet-msg');
+  const btn     = document.getElementById('alphabet-btn');
+  const email   = emailEl.value.trim().toLowerCase();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.textContent = 'Merci d\'entrer une adresse email valide.';
+    msg.style.color = '#C96B8A';
+    msg.classList.remove('hidden');
+    return;
+  }
 
   btn.disabled = true;
   btn.textContent = '…';
 
-  // Enregistrer l'abonnée ET accorder l'accès Tilawa Tour en parallèle
-  const [{ error: e1 }, { error: e2 }] = await Promise.all([
-    _supabase.from('email_subscribers').insert({ email, source: 'tilawa_gift' }),
-    _supabase.from('beta_access').upsert({ email, source: 'homepage_encart' }, { onConflict: 'email' })
-  ]);
-
-  // Doublon (23505) = déjà inscrite, pas une erreur
-  if ((e1 && e1.code !== '23505') || (e2 && e2.code !== '23505')) {
+  // Enregistrer l'abonnée (doublon 23505 = déjà inscrite, pas une erreur)
+  const { error: e1 } = await _supabase.from('email_subscribers').insert({ email, source: 'alphabet_gift' });
+  if (e1 && e1.code !== '23505') {
     msg.textContent = 'Une erreur est survenue. Réessayez.';
     msg.style.color = '#C96B8A';
     msg.classList.remove('hidden');
@@ -689,26 +690,19 @@ async function submitTilawa(e) {
     return;
   }
 
-  // Envoyer email de bienvenue via Edge Function
-  console.log('[send-email] appel en cours pour:', email);
+  // Envoyer le PDF par email via Cloudflare Function
   try {
-    const res = await fetch('https://qsvozaxqeamrdkmujoze.supabase.co/functions/v1/swift-function', {
+    await fetch('/api/email-alphabet', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      },
-      body: JSON.stringify({ type: 'tilawa_access', data: { to_email: email } })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
     });
-    const body = await res.text();
-    console.log('[send-email] status:', res.status, body);
-  } catch(err) { console.error('[send-email] fetch error:', err); }
+  } catch(err) { console.error('[email-alphabet]', err); }
 
-  msg.textContent = 'Accès accordé ! Vérifiez votre boîte mail pour le lien vers Tilawa Tour. ✦';
+  msg.textContent = '✦ Parfait ! Vérifiez votre boîte mail, l\'affiche vous y attend.';
   msg.style.color = '#1C3540';
   msg.classList.remove('hidden');
-  document.getElementById('tilawa-email').value = '';
+  emailEl.value = '';
   btn.disabled = false;
   btn.textContent = 'Recevoir →';
 }
