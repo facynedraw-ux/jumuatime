@@ -36,8 +36,8 @@ function emailAlphabet({ email }) {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F0;padding:32px 16px;">
 <tr><td align="center">
 <table width="100%" style="max-width:560px;background:white;border-radius:20px;overflow:hidden;border:1px solid #E2D4BC;">
-  <tr><td style="background:#5B9EAD;padding:24px 32px;text-align:center;">
-    <img src="https://jumuatime.com/Images/logo_version_white.png" alt="Jumua Time" width="160" style="height:auto;display:block;margin:0 auto;" />
+  <tr><td style="background:#FAF6F0;padding:24px 32px;text-align:center;border-bottom:1px solid #E2D4BC;">
+    <img src="https://jumuatime.com/Images/logo_jumuatime.png" alt="Jumua Time" width="160" style="height:auto;display:block;margin:0 auto;" />
   </td></tr>
   <tr><td style="padding:32px;">${content}</td></tr>
   <tr><td style="background:#FAF6F0;padding:20px 32px;text-align:center;border-top:1px solid #E2D4BC;">
