@@ -77,17 +77,19 @@ export async function onRequestPost(context) {
       return jsonResponse({ error: err }, 502);
     }
 
-    // Notification à Facyne (fire-and-forget)
-    fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${resendApiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: 'Jumua Time <contact@jumuatime.com>',
-        to: ['facyne.draw@gmail.com'],
-        subject: '📥 Nouveau téléchargement — Alphabet Arabe',
-        html: `<p style="font-family:Arial,sans-serif;color:#1A1208;">Un nouveau visiteur a récupéré l'affiche Alphabet Arabe.</p><p style="color:#8B7A5A;">Email : <strong>${email}</strong></p>`,
-      }),
-    }).catch(() => {});
+    // Notification à Facyne — context.waitUntil() pour ne pas être annulé
+    context.waitUntil(
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${resendApiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Jumua Time <contact@jumuatime.com>',
+          to: ['facyne.draw@gmail.com'],
+          subject: '📥 Nouveau téléchargement — Alphabet Arabe',
+          html: `<p style="font-family:Arial,sans-serif;color:#1A1208;">Un nouveau visiteur a récupéré l'affiche Alphabet Arabe.</p><p style="color:#8B7A5A;">Email : <strong>${email}</strong></p>`,
+        }),
+      }).catch(() => {})
+    );
 
     return jsonResponse({ sent: true });
 
