@@ -488,8 +488,9 @@ function renderPanel(o) {
     <!-- Client -->
     <div class="f-sep"></div>
     <div class="f-label">Client</div>
-    <div class="text-sm font-semibold mb-0.5">${name}</div>
-    <div class="text-xs text-muted mb-4" style="color:#9B7FA6;">${email}</div>
+    <div class="text-sm font-semibold mb-1">${name}</div>
+    <a href="mailto:${email}" class="text-sm no-underline mb-1 block" style="color:#5B9EAD;">${email}</a>
+    ${(adr.phone || adr.telephone) ? `<div class="text-sm mb-4" style="color:#1A1208;">📞 ${adr.phone || adr.telephone}</div>` : '<div class="text-xs text-muted mb-4">Téléphone non collecté</div>'}
 
     ${adrParts.length ? `
     <div class="f-label">Adresse de livraison</div>
