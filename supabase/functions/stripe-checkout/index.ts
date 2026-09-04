@@ -211,6 +211,10 @@ Deno.serve(async (req: Request) => {
         };
       }
 
+      if (hasPhysical) {
+        sessionParams.phone_number_collection = { enabled: true };
+      }
+
       if (prefilledAddress) {
         // Adresse déjà saisie dans le panier (Gelato) → stocker dans metadata
         sessionParams.metadata.adresse_livraison = JSON.stringify({

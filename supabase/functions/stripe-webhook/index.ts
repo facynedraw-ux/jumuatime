@@ -138,6 +138,7 @@ Deno.serve(async (req: Request) => {
         ville:       shippingDetails.address.city,
         code_postal: shippingDetails.address.postal_code,
         pays:        shippingDetails.address.country,
+        telephone:   session.customer_details?.phone || "",
       } : null;
 
       const persoData = meta.personnalisation ? JSON.parse(meta.personnalisation) : {};
@@ -231,6 +232,7 @@ Deno.serve(async (req: Request) => {
         ville:       shippingDetails.address.city,
         code_postal: shippingDetails.address.postal_code,
         pays:        shippingDetails.address.country,
+        telephone:   session.customer_details?.phone || "",
       } : (meta.adresse_livraison ? JSON.parse(meta.adresse_livraison) : null);
 
       const emailClient = session.customer_details?.email;
