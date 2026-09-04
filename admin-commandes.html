@@ -439,8 +439,13 @@ function renderPanel(o) {
   const total      = o.montant_total;
   const sousTotal  = o.montant_produit != null ? o.montant_produit : (total != null ? total - livraison : null);
 
-  // Adresse
-  const adrParts = [adr.line1, adr.line2, [adr.postal_code, adr.city].filter(Boolean).join(' '), adr.country].filter(Boolean);
+  // Adresse — supporte les deux formats (Stripe: line1/postal_code/city/country et interne: rue/code_postal/ville/pays)
+  const adrParts = [
+    adr.line1 || adr.rue,
+    adr.line2 || adr.complement,
+    [(adr.postal_code || adr.code_postal), (adr.city || adr.ville)].filter(Boolean).join(' '),
+    adr.country || adr.pays,
+  ].filter(Boolean);
 
   // Personnalisation
   const persoEntries = Object.entries(perso).filter(([,v]) => v);
