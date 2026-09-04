@@ -257,7 +257,7 @@ async function loadAll() {
   const [physRes, numRes] = await Promise.all([
     _supabase
       .from('commandes_physiques')
-      .select('*, resources(title, preview_url, price)')
+      .select('*, resources(title, preview_url, price, variantes)')
       .order('created_at', { ascending: false }),
     _supabase
       .from('purchases')
@@ -423,9 +423,14 @@ function closePanel() {
 
 function renderPanel(o) {
   const adr    = o.adresse_livraison || {};
-  const name   = adr.name || adr.full_name || adr.nom || '—';
-  const email  = adr.email || '—';
+  const name   = o.nom_client || adr.name || adr.full_name || adr.nom || '—';
+  const email  = o.email_client || adr.email || '—';
   const prod   = o.resources || {};
+  const varianteLabel = (() => {
+    if (!o.variante_id) return null;
+    const v = (prod.variantes || []).find(v => v.id === o.variante_id);
+    return v ? v.label : o.variante_id;
+  })();
   const perso  = o.personnalisation || {};
   const ref    = (o.stripe_session_id || o.id).slice(-12).toUpperCase();
   const date   = o.created_at ? new Date(o.created_at).toLocaleString('fr-FR') : '—';
@@ -465,7 +470,7 @@ function renderPanel(o) {
       ${prod.preview_url ? `<img src="${prod.preview_url}" alt="" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">` : ''}
       <div>
         <div class="font-semibold text-sm">${prod.title || '—'}</div>
-        ${o.variante_id ? `<div class="text-xs text-muted mt-0.5">Variante : ${o.variante_id}</div>` : ''}
+        ${varianteLabel ? `<div class="text-xs text-muted mt-0.5">Variante : <strong>${varianteLabel}</strong></div>` : ''}
       </div>
     </div>
 
@@ -483,7 +488,8 @@ function renderPanel(o) {
 
     ${adrParts.length ? `
     <div class="f-label">Adresse de livraison</div>
-    <div class="text-sm leading-relaxed mb-4" style="background:#FAFAF8;border:1px solid #E8D5DC;border-radius:10px;padding:10px 12px;">
+    <div class="text-sm leading-relaxed mb-4" style="background:#FAFAF8;border:1px solid #E8D5DC;border-radius:10px;padding:10px 12px;font-family:monospace;font-size:13px;">
+      <strong>${name}</strong><br>
       ${adrParts.join('<br>')}
     </div>` : ''}
 
