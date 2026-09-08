@@ -46,12 +46,18 @@ Deno.serve(async (req: Request) => {
   if (verify) {
     const { data: purchase } = await supabase
       .from("purchases")
-      .select("download_token")
+      .select("download_token, resource_id, amount, resources(id, title, price)")
       .eq("stripe_session_id", verify)
       .maybeSingle();
 
+    const res = purchase?.resources as any;
     return new Response(
-      JSON.stringify({ download_token: purchase?.download_token || null }),
+      JSON.stringify({
+        download_token: purchase?.download_token || null,
+        ga_item_id:    res?.id || purchase?.resource_id || null,
+        ga_item_name:  res?.title || null,
+        ga_value:      res?.price ? res.price / 100 : (purchase?.amount || null),
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

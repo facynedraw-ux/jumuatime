@@ -192,30 +192,51 @@ async function init() {
     document.getElementById('loading-state').classList.add('hidden');
     document.getElementById('success-state').classList.remove('hidden');
 
-    try {
-      const _pending = JSON.parse(localStorage.getItem('jt_pending_purchase') || 'null');
-      if (_pending) {
+    const _gaKey = 'ga_purch_' + (sessionId || '').slice(-12);
+    if (!sessionStorage.getItem(_gaKey)) {
+      sessionStorage.setItem(_gaKey, '1');
+      try {
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'purchase',
-          ecommerce: {
-            transaction_id: sessionId,
-            currency: 'EUR',
-            value: _pending.value,
-            items: (_pending.items || []).map((item, idx) => ({
-              item_id: item.produit_id,
-              item_name: item.title,
-              item_category: item.category || '',
-              price: (item.price_cents || 0) / 100,
-              quantity: item.quantity || 1,
-              index: idx,
-            })),
-          },
-        });
+        window.dataLayer.push({ ecommerce: null });
+        if (data.ga_item_id || data.ga_item_name) {
+          window.dataLayer.push({
+            event: 'purchase',
+            ecommerce: {
+              transaction_id: sessionId,
+              value:    data.ga_value || 0,
+              currency: 'EUR',
+              items: [{
+                item_id:   data.ga_item_id || sessionId.slice(-8),
+                item_name: data.ga_item_name || 'Ressource numérique',
+                price:     data.ga_value || 0,
+                quantity:  1,
+              }],
+            },
+          });
+        } else {
+          const _pending = JSON.parse(localStorage.getItem('jt_pending_purchase') || 'null');
+          if (_pending) {
+            window.dataLayer.push({
+              event: 'purchase',
+              ecommerce: {
+                transaction_id: sessionId,
+                value:    _pending.value,
+                currency: 'EUR',
+                items: (_pending.items || []).map((item, idx) => ({
+                  item_id:   item.produit_id,
+                  item_name: item.title,
+                  price:     (item.price_cents || 0) / 100,
+                  quantity:  item.quantity || 1,
+                  index:     idx,
+                })),
+              },
+            });
+          }
+        }
         localStorage.removeItem('jt_pending_purchase');
         localStorage.removeItem('jt_panier');
-      }
-    } catch {}
+      } catch {}
+    }
 
   } catch (e) {
     showError();
