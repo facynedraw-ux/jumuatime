@@ -250,8 +250,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const { data, error } = await _supabase
     .from('commandes_physiques')
     .select(`
-      id, created_at, statut, personnalisation, montant_livraison,
-      resources ( title, preview_url, category ),
+      id, created_at, statut, personnalisation, montant_livraison, montant_produit, montant_total,
+      resources ( id, title, preview_url, category ),
       variante_id, adresse_livraison
     `)
     .eq('stripe_session_id', sessionId)
@@ -277,6 +277,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="value">Envoyé à votre adresse</span>
       </div>
     `;
+    // GA4 purchase — fallback localStorage (webhook pas encore traité)
+    _firePurchaseEvent(sessionId, null);
     return;
   }
 
@@ -336,7 +338,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   document.getElementById('order-details').innerHTML = rows;
+
+  // GA4 purchase avec données réelles Supabase
+  _firePurchaseEvent(sessionId, cmd);
 })();
+
+function _firePurchaseEvent(sessionId, cmd) {
+  // Idempotence : ne tire qu'une seule fois par session navigateur
+  const _gaKey = 'ga_purch_' + (sessionId || '').slice(-12);
+  if (sessionStorage.getItem(_gaKey)) return;
+  sessionStorage.setItem(_gaKey, '1');
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ ecommerce: null }); // reset ecommerce objet
+
+  if (cmd) {
+    // Données réelles depuis Supabase
+    window.dataLayer.push({
+      event: 'purchase',
+      ecommerce: {
+        transaction_id: sessionId,
+        value:    ((cmd.montant_total || cmd.montant_produit || 0) / 100),
+        shipping: ((cmd.montant_livraison || 0) / 100),
+        currency: 'EUR',
+        items: [{
+          item_id:   cmd.resources?.id || sessionId.slice(-8),
+          item_name: cmd.resources?.title || 'Produit physique',
+          price:     ((cmd.montant_produit || 0) / 100),
+          quantity:  1,
+        }],
+      },
+    });
+  } else {
+    // Fallback : localStorage pré-rempli avant la redirection Stripe
+    const _p = JSON.parse(localStorage.getItem('jt_pending_purchase') || 'null');
+    if (_p) {
+      window.dataLayer.push({
+        event: 'purchase',
+        ecommerce: {
+          transaction_id: sessionId,
+          value:    _p.value,
+          currency: 'EUR',
+          items:    _p.items || [],
+        },
+      });
+    }
+  }
+
+  localStorage.removeItem('jt_pending_purchase');
+  localStorage.removeItem('jt_panier');
+}
 
 function showError() {
   document.getElementById('loading-state').classList.add('hidden');
