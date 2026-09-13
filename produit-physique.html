@@ -243,12 +243,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <main id="main-content" class="hidden max-w-5xl mx-auto px-4 py-8 pb-28 md:pb-16">
-  <button onclick="history.length > 1 ? history.back() : window.location.href='ressources.html'"
-          class="flex items-center gap-1 text-sm mb-6 transition-colors"
-          style="background:none;border:none;cursor:pointer;color:#8B7A5A;font-family:'DM Sans',sans-serif;padding:0;">
-    <span class="ms" style="font-size:18px;">arrow_back</span>
-    Retour à la boutique
-  </button>
+  <!-- Fil d'Ariane -->
+  <nav class="mb-8 flex items-center gap-1 flex-wrap" style="font-size:13px;color:#8B7A5A;" aria-label="Fil d'Ariane">
+    <a href="index.html" style="color:#8B7A5A;text-decoration:none;" class="hover:underline">Accueil</a>
+    <span style="color:#C49A5A;margin:0 5px;">/</span>
+    <a href="ressources.html" style="color:#8B7A5A;text-decoration:none;" class="hover:underline">Boutique</a>
+    <span id="breadcrumb-cat-sep" class="hidden" style="color:#C49A5A;margin:0 5px;">/</span>
+    <a id="breadcrumb-cat" class="hidden hover:underline" href="ressources.html" style="color:#8B7A5A;text-decoration:none;"></a>
+    <span style="color:#C49A5A;margin:0 5px;">/</span>
+    <span id="breadcrumb-title" style="color:#1A1208;font-weight:500;"></span>
+  </nav>
   <div class="grid md:grid-cols-2 gap-12 items-start">
 
     <!-- Colonne gauche — Image -->
@@ -680,6 +684,13 @@ async function renderBundle() {
   document.title = `${produit.title} — Jumua Time`;
   document.getElementById('page-title').textContent = `${produit.title} — Jumua Time`;
   document.getElementById('product-title').textContent = produit.title;
+  document.getElementById('breadcrumb-title').textContent = produit.title;
+  if (produit.category) {
+    const catEl = document.getElementById('breadcrumb-cat');
+    catEl.textContent = produit.category;
+    catEl.classList.remove('hidden');
+    document.getElementById('breadcrumb-cat-sep').classList.remove('hidden');
+  }
 
   try {
   setOgMeta(
@@ -821,6 +832,14 @@ function renderProduit() {
   document.title = `${produit.title} — Jumua Time`;
   document.getElementById('page-title').textContent = `${produit.title} — Jumua Time`;
   document.getElementById('product-title').textContent = produit.title;
+  // Fil d'Ariane
+  document.getElementById('breadcrumb-title').textContent = produit.title;
+  if (produit.category) {
+    const catEl = document.getElementById('breadcrumb-cat');
+    catEl.textContent = produit.category;
+    catEl.classList.remove('hidden');
+    document.getElementById('breadcrumb-cat-sep').classList.remove('hidden');
+  }
   setOgMeta(
     produit.title,
     produit.description || `${produit.title} — Jumua Time`,
