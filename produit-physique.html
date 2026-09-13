@@ -180,6 +180,8 @@ p {
     line-height:1.8;
     font-size:16px;
     color:#5C4F38;
+    text-align:justify;
+    hyphens:auto;
   }
   .product-placeholder {
     min-height:280px;
@@ -284,38 +286,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- Miniatures horizontales (mobile uniquement) -->
       <div id="gallery-thumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 hidden"></div>
 
-      <!-- Boutons CTA sous les photos -->
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:18px;">
-        <button id="add-cart-btn" class="btn-teal justify-center" style="width:100%;padding:10px 20px;font-size:14px;font-weight:600;letter-spacing:0.02em;" disabled onclick="addToCartFromPage()">
-          <span class="ms" style="font-size:16px;">shopping_bag</span>
-          Ajouter au panier
-        </button>
-        <button id="order-btn" class="flex items-center justify-center gap-2 font-semibold rounded-xl border transition-all" style="width:100%;padding:9px 20px;font-size:13px;background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.02em;" disabled onclick="startCheckout()"
-          onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
-          <span class="ms" style="font-size:15px;">bolt</span>
-          Commander maintenant
-        </button>
-        <p class="text-xs text-center text-muted" id="checkout-hint" style="margin-top:2px;">Paiement sécurisé par Stripe</p>
-      </div>
-
-      <!-- Récap Livraison / Total + Caractéristiques -->
-      <div style="margin-top:16px;border-top:1px solid #E2D4BC;padding-top:16px;display:flex;flex-direction:column;gap:0;">
+      <!-- Récap Livraison / Total + Caractéristiques — au-dessus des boutons -->
+      <div style="margin-top:18px;border:1px solid #E2D4BC;border-radius:12px;padding:14px 16px;background:#FDFAF6;">
         <div class="recap-row">
-          <span class="text-muted" style="font-size:13px;">Livraison</span>
-          <span id="recap-livraison" style="font-size:13px;">—</span>
+          <span class="text-muted" style="font-size:14px;">Livraison</span>
+          <span id="recap-livraison" style="font-size:14px;font-weight:500;">—</span>
         </div>
-        <div class="recap-row" style="margin-top:2px;">
+        <div class="recap-row" style="margin-top:6px;padding-top:6px;border-top:1px solid #EDE5D8;">
           <span style="font-weight:700;font-size:15px;">Total</span>
-          <span id="recap-total" style="font-weight:700;font-size:16px;color:#5B9EAD;">—</span>
+          <span id="recap-total" style="font-weight:700;font-size:17px;color:#5B9EAD;">—</span>
         </div>
-        <p class="text-xs text-muted mt-2" id="recap-livraison-info"></p>
+        <p class="text-xs text-muted mt-2" id="recap-livraison-info" style="line-height:1.5;"></p>
         <span id="recap-produit" style="display:none;">—</span>
       </div>
-      <div id="product-details" class="space-y-1 text-xs text-muted" style="padding-top:12px;border-top:1px solid #E2D4BC;margin-top:4px;"></div>
+      <div id="product-details" class="space-y-1 text-sm text-muted" style="padding:10px 0 4px;margin-top:2px;"></div>
+
+      <!-- Boutons CTA -->
+      <div style="display:flex;flex-direction:column;gap:9px;margin-top:4px;">
+        <button id="add-cart-btn" class="flex items-center justify-center gap-2 font-semibold transition-all" style="width:100%;padding:13px 24px;font-size:15px;font-weight:700;letter-spacing:0.03em;border:none;border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#C49A5A 0%,#A97C35 100%);color:white;box-shadow:0 4px 18px rgba(196,154,90,0.35);transition:opacity 0.2s,box-shadow 0.2s;" disabled onclick="addToCartFromPage()"
+          onmouseover="if(!this.disabled){this.style.opacity='0.9';this.style.boxShadow='0 6px 24px rgba(196,154,90,0.45)'}" onmouseout="this.style.opacity='1';this.style.boxShadow='0 4px 18px rgba(196,154,90,0.35)'">
+          <span class="ms" style="font-size:18px;">shopping_bag</span>
+          Ajouter au panier
+        </button>
+        <button id="order-btn" class="flex items-center justify-center gap-2 font-semibold rounded-xl border transition-all" style="width:100%;padding:11px 24px;font-size:14px;background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
+          onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
+          <span class="ms" style="font-size:16px;">bolt</span>
+          Commander maintenant
+        </button>
+        <p class="text-xs text-center text-muted" id="checkout-hint" style="margin-top:1px;">
+          <span class="ms" style="font-size:12px;vertical-align:middle;">lock</span>
+          Paiement sécurisé par Stripe
+        </p>
+      </div>
     </div>
 
     <!-- Colonne droite — Tout le contenu -->
-    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;padding-left:20px;">
+    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;padding-left:32px;">
 
       <!-- Titre & prix -->
       <div>
