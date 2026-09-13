@@ -798,8 +798,10 @@ function renderProduit() {
     }
   }
 
-  // Badge délai — mode_livraison défini = produit manuel (priorité sur gelato_product_id)
-  const _isGelato = !produit.mode_livraison && !!(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id));
+  // Badge délai — mode_livraison null = Gelato (peu importe si gelato_product_id est encore vide)
+  const _isGelato = produit.mode_livraison === null || produit.mode_livraison === undefined
+    ? !!(produit.gelato_product_id || (produit.variantes||[]).length > 0)
+    : false;
   const _isLettre = produit.mode_livraison === 'lettre';
   const _delaiDef = _isGelato ? '5 à 7 jours ouvrés' : (_isLettre ? '3 à 4 jours ouvrés' : '3 à 5 jours ouvrés');
   const rawDelai = produit.delai_livraison || '';
@@ -919,7 +921,9 @@ function selectVariante(id) {
 function updatePrix(prixProduit) {
   const variante    = (produit.variantes || []).find(v => v.id === varianteChoisie);
   const effectiveGel = variante?.gelato_product_id || produit.gelato_product_id || '';
-  const isGelato    = !!effectiveGel || (Array.isArray(produit.variantes) && produit.variantes.some(v => v.gelato_product_id));
+  const isGelato    = !!effectiveGel
+    || (Array.isArray(produit.variantes) && produit.variantes.some(v => v.gelato_product_id))
+    || produit.mode_livraison === null;
 
   const _hasMultiPrix = (produit.variantes || []).filter(v => v.prix > 0).length > 1;
   document.getElementById('product-price-display').textContent =
