@@ -647,15 +647,17 @@ async function renderBundle() {
   document.getElementById('recap-produit').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
   if (hasGelato) {
-    document.getElementById('recap-livraison').textContent = 'Offerte';
+    document.getElementById('recap-livraison').innerHTML = '<span class="ms" style="font-size:14px;vertical-align:-2px;margin-right:3px;">redeem</span>Offerte';
     document.getElementById('recap-total').textContent =
       (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
     const infoEl = document.getElementById('recap-livraison-info');
     if (infoEl) infoEl.textContent = 'Livraison incluse · Expédié par Gelato';
   } else {
     const shipCents = bundlePriceCents >= 4900 ? 0 : 490;
-    document.getElementById('recap-livraison').textContent =
-      shipCents === 0 ? 'Offerte' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+    document.getElementById('recap-livraison').innerHTML =
+      shipCents === 0
+        ? '<span class="ms" style="font-size:14px;vertical-align:-2px;margin-right:3px;">redeem</span>Offerte'
+        : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     document.getElementById('recap-total').textContent =
       ((bundlePriceCents + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     const infoEl = document.getElementById('recap-livraison-info');
@@ -934,7 +936,7 @@ function updatePrix(prixProduit) {
   const infoEl = document.getElementById('recap-livraison-info');
 
   if (isGelato) {
-    document.getElementById('recap-livraison').textContent = 'Offerte';
+    document.getElementById('recap-livraison').innerHTML = '<span class="ms" style="font-size:14px;vertical-align:-2px;margin-right:3px;">redeem</span>Offerte';
     document.getElementById('recap-total').textContent = `${(prixProduit / 100).toFixed(2)} €`;
     infoEl.textContent = 'Livraison incluse · Expédié par Gelato';
     const hint = document.getElementById('checkout-hint');
@@ -943,8 +945,10 @@ function updatePrix(prixProduit) {
     const modeLivr  = (produit.variantes || []).find(v => v.id === varianteChoisie)?.mode_livraison
                     || produit.mode_livraison || 'colis';
     const shipCents = prixProduit >= 4900 ? 0 : (modeLivr === 'lettre' ? 200 : 490);
-    document.getElementById('recap-livraison').textContent =
-      shipCents === 0 ? 'Offerte' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+    document.getElementById('recap-livraison').innerHTML =
+      shipCents === 0
+        ? '<span class="ms" style="font-size:14px;vertical-align:-2px;margin-right:3px;">redeem</span>Offerte'
+        : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     document.getElementById('recap-total').textContent =
       ((prixProduit + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     infoEl.textContent = modeLivr === 'lettre'
