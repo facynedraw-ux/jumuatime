@@ -831,7 +831,8 @@ function renderProduit() {
 
   // Variantes
   const variantes = produit.variantes || [];
-  if (variantes.length > 0) {
+  const variantesAvecPrix = variantes.filter(v => v.prix > 0);
+  if (variantes.length > 0 && variantesAvecPrix.length > 0) {
     document.getElementById('variantes-section').classList.remove('hidden');
     const list = document.getElementById('variantes-list');
     list.innerHTML = variantes.map(v => `
@@ -841,12 +842,11 @@ function renderProduit() {
         <div class="variante-prix">${(v.prix / 100).toFixed(2)} €</div>
       </button>
     `).join('');
-    // Sélectionner la première variante par défaut
     selectVariante(variantes[0].id);
   } else {
-    // Pas de variantes — prix fixe
-    varianteChoisie = null;
-    updatePrix(produit.price ? produit.price * 100 : 0);
+    // Prix fixe — pas de variantes, ou variantes sans prix (conteneur Gelato unique)
+    varianteChoisie = variantes.length > 0 ? variantes[0].id : null;
+    updatePrix(Math.round((Number(produit.price) || 0) * 100));
   }
 
   // Stock
@@ -911,7 +911,7 @@ function selectVariante(id) {
     img.src = v?.preview_url || galleryImages[0] || produit.preview_url || '';
   }
 
-  if (v) updatePrix(v.prix);
+  if (v) updatePrix(v.prix || Math.round((Number(produit.price) || 0) * 100));
   checkFormValid();
 }
 
@@ -921,8 +921,9 @@ function updatePrix(prixProduit) {
   const effectiveGel = variante?.gelato_product_id || produit.gelato_product_id || '';
   const isGelato    = !!effectiveGel;
 
+  const _hasMultiPrix = (produit.variantes || []).filter(v => v.prix > 0).length > 1;
   document.getElementById('product-price-display').textContent =
-    `À partir de ${(prixProduit / 100).toFixed(2)} €`;
+    _hasMultiPrix ? `À partir de ${(prixProduit / 100).toFixed(2)} €` : `${(prixProduit / 100).toFixed(2)} €`;
   document.getElementById('recap-produit').textContent =
     `${(prixProduit / 100).toFixed(2)} €`;
 
@@ -1050,7 +1051,7 @@ function addToCartFromPage() {
   if (!produit) return;
   if (produit.type_produit === 'bundle') { addBundleToCart(); return; }
   const variante    = (produit.variantes || []).find(v => v.id === varianteChoisie);
-  const priceCents  = variante ? variante.prix : (produit.price || 0) * 100;
+  const priceCents  = variante ? (variante.prix || Math.round((produit.price || 0) * 100)) : Math.round((produit.price || 0) * 100);
 
   Cart.add({
     produit_id:        produit.id,
@@ -1080,7 +1081,7 @@ function startCheckout() {
   const btn = document.getElementById('order-btn');
 
   const variante   = (produit.variantes || []).find(v => v.id === varianteChoisie);
-  const priceCents = variante ? variante.prix : (produit.price || 0) * 100;
+  const priceCents = variante ? (variante.prix || Math.round((produit.price || 0) * 100)) : Math.round((produit.price || 0) * 100);
   const title      = variante ? `${produit.title} — ${variante.label}` : produit.title;
 
   Cart.add({
