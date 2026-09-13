@@ -132,16 +132,15 @@ p {
   .fiche-chapo {
     font-family:'Playfair Display',serif;
     font-style:italic;
-    font-size:19px;
-    line-height:1.55;
-    border-left:3px solid #C49A5A;
-    padding-left:16px;
+    font-size:18px;
+    line-height:1.65;
+    color:#3D3020;
     margin-bottom:20px;
   }
   .fiche-liste {
     list-style:none;
     padding:0;
-    margin:0 0 24px;
+    margin:0 0 20px;
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -150,28 +149,32 @@ p {
     position:relative;
     padding-left:22px;
     font-size:15px;
-    line-height:1.5;
+    line-height:1.55;
+    color:#5C4F38;
   }
   .fiche-liste li::before {
-    content:"\2713";
+    content:"\2022";
     position:absolute;
     left:0;
-    color:#5B9EAD;
+    color:#C49A5A;
+    font-size:18px;
+    line-height:1.2;
   }
   .fiche-separateur {
     border:none;
     height:1px;
-    background:#C49A5A;
-    opacity:0.35;
-    margin:0 0 20px;
+    background:#E2D4BC;
+    margin:4px 0 20px;
   }
   .fiche-livraison {
     font-size:13px;
-    color:#2D5A66;
-    margin-top:20px;
+    color:#5B9EAD;
+    margin-top:16px;
   }
   .fiche-description p {
-    line-height:1.75;
+    line-height:1.8;
+    font-size:15px;
+    color:#5C4F38;
   }
 </style>
 <!-- Meta Pixel -->
@@ -241,11 +244,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <span class="ms" style="font-size:18px;">arrow_back</span>
     Retour à la boutique
   </button>
-  <div class="grid md:grid-cols-2 gap-10 items-start">
+  <div class="grid md:grid-cols-2 gap-12 items-start">
 
-    <!-- Colonne gauche — Image + Config -->
-    <div class="fade-up">
-      <div id="product-image-wrap" class="rounded-2xl overflow-hidden bg-teal-light aspect-square flex items-center justify-center relative" style="background:#EBF5F7;">
+    <!-- Colonne gauche — Image -->
+    <div class="fade-up md:sticky md:top-24">
+      <div id="product-image-wrap" class="rounded-2xl overflow-hidden aspect-square flex items-center justify-center relative" style="background:#EBF5F7;">
         <img id="product-image" src="" alt="" class="w-full h-full object-cover cursor-pointer hidden" onclick="openLightbox(currentGalleryIdx)">
         <div id="product-image-placeholder" class="text-center p-8">
           <span class="ms" style="font-size:64px;color:#5B9EAD;">image</span>
@@ -256,85 +259,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div id="gallery-thumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 hidden"></div>
+    </div>
 
-      <!-- Configurateur (sous l'image) -->
-      <div class="space-y-6 mt-6">
+    <!-- Colonne droite — Tout le contenu -->
+    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;">
 
-        <!-- Titre & prix -->
-        <div>
-          <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#C49A5A;">✦ PRODUIT PHYSIQUE · LIVRÉ CHEZ TOI</p>
-          <h1 id="product-title" class="font-display text-2xl md:text-3xl font-bold mb-2" style="color:#1A1208;line-height:1.2;"></h1>
-          <div class="flex items-center gap-3 flex-wrap">
-            <span id="product-price-display" class="text-2xl font-bold" style="color:#5B9EAD;"></span>
-            <span id="product-delay-badge" class="text-xs px-3 py-1 rounded-full font-medium" style="background:#EBF5F7;color:#3D7A8A;"></span>
+      <!-- Titre & prix -->
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#C49A5A;letter-spacing:2px;">✦ PRODUIT PHYSIQUE · LIVRÉ CHEZ TOI</p>
+        <h1 id="product-title" class="font-display text-2xl md:text-3xl font-bold mb-3" style="color:#1A1208;line-height:1.2;"></h1>
+        <div class="flex items-center gap-3 flex-wrap">
+          <span id="product-price-display" class="font-display text-3xl font-bold" style="color:#1A1208;"></span>
+          <span id="product-delay-badge" class="text-xs px-3 py-1 rounded-full font-medium" style="background:#EBF5F7;color:#3D7A8A;"></span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div id="product-description" class="fiche-description leading-relaxed text-muted"></div>
+
+      <!-- Variantes -->
+      <div id="variantes-section" class="hidden">
+        <label class="field-label mb-3">Choisissez votre style</label>
+        <div id="variantes-list" class="grid grid-cols-1 gap-3"></div>
+      </div>
+
+      <!-- Personnalisation -->
+      <div id="perso-section" class="hidden">
+        <label class="field-label mb-3">Personnalisation</label>
+        <div id="perso-fields" class="space-y-4"></div>
+        <div id="preview-section" class="hidden mt-4">
+          <p class="field-label mb-2">Aperçu</p>
+          <div class="preview-box">
+            <span id="preview-text" class="font-display text-2xl italic" style="color:#C49A5A;opacity:0.5;">Votre texte apparaîtra ici…</span>
           </div>
         </div>
+      </div>
 
-        <!-- Variantes -->
-        <div id="variantes-section" class="hidden">
-          <label class="field-label mb-3">Choisissez votre style</label>
-          <div id="variantes-list" class="grid grid-cols-1 gap-3"></div>
+      <!-- Stock -->
+      <div id="stock-badge" class="hidden"></div>
+
+      <!-- Livraison & total (léger, sans encadré lourd) -->
+      <div style="border-top:1px solid #E2D4BC;padding-top:20px;">
+        <div class="recap-row">
+          <span class="text-muted" style="font-size:14px;">Livraison</span>
+          <span id="recap-livraison" style="font-size:14px;">—</span>
         </div>
-
-        <!-- Personnalisation -->
-        <div id="perso-section" class="hidden">
-          <label class="field-label mb-3">Personnalisation</label>
-          <div id="perso-fields" class="space-y-4"></div>
-
-          <!-- Aperçu prénom -->
-          <div id="preview-section" class="hidden mt-4">
-            <p class="field-label mb-2">Aperçu</p>
-            <div class="preview-box">
-              <span id="preview-text" class="font-display text-2xl italic" style="color:#C49A5A;opacity:0.5;">Votre texte apparaîtra ici…</span>
-            </div>
-          </div>
+        <div class="recap-row" style="margin-top:2px;">
+          <span style="font-weight:700;font-size:16px;">Total</span>
+          <span id="recap-total" style="font-weight:700;font-size:18px;color:#5B9EAD;">—</span>
         </div>
+        <p class="text-xs text-muted mt-2" id="recap-livraison-info"></p>
+        <span id="recap-produit" style="display:none;">—</span>
+      </div>
 
-        <!-- Stock -->
-        <div id="stock-badge" class="hidden"></div>
-
-        <!-- Récapitulatif prix -->
-        <div class="bg-white border border-border rounded-2xl p-5">
-          <h3 class="font-semibold text-sm mb-3">Récapitulatif</h3>
-          <div class="recap-row">
-            <span class="text-muted">Produit</span>
-            <span id="recap-produit">—</span>
-          </div>
-          <div class="recap-row">
-            <span class="text-muted">Livraison</span>
-            <span id="recap-livraison">—</span>
-          </div>
-          <div class="recap-row total">
-            <span>Total</span>
-            <span id="recap-total" style="color:#5B9EAD;">—</span>
-          </div>
-          <p class="text-xs text-muted mt-2" id="recap-livraison-info"></p>
-        </div>
-
-        <!-- Bouton commander -->
+      <!-- Boutons -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
         <button id="add-cart-btn" class="btn-teal w-full justify-center py-3 text-base" disabled onclick="addToCartFromPage()">
           <span class="ms" style="font-size:18px;">shopping_bag</span>
           Ajouter au panier
         </button>
-        <button id="order-btn" class="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-2xl border-2 transition-all mt-1" style="background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
+        <button id="order-btn" class="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-2xl border-2 transition-all" style="background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
           onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
           <span class="ms" style="font-size:18px;">bolt</span>
           Commander maintenant
         </button>
         <p class="text-xs text-center text-muted" id="checkout-hint">Paiement sécurisé par Stripe</p>
-
-        <!-- Caractéristiques -->
-        <div id="product-details" class="space-y-2 text-sm text-muted pt-2 border-t border-border"></div>
-
       </div>
-    </div>
 
-    <!-- Colonne droite — Description -->
-    <div class="fade-up md:sticky md:top-24">
-      <h3 class="font-semibold text-sm mb-4" style="color:#1A1208;">À propos de ce produit</h3>
-      <div id="product-description" class="fiche-description text-sm leading-relaxed text-muted"></div>
-    </div>
+      <!-- Caractéristiques -->
+      <div id="product-details" class="space-y-2 text-sm text-muted" style="padding-top:4px;border-top:1px solid #E2D4BC;"></div>
 
+    </div>
   </div>
 
   <!-- VOUS AIMEREZ AUSSI (produits sans collection) -->
