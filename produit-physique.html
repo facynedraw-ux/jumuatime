@@ -919,7 +919,7 @@ function selectVariante(id) {
 function updatePrix(prixProduit) {
   const variante    = (produit.variantes || []).find(v => v.id === varianteChoisie);
   const effectiveGel = variante?.gelato_product_id || produit.gelato_product_id || '';
-  const isGelato    = !!effectiveGel;
+  const isGelato    = !!effectiveGel || (Array.isArray(produit.variantes) && produit.variantes.some(v => v.gelato_product_id));
 
   const _hasMultiPrix = (produit.variantes || []).filter(v => v.prix > 0).length > 1;
   document.getElementById('product-price-display').textContent =

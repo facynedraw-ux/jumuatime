@@ -840,7 +840,9 @@ function editResource(id) {
   if (r.type_produit === 'bundle') {
     setBundleItems(r.bundle_items || []);
   } else {
-    const isGelato = !!r.gelato_product_id || gelatoVariantes.some(v => v.gelato_product_id);
+    const isGelato = !!r.gelato_product_id
+      || gelatoVariantes.some(v => v.gelato_product_id)
+      || (Array.isArray(r.variantes) && r.variantes.length > 0);
     document.getElementById('r-gelato').checked = isGelato;
     document.getElementById('r-manuel').checked = !isGelato;
     onExpeditionChange();
