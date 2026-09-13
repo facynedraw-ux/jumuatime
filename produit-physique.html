@@ -285,18 +285,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="gallery-thumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 hidden"></div>
 
       <!-- Boutons CTA sous les photos -->
-      <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;">
-        <button id="add-cart-btn" class="btn-teal w-full justify-center py-3 text-base" disabled onclick="addToCartFromPage()">
-          <span class="ms" style="font-size:18px;">shopping_bag</span>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:18px;">
+        <button id="add-cart-btn" class="btn-teal justify-center" style="width:100%;padding:10px 20px;font-size:14px;font-weight:600;letter-spacing:0.02em;" disabled onclick="addToCartFromPage()">
+          <span class="ms" style="font-size:16px;">shopping_bag</span>
           Ajouter au panier
         </button>
-        <button id="order-btn" class="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-2xl border-2 transition-all" style="background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
+        <button id="order-btn" class="flex items-center justify-center gap-2 font-semibold rounded-xl border transition-all" style="width:100%;padding:9px 20px;font-size:13px;background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.02em;" disabled onclick="startCheckout()"
           onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
-          <span class="ms" style="font-size:18px;">bolt</span>
+          <span class="ms" style="font-size:15px;">bolt</span>
           Commander maintenant
         </button>
-        <p class="text-xs text-center text-muted" id="checkout-hint">Paiement sécurisé par Stripe</p>
+        <p class="text-xs text-center text-muted" id="checkout-hint" style="margin-top:2px;">Paiement sécurisé par Stripe</p>
       </div>
+
+      <!-- Récap Livraison / Total + Caractéristiques -->
+      <div style="margin-top:16px;border-top:1px solid #E2D4BC;padding-top:16px;display:flex;flex-direction:column;gap:0;">
+        <div class="recap-row">
+          <span class="text-muted" style="font-size:13px;">Livraison</span>
+          <span id="recap-livraison" style="font-size:13px;">—</span>
+        </div>
+        <div class="recap-row" style="margin-top:2px;">
+          <span style="font-weight:700;font-size:15px;">Total</span>
+          <span id="recap-total" style="font-weight:700;font-size:16px;color:#5B9EAD;">—</span>
+        </div>
+        <p class="text-xs text-muted mt-2" id="recap-livraison-info"></p>
+        <span id="recap-produit" style="display:none;">—</span>
+      </div>
+      <div id="product-details" class="space-y-1 text-xs text-muted" style="padding-top:12px;border-top:1px solid #E2D4BC;margin-top:4px;"></div>
     </div>
 
     <!-- Colonne droite — Tout le contenu -->
@@ -335,23 +350,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- Stock -->
       <div id="stock-badge" class="hidden"></div>
-
-      <!-- Livraison & total -->
-      <div style="border-top:1px solid #E2D4BC;padding-top:20px;">
-        <div class="recap-row">
-          <span class="text-muted" style="font-size:14px;">Livraison</span>
-          <span id="recap-livraison" style="font-size:14px;">—</span>
-        </div>
-        <div class="recap-row" style="margin-top:2px;">
-          <span style="font-weight:700;font-size:16px;">Total</span>
-          <span id="recap-total" style="font-weight:700;font-size:18px;color:#5B9EAD;">—</span>
-        </div>
-        <p class="text-xs text-muted mt-2" id="recap-livraison-info"></p>
-        <span id="recap-produit" style="display:none;">—</span>
-      </div>
-
-      <!-- Caractéristiques -->
-      <div id="product-details" class="space-y-2 text-sm text-muted" style="padding-top:4px;border-top:1px solid #E2D4BC;"></div>
 
     </div>
   </div>
@@ -915,7 +913,6 @@ function renderProduit() {
   // Caractéristiques
   const details = document.getElementById('product-details');
   details.innerHTML = `
-    <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">local_shipping</span> Livraison sous ${delai}</div>
     ${(produit.gelato_product_id || (produit.variantes||[]).some(v=>v.gelato_product_id)) ? `
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">verified</span> Fabriqué par Gelato, partenaire certifié</div>
     <div class="flex items-center gap-2"><span class="ms" style="font-size:16px;color:#5B9EAD;">workspace_premium</span> Fabrication professionnelle à la demande</div>
