@@ -647,7 +647,7 @@ async function renderBundle() {
   document.getElementById('recap-produit').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
   if (hasGelato) {
-    document.getElementById('recap-livraison').textContent = 'Offerte 🎁';
+    document.getElementById('recap-livraison').textContent = 'Offerte';
     document.getElementById('recap-total').textContent =
       (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
     const infoEl = document.getElementById('recap-livraison-info');
@@ -655,7 +655,7 @@ async function renderBundle() {
   } else {
     const shipCents = bundlePriceCents >= 4900 ? 0 : 490;
     document.getElementById('recap-livraison').textContent =
-      shipCents === 0 ? 'Offerte 🎁' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+      shipCents === 0 ? 'Offerte' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     document.getElementById('recap-total').textContent =
       ((bundlePriceCents + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     const infoEl = document.getElementById('recap-livraison-info');
@@ -934,7 +934,7 @@ function updatePrix(prixProduit) {
   const infoEl = document.getElementById('recap-livraison-info');
 
   if (isGelato) {
-    document.getElementById('recap-livraison').textContent = 'Offerte 🎁';
+    document.getElementById('recap-livraison').textContent = 'Offerte';
     document.getElementById('recap-total').textContent = `${(prixProduit / 100).toFixed(2)} €`;
     infoEl.textContent = 'Livraison incluse · Expédié par Gelato';
     const hint = document.getElementById('checkout-hint');
@@ -944,7 +944,7 @@ function updatePrix(prixProduit) {
                     || produit.mode_livraison || 'colis';
     const shipCents = prixProduit >= 4900 ? 0 : (modeLivr === 'lettre' ? 200 : 490);
     document.getElementById('recap-livraison').textContent =
-      shipCents === 0 ? 'Offerte 🎁' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
+      shipCents === 0 ? 'Offerte' : (shipCents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     document.getElementById('recap-total').textContent =
       ((prixProduit + shipCents) / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + ' €';
     infoEl.textContent = modeLivr === 'lettre'
