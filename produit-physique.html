@@ -283,17 +283,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <!-- Miniatures horizontales (mobile uniquement) -->
       <div id="gallery-thumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 hidden"></div>
+
+      <!-- Boutons CTA sous les photos -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;">
+        <button id="add-cart-btn" class="btn-teal w-full justify-center py-3 text-base" disabled onclick="addToCartFromPage()">
+          <span class="ms" style="font-size:18px;">shopping_bag</span>
+          Ajouter au panier
+        </button>
+        <button id="order-btn" class="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-2xl border-2 transition-all" style="background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
+          onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
+          <span class="ms" style="font-size:18px;">bolt</span>
+          Commander maintenant
+        </button>
+        <p class="text-xs text-center text-muted" id="checkout-hint">Paiement sécurisé par Stripe</p>
+      </div>
     </div>
 
     <!-- Colonne droite — Tout le contenu -->
-    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;padding-left:8px;">
+    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;padding-left:20px;">
 
       <!-- Titre & prix -->
       <div>
         <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color:#C49A5A;letter-spacing:2px;">✦ PRODUIT PHYSIQUE · LIVRÉ CHEZ TOI</p>
-        <h1 id="product-title" class="font-display text-2xl md:text-3xl font-bold mb-3" style="color:#1A1208;line-height:1.2;"></h1>
+        <h1 id="product-title" class="font-display text-2xl md:text-3xl font-semibold mb-4" style="color:#3D2D1A;line-height:1.2;"></h1>
         <div class="flex items-center gap-3 flex-wrap">
-          <span id="product-price-display" class="font-display text-3xl font-bold" style="color:#1A1208;"></span>
+          <span id="product-price-display" class="font-display text-3xl font-bold" style="color:#5B9EAD;"></span>
           <span id="product-delay-badge" class="text-xs px-3 py-1 rounded-full font-medium" style="background:#EBF5F7;color:#3D7A8A;"></span>
         </div>
       </div>
@@ -322,7 +336,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- Stock -->
       <div id="stock-badge" class="hidden"></div>
 
-      <!-- Livraison & total (léger, sans encadré lourd) -->
+      <!-- Livraison & total -->
       <div style="border-top:1px solid #E2D4BC;padding-top:20px;">
         <div class="recap-row">
           <span class="text-muted" style="font-size:14px;">Livraison</span>
@@ -334,20 +348,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <p class="text-xs text-muted mt-2" id="recap-livraison-info"></p>
         <span id="recap-produit" style="display:none;">—</span>
-      </div>
-
-      <!-- Boutons -->
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <button id="add-cart-btn" class="btn-teal w-full justify-center py-3 text-base" disabled onclick="addToCartFromPage()">
-          <span class="ms" style="font-size:18px;">shopping_bag</span>
-          Ajouter au panier
-        </button>
-        <button id="order-btn" class="w-full flex items-center justify-center gap-2 py-3 text-base font-semibold rounded-2xl border-2 transition-all" style="background:white;border-color:#5B9EAD;color:#5B9EAD;cursor:pointer;font-family:'DM Sans',sans-serif;" disabled onclick="startCheckout()"
-          onmouseover="if(!this.disabled){this.style.background='#EBF5F7'}" onmouseout="this.style.background='white'">
-          <span class="ms" style="font-size:18px;">bolt</span>
-          Commander maintenant
-        </button>
-        <p class="text-xs text-center text-muted" id="checkout-hint">Paiement sécurisé par Stripe</p>
       </div>
 
       <!-- Caractéristiques -->
