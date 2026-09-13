@@ -122,9 +122,14 @@ p {
   @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   .fade-up { animation:fadeUp 0.45s ease both; }
 
-  .gallery-thumb { width:64px;height:64px;border-radius:10px;overflow:hidden;border:2px solid #E2D4BC;cursor:pointer;flex-shrink:0;transition:border-color 0.15s; }
+  .gallery-thumb { width:68px;height:68px;border-radius:10px;overflow:hidden;border:2px solid #E2D4BC;cursor:pointer;flex-shrink:0;transition:border-color 0.15s;background:#FAF6F0; }
   .gallery-thumb.active { border-color:#5B9EAD; }
   .gallery-thumb img { width:100%;height:100%;object-fit:cover;display:block; }
+  #gallery-thumbs-left { display:none; }
+  @media (min-width:768px) {
+    #gallery-thumbs { display:none !important; }
+    #gallery-thumbs-left { display:flex !important; }
+  }
   .lightbox-overlay { position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out; }
   .lightbox-overlay img { max-width:100%;max-height:90vh;border-radius:12px;object-fit:contain; }
 
@@ -248,16 +253,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Colonne gauche — Image -->
     <div class="fade-up md:sticky md:top-24">
-      <div id="product-image-wrap" class="rounded-2xl overflow-hidden aspect-square flex items-center justify-center relative" style="background:transparent;">
-        <img id="product-image" src="" alt="" class="w-full h-full object-cover cursor-pointer hidden" onclick="openLightbox(currentGalleryIdx)">
-        <div id="product-image-placeholder" class="text-center p-8">
-          <span class="ms" style="font-size:64px;color:#5B9EAD;">image</span>
-          <p class="text-sm text-muted mt-2">Image bientôt disponible</p>
-        </div>
-        <div id="product-watermark" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
-          <span class="font-bold select-none" style="color:rgba(255,255,255,0.35);font-size:clamp(1.2rem,5vw,2rem);transform:rotate(-30deg);letter-spacing:0.15em;">APERÇU</span>
+      <!-- Flex row : miniatures gauche + image (desktop) -->
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <!-- Miniatures verticales (desktop uniquement) -->
+        <div id="gallery-thumbs-left" style="display:none;flex-direction:column;gap:8px;flex-shrink:0;width:72px;"></div>
+        <!-- Image principale -->
+        <div id="product-image-wrap" style="flex:1;position:relative;border-radius:16px;overflow:hidden;background:#FAF6F0;">
+          <img id="product-image" src="" alt="" class="hidden" style="width:100%;height:auto;cursor:pointer;" onclick="openLightbox(currentGalleryIdx)">
+          <div id="product-image-placeholder" class="text-center p-8" style="min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <span class="ms" style="font-size:64px;color:#5B9EAD;">image</span>
+            <p class="text-sm text-muted mt-2">Image bientôt disponible</p>
+          </div>
+          <div id="product-watermark" class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+            <span class="font-bold select-none" style="color:rgba(255,255,255,0.35);font-size:clamp(1.2rem,5vw,2rem);transform:rotate(-30deg);letter-spacing:0.15em;">APERÇU</span>
+          </div>
         </div>
       </div>
+      <!-- Miniatures horizontales (mobile uniquement) -->
       <div id="gallery-thumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1 hidden"></div>
     </div>
 
@@ -344,7 +356,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- COMPLÈTE TA COLLECTION (produits avec collection) -->
   <section id="collection-section" class="hidden" style="margin-top:4rem;">
     <div class="mb-5">
-      <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#C49A5A;letter-spacing:2px;">✦ Va avec ce produit</p>
+      <p class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#C49A5A;letter-spacing:2px;">✦ Vous aimerez aussi :</p>
       <h2 id="collection-label" class="font-display text-lg font-bold" style="color:#1A1208;">Complète ta collection</h2>
     </div>
     <div id="collection-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
@@ -829,12 +841,20 @@ function renderProduit() {
     document.getElementById('product-watermark').classList.remove('hidden');
 
     if (galleryImages.length > 1) {
-      const thumbsEl = document.getElementById('gallery-thumbs');
-      thumbsEl.innerHTML = galleryImages.map((url, i) => `
+      const thumbHtml = galleryImages.map((url, i) => `
         <div class="gallery-thumb${i===0?' active':''}" onclick="switchImage(${i},this)">
           <img src="${url}" alt="" loading="lazy">
         </div>`).join('');
+      // Mobile : ligne horizontale sous l'image
+      const thumbsEl = document.getElementById('gallery-thumbs');
+      thumbsEl.innerHTML = thumbHtml;
       thumbsEl.classList.remove('hidden');
+      // Desktop : colonne verticale à gauche de l'image
+      const thumbsLeft = document.getElementById('gallery-thumbs-left');
+      thumbsLeft.innerHTML = thumbHtml;
+      thumbsLeft.style.display = 'flex';
+      // Masquer la ligne mobile sur desktop via media query CSS
+      thumbsEl.classList.add('md:hidden');
     }
   }
 
