@@ -9,10 +9,13 @@ Cloudflare Pages — repo git : D:\DEV\jumuatime (git push → Cloudflare auto)
 Répertoire de travail local : D:\DEV\jumuatime\
 
 ## Palette
-- Teal principal : #5B9EAD
-- Gold : #C49A5A
-- Crème : #FAF6F0
-- Texte foncé : #1A1A1A
+Variables CSS (`--c-*`) définies dans produit-physique.html et utilisées globalement :
+- `--c-teal` : #5B9EAD — couleur principale, bouton outline, prix, icônes
+- `--c-gold` : #C49A5A — accentuation, puces liste, eyebrow, bordures, bouton "Ajouter au panier" (gradient → #A97C35)
+- `--c-bg` : #FAF6F0 — fond page et image placeholder
+- `--c-dark` : #1A1208 — texte courant très foncé
+- `--c-muted` : #8B7A5A — texte secondaire / muted
+- Titres fiche produit (h1) : #3D2D1A (brun chaud, plus doux que --c-dark)
 - Footer : #2D5A66 (teal foncé)
 - Admin : #C96B8A (rose)
 
@@ -85,6 +88,7 @@ Colonnes :
 - `bundle_items` (jsonb[], nullable) — articles d'un bundle : `[{g, p, t, img, rid, vid}]` ; `g: null` = livraison manuelle (pas Gelato)
 - `format` (text, nullable)
 - `gallery_urls` (text[], nullable) — galerie d'images supplémentaires
+- `video_url` (text, nullable) — URL YouTube (youtu.be / watch?v= / shorts/ / embed/) — miniature ▶ dans galerie, lightbox iframe autoplay
 - `is_active` (boolean) — produit actif/commandable
 - `visible_boutique` (boolean, default true) — affiché en boutique et recommandations ; mettre false pour les produits bundle-only
 
@@ -245,6 +249,7 @@ Toujours utiliser `Cache-Control: no-store` dans la réponse. Ne jamais mettre `
 ## Admin — ressources (admin-ressources.html)
 - Bouton corbeille rouge sur chaque produit → confirm() + DELETE resources (RLS admin_delete requis)
 - "Voir la fiche" route vers produit-physique.html pour type_produit = 'physique' OU 'bundle'
+- Champ `video_url` : URL YouTube optionnel (après la section galerie dans le formulaire) → sauvegardé dans `resources.video_url`, réinitialisé à '' sur nouveau produit
 
 ## Bundles — livraison manuelle (bypass Gelato)
 - Si `bundle_items[*].g = null` en DB → bundle traité comme livraison manuelle (pas de quote Gelato)
@@ -287,6 +292,36 @@ Avant de dire "déployé" ou de faire `git push`, vérifier systématiquement :
 - **Footer** : Instagram handle = `@jumuatime` / `instagram.com/jumuatime` (PAS `jumua_time` avec underscore)
 - **Footer newsletter** : `submitNewsletter(e)` est définie dans `supabase-client.js` — ne pas la redéfinir dans chaque page
 - **a-propos.html** : pas de lien facyne.com — Instagram uniquement. Photo/avatar en bas de page (juste avant footer).
+
+### produit-physique.html — fiche produit physique
+**Layout** : grille 2 colonnes `md:grid-cols-2 gap-12`, fil d'Ariane dynamique au-dessus.
+
+**Colonne gauche (sticky `md:top-24`)** :
+- Galerie : flex-row `gap:10px` — miniatures verticales `#gallery-thumbs-left` (desktop, `display:none` → CSS media query `@media(min-width:768px)` le passe à `display:flex`) + image principale `#product-image-wrap`
+- Miniatures horizontales `#gallery-thumbs` (mobile uniquement, `hidden` par défaut, affichée en dessous)
+- **Récap Livraison/Total** (`#recap-livraison`, `#recap-total`, `#recap-livraison-info`) dans un encadré `border:1px solid #E2D4BC; border-radius:12px; background:#FDFAF6` — **au-dessus des boutons CTA**
+- **Caractéristiques** `#product-details` : texte `text-sm text-muted`, juste sous le récap (sans "Livraison sous X jours" — doublon supprimé, info déjà dans `fiche-livraison`)
+- **Bouton "Ajouter au panier"** `#add-cart-btn` : gradient or `linear-gradient(135deg,#C49A5A,#A97C35)`, blanc, `border-radius:12px`, ombre chaude `rgba(196,154,90,0.35)` — appelle `addToCartFromPage()`
+- **Bouton "Commander maintenant"** `#order-btn` : outline teal, fond blanc — appelle `startCheckout()`
+- Hint "🔒 Paiement sécurisé par Stripe" `#checkout-hint`
+
+**Colonne droite** (`padding-left:32px`) :
+- Eyebrow gold, `#product-title` (couleur `#3D2D1A`), `#product-price-display` (couleur `#5B9EAD`)
+- `#product-description` : classe `fiche-description` → `mdToHtml()` génère des blocks typés :
+  - `.fiche-chapo` — Playfair Display italic 20px (premier `p`)
+  - `.fiche-liste` — puces `#C49A5A`, font-size 16px
+  - `.fiche-separateur` — ligne fine `#E2D4BC`
+  - `.fiche-livraison` — teal 14px (dernier `p` après ul, ex : "Expédié sous 5-7 jours")
+  - `.fiche-description p` — 16px, `text-align:justify`, `hyphens:auto`
+- `#variantes-section`, `#perso-section`, `#stock-badge`
+
+**Pièges connus** :
+- `#product-image-placeholder` a `display:flex` en CSS class `.product-placeholder` → `.product-placeholder.hidden { display:none !important }` override nécessaire (sinon `.hidden` ignoré)
+- `#gallery-thumbs-left` : ne pas mettre `display:flex` en inline style ; le CSS media query gère la visibilité
+- `switchImage()` utilise `querySelectorAll('.gallery-thumb')` → sync active state sur les DEUX containers (desktop + mobile)
+- Galerie vidéo YouTube : regex `(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([^&\s?]+)` → miniature `img.youtube.com/vi/<id>/mqdefault.jpg` avec icône `play_circle` — lightbox via `openVideoLightbox()` (iframe autoplay)
+- `_getLightbox()` : helper partagé entre images (`openLightbox(idx)`) et vidéos (`openVideoLightbox(url)`)
+- Détection Gelato : `mode_livraison === null` = produit Gelato → livraison affichée "Offerte" avec icône `redeem`
 
 ### tilawatour.html — landing page Tilawa Tour
 - Hero : fond teal foncé, phone frame 380px (paysage), image `Images/screen_serenity_dash.png?v=2`, clic → lightbox
