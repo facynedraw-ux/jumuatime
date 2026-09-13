@@ -647,11 +647,11 @@ async function renderBundle() {
   document.getElementById('recap-produit').textContent =
     (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
   if (hasGelato) {
-    document.getElementById('recap-livraison').textContent = '—';
+    document.getElementById('recap-livraison').textContent = 'Offerte 🎁';
     document.getElementById('recap-total').textContent =
       (bundlePriceCents / 100).toFixed(2).replace('.', ',') + ' €';
     const infoEl = document.getElementById('recap-livraison-info');
-    if (infoEl) infoEl.textContent = 'Frais de livraison calculés à l\'étape suivante';
+    if (infoEl) infoEl.textContent = 'Livraison incluse · Expédié par Gelato';
   } else {
     const shipCents = bundlePriceCents >= 4900 ? 0 : 490;
     document.getElementById('recap-livraison').textContent =
@@ -934,9 +934,9 @@ function updatePrix(prixProduit) {
   const infoEl = document.getElementById('recap-livraison-info');
 
   if (isGelato) {
-    document.getElementById('recap-livraison').textContent = '—';
+    document.getElementById('recap-livraison').textContent = 'Offerte 🎁';
     document.getElementById('recap-total').textContent = `${(prixProduit / 100).toFixed(2)} €`;
-    infoEl.textContent = 'Frais de livraison calculés à l\'étape suivante';
+    infoEl.textContent = 'Livraison incluse · Expédié par Gelato';
     const hint = document.getElementById('checkout-hint');
     if (hint) hint.textContent = 'Paiement sécurisé par Stripe · Adresse saisie sur le panier';
   } else {
