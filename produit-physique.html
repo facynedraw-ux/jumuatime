@@ -181,6 +181,14 @@ p {
     font-size:16px;
     color:#5C4F38;
   }
+  .product-placeholder {
+    min-height:280px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+  .product-placeholder.hidden { display:none !important; }
 </style>
 <!-- Meta Pixel -->
 <script>
@@ -264,7 +272,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- Image principale -->
         <div id="product-image-wrap" style="flex:1;position:relative;border-radius:16px;overflow:hidden;background:#FAF6F0;">
           <img id="product-image" src="" alt="" class="hidden" style="width:100%;height:auto;cursor:pointer;" onclick="openLightbox(currentGalleryIdx)">
-          <div id="product-image-placeholder" class="text-center p-8" style="min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div id="product-image-placeholder" class="product-placeholder text-center p-8">
             <span class="ms" style="font-size:64px;color:#5B9EAD;">image</span>
             <p class="text-sm text-muted mt-2">Image bientôt disponible</p>
           </div>
@@ -278,7 +286,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <!-- Colonne droite — Tout le contenu -->
-    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;">
+    <div class="fade-up" style="display:flex;flex-direction:column;gap:28px;padding-left:8px;">
 
       <!-- Titre & prix -->
       <div>
@@ -859,11 +867,24 @@ function renderProduit() {
     document.getElementById('product-image-placeholder').classList.add('hidden');
     document.getElementById('product-watermark').classList.remove('hidden');
 
-    if (galleryImages.length > 1) {
-      const thumbHtml = galleryImages.map((url, i) => `
+    const videoUrl = produit.video_url || '';
+    const videoThumb = videoUrl ? (() => {
+      const m = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([^&\s?]+)/);
+      const id = m ? m[1] : null;
+      return id ? `<div class="gallery-thumb" style="position:relative;" onclick="openVideoLightbox('${videoUrl.replace(/'/g,"\\'")}')">
+        <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="Vidéo" style="width:100%;height:100%;object-fit:cover;">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.32);">
+          <span class="ms" style="font-size:26px;color:white;">play_circle</span>
+        </div>
+      </div>` : '';
+    })() : '';
+
+    if (galleryImages.length > 1 || videoThumb) {
+      const imgThumbHtml = galleryImages.map((url, i) => `
         <div class="gallery-thumb${i===0?' active':''}" onclick="switchImage(${i},this)">
           <img src="${url}" alt="" loading="lazy">
         </div>`).join('');
+      const thumbHtml = imgThumbHtml + videoThumb;
       // Mobile : ligne horizontale sous l'image
       const thumbsEl = document.getElementById('gallery-thumbs');
       thumbsEl.innerHTML = thumbHtml;
@@ -872,7 +893,6 @@ function renderProduit() {
       const thumbsLeft = document.getElementById('gallery-thumbs-left');
       thumbsLeft.innerHTML = thumbHtml;
       thumbsLeft.style.display = 'flex';
-      // Masquer la ligne mobile sur desktop via media query CSS
       thumbsEl.classList.add('md:hidden');
     }
   }
@@ -1191,23 +1211,36 @@ function switchImage(idx, thumb) {
   thumb.classList.add('active');
 }
 
-function openLightbox(idx) {
-  if (produit?.type_produit === 'bundle') return;
-  const url = galleryImages[idx];
-  if (!url) return;
+function _getLightbox() {
   let lb = document.getElementById('jt-lightbox');
   if (!lb) {
     lb = document.createElement('div');
     lb.id = 'jt-lightbox';
     lb.className = 'lightbox-overlay';
-    lb.innerHTML = '<img src="" alt="">';
-    lb.addEventListener('click', () => { lb.style.display = 'none'; document.body.style.overflow = ''; });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') { lb.style.display = 'none'; document.body.style.overflow = ''; }
-    });
+    const close = () => { lb.style.display = 'none'; lb.innerHTML = ''; document.body.style.overflow = ''; };
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
     document.body.appendChild(lb);
   }
-  lb.querySelector('img').src = url;
+  return lb;
+}
+
+function openLightbox(idx) {
+  if (produit?.type_produit === 'bundle') return;
+  const url = galleryImages[idx];
+  if (!url) return;
+  const lb = _getLightbox();
+  lb.innerHTML = `<img src="${url}" alt="" style="max-width:100%;max-height:90vh;border-radius:12px;object-fit:contain;">`;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function openVideoLightbox(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([^&\s?]+)/);
+  const id = m ? m[1] : null;
+  if (!id) return;
+  const lb = _getLightbox();
+  lb.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay;fullscreen" allowfullscreen style="width:min(900px,95vw);aspect-ratio:16/9;border-radius:12px;"></iframe>`;
   lb.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }

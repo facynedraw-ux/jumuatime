@@ -400,6 +400,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="text-xs text-muted mt-1">Upload depuis ton ordinateur ou colle une URL (mockups Gelato, etc.)</p>
     </div>
 
+    <div class="mb-3">
+      <label class="f-label" for="f-video-url">Vidéo YouTube (optionnel)</label>
+      <input type="url" id="f-video-url" class="f-input" placeholder="https://www.youtube.com/watch?v=...">
+      <p class="text-xs text-muted mt-1">Apparaîtra comme miniature ▶ dans la galerie de la fiche produit.</p>
+    </div>
+
     <div id="section-format" class="mb-5">
       <label class="f-label" for="f-format">Format</label>
       <input type="text" id="f-format" class="f-input" placeholder="PDF" value="PDF">
@@ -821,6 +827,7 @@ function editResource(id) {
   document.getElementById('f-stock').value = r.stock ?? '';
   document.getElementById('f-gallery-list').innerHTML = '';
   (r.gallery_urls || []).forEach(url => addGalleryUrl(url));
+  document.getElementById('f-video-url').value = r.video_url || '';
 
   // Charger les variantes EN PREMIER (avant onExpeditionChange)
   gelatoVariantes = (r.variantes || []).map(v => ({
@@ -878,6 +885,7 @@ function openPanel() {
   document.getElementById('f-active').checked = true;
   document.getElementById('f-visible-boutique').checked = true;
   document.getElementById('f-gallery-list').innerHTML = '';
+  document.getElementById('f-video-url').value = '';
   document.getElementById('r-manuel').checked = true;
   document.getElementById('r-gelato').checked = false;
   document.getElementById('f-stock').value = '';
@@ -1077,6 +1085,7 @@ async function saveResource() {
     bundle_items: document.getElementById('f-type-produit').value === 'bundle' ? getBundleItems() : null,
     price: parseFloat(document.getElementById('f-price').value) || 0,
     gallery_urls: getGalleryUrls(),
+    video_url: document.getElementById('f-video-url').value.trim() || null,
     preview_url: previewUrl,
     preview_pdf_url: previewPdfUrl,
     file_url: fileUrl,
